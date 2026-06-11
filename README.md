@@ -1,7 +1,7 @@
-# nws (Nix Workstation Suite)
+# Nix Station
 
 [![Nix](https://img.shields.io/badge/Nix-5277C3?logo=nixos&logoColor=white)](https://nixos.org/)
-[![CI](https://github.com/hisuilab/nix-workstation/actions/workflows/ci.yml/badge.svg)](https://github.com/hisuilab/nix-workstation/actions)
+[![CI](https://github.com/hisuilab/nix-station/actions/workflows/ci.yml/badge.svg)](https://github.com/hisuilab/nix-station/actions)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 > Nixの学習コストをゼロに。
@@ -34,6 +34,6 @@
 環境を構築したいマシンで以下を実行します。
 
 ```bash
-git clone [https://github.com/hisuilab/nws.git](https://github.com/hisuilab/nix-workstation.git)
-cd nws
+git clone [https://github.com/hisuilab/nix-station.git](https://github.com/hisuilab/nix-station.git)
+cd nix-station
 ```

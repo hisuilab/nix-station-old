@@ -1,5 +1,5 @@
 {
-  description = "Nix Workstation Suite (nws)";
+  description = "Nix Station";
 
   # 1. 外部リポジトリ（依存関係）の定義
   inputs = {

@@ -1,4 +1,4 @@
-# NWS: 開発プロセス・CI/CD・チーム規律
+# Nix Station: 開発プロセス・CI/CD・チーム規律
 
 ## 1. 開発サイクルと命名規則 (GitHub & Git Flow)
 

@@ -1,0 +1,27 @@
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Nix Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix and Enable Magic Cache
+        uses: DeterminateSystems/determinate-nix-action@v9
+
+      - name: Check Flake evaluation and syntax
+        run: nix flake check --show-trace
+
+      - name: Dry-run Build for Host Server
+        run: |
+          # 実際の設定は適用せず、ビルドのパースと構文が正常に通るかだけをテスト
+          nix eval .#darwinConfigurations.server.system

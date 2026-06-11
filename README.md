@@ -34,6 +34,6 @@
 環境を構築したいマシンで以下を実行します。
 
 ```bash
-git clone [https://github.com/hisuilab/nix-station.git](https://github.com/hisuilab/nix-station.git)
+git clone https://github.com/hisuilab/nix-station.git
 cd nix-station
 ```

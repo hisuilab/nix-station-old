@@ -90,6 +90,19 @@
           (import ./tests/home/integration.nix {
             inherit home-manager nixpkgs system;
           }).activationPackage;
+        # macOSとHome Managerの有効・無効・分岐評価
+        macOSEnabledEval =
+          (import ./tests/macOS/integration.nix {
+            inherit mkDarwinConfiguration userProfile;
+          }).enabledSystem;
+        macOSDisabledEval =
+          (import ./tests/macOS/integration.nix {
+            inherit mkDarwinConfiguration userProfile;
+          }).disabledSystem;
+        macOSRoutingEval =
+          (import ./tests/macOS/integration.nix {
+            inherit mkDarwinConfiguration userProfile;
+          }).routingSystem;
         serverEval = self.darwinConfigurations.${serverConfig.meta.hostname}.system;
 
         tests =

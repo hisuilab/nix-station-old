@@ -71,6 +71,11 @@ Flakeは通常、Gitで追跡されているファイルを入力として評価
 ```text
 tests/
 ├── default.nix
+├── home/
+│   ├── default.nix
+│   ├── integration.nix
+│   ├── git/
+│   └── zsh/
 └── user-profile/
     ├── default.nix
     └── fixtures/
@@ -95,8 +100,7 @@ nix build path:.#checks.aarch64-darwin.tests --no-link
 ├── .github/workflows/  # GitHub Actions
 ├── docs/               # 開発ドキュメント
 ├── hosts/              # ホスト別設定
-├── modules/            # OS・共通モジュール
-├── packages/           # 機能別パッケージ設定
+├── modules/            # OS・Home Manager・共通モジュール
 ├── tests/              # 機能単位の評価テスト
 ├── user-profiles/      # 選択可能なユーザープロファイル
 ├── flake.lock

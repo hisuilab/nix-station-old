@@ -13,14 +13,9 @@
     name = "guest";
   };
 
-  # 各パッケージの有効化フラグ（初期ビルドを通すため一度すべてfalse）
-  packages = {
-    devbox = false;
-    ghostty = false;
+  # Home Managerで管理するユーザー環境
+  homeManager = {
     git = false;
-    homebrew = false;
-    vim = false;
-    zed = false;
     zsh = false;
   };
 

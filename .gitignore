@@ -42,3 +42,8 @@ result-*
 
 .DS_Store
 Thumbs.db
+
+# ==================================================
+# Local user profiles
+# ==================================================
+user-profiles/hisuilab*

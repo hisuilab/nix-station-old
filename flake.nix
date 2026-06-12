@@ -20,11 +20,12 @@
       serverConfig = import ./hosts/server/config.nix { };
 
       # ユーザー層（default.nix）の分流ロジックを読み込む
-      userModules = import ./user { };
+      userProfiles = import ./user-profiles { };
 
       # サーバーホスト用に動的に抽出したパラメータ
       system = serverConfig.meta.system;
-      username = serverConfig.user.username;
+      userProfileName = serverConfig.userProfile.name;
+      userProfile = userProfiles.importUserProfile userProfileName;
     in
     {
       # 開発環境（devShell）の定義
@@ -39,12 +40,15 @@
       darwinConfigurations = {
         "${serverConfig.meta.hostname}" = nix-darwin.lib.darwinSystem {
           inherit system;
+          specialArgs = { inherit userProfile; };
           modules = [
             # 共通コア設定の適用
             ./modules/common/default.nix
 
-            # 動的に引き当てたユーザープロファイルの適用
-            (userModules.importUserProfile username)
+            # 選択したプロファイルを評価し、各モジュールから参照可能にする
+            (builtins.seq userProfile {
+              _module.args = { inherit userProfile; };
+            })
 
             # 最小限のシステム設定（ホスト名）の注入
             {

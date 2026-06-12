@@ -9,8 +9,8 @@
   };
 
   # マシンに紐付けるユーザープロファイル
-  user = {
-    username = "hisuilab";
+  userProfile = {
+    name = "guest";
   };
 
   # 各パッケージの有効化フラグ（初期ビルドを通すため一度すべてfalse）

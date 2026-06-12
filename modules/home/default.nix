@@ -3,7 +3,7 @@
 let
   homeModules =
     lib.optional (homeManager.git or false) ./git/default.nix
-    ++ lib.optional (homeManager.zsh or false) ../../packages/zsh/default.nix;
+    ++ lib.optional (homeManager.zsh or false) ./zsh/default.nix;
 in
 {
   imports = homeModules;

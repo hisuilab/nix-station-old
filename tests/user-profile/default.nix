@@ -2,8 +2,8 @@
 
 let
   lib = pkgs.lib;
-  userProfiles = import ../user-profiles { };
-  fixtures = ./fixtures/user-profiles;
+  userProfiles = import ../../user-profiles { };
+  fixtures = ./fixtures;
 
   load = name:
     userProfiles.loadUserProfile {

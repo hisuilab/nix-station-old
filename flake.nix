@@ -64,14 +64,14 @@
       checks."${system}" = {
         serverEval = self.darwinConfigurations.server.system;
 
-        userProfileTests =
+        tests =
           let
             pkgs = nixpkgs.legacyPackages.${system};
-            results = import ./tests/user-profile.nix { inherit pkgs; };
+            results = import ./tests { inherit pkgs; };
           in
           if results == [ ]
-          then pkgs.runCommand "user-profile-tests-pass" { } "touch $out"
-          else throw "user-profile tests failed: ${builtins.toJSON results}";
+          then pkgs.runCommand "tests-pass" { } "touch $out"
+          else throw "tests failed: ${builtins.toJSON results}";
       };
     };
 }

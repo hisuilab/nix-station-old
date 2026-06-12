@@ -27,6 +27,14 @@
       username = serverConfig.user.username;
     in
     {
+      # 開発環境（devShell）の定義
+      # このリポジトリのコードを編集する際に便利なツールがあれば、下の `packages` に追加してください。
+      devShells."${system}".default = let
+        pkgs = nixpkgs.legacyPackages."${system}";
+      in pkgs.mkShell {
+        packages = with pkgs; [ ];
+      };
+
       # M4 Mac mini（macOS）用のシステム定義を生成
       darwinConfigurations = {
         "${serverConfig.meta.hostname}" = nix-darwin.lib.darwinSystem {

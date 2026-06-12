@@ -1,6 +1,6 @@
 {
   username = "guest";
-  description = "Generic guest user profile";
+  description = "Guest fixture";
   git = {
     userName = "guest";
     userEmail = "guest@example.com";

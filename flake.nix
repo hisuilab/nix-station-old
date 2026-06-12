@@ -25,7 +25,9 @@
       # サーバーホスト用に動的に抽出したパラメータ
       system = serverConfig.meta.system;
       userProfileName = serverConfig.userProfile.name;
-      userProfile = userProfiles.importUserProfile userProfileName;
+      userProfile = userProfiles.loadUserProfile {
+        name = userProfileName;
+      };
     in
     {
       # 開発環境（devShell）の定義
@@ -46,7 +48,7 @@
             ./modules/common/default.nix
 
             # 選択したプロファイルを評価し、各モジュールから参照可能にする
-            (builtins.seq userProfile {
+            (builtins.deepSeq userProfile {
               _module.args = { inherit userProfile; };
             })
 
@@ -61,6 +63,15 @@
       # 評価テスト用の設定（nix flake check で検証可能にするための仕掛け）
       checks."${system}" = {
         serverEval = self.darwinConfigurations.server.system;
+
+        userProfileTests =
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+            results = import ./tests/user-profile.nix { inherit pkgs; };
+          in
+          if results == [ ]
+          then pkgs.runCommand "user-profile-tests-pass" { } "touch $out"
+          else throw "user-profile tests failed: ${builtins.toJSON results}";
       };
     };
 }

@@ -15,6 +15,42 @@ git switch main
 git pull --ff-only origin main
 ```
 
+## IssueとPull Requestの運用
+
+### Issueの作成
+
+GitHubの`Issues`から`New issue`を選択し、Featureフォームへ次を入力します。
+
+- 概要
+- 設計
+- タスク
+- 完了条件
+- 関連Issue
+
+タスクは実装作業、完了条件は検証可能な受け入れ基準として分けます。
+
+### Pull Requestの作成
+
+作業開始後、早めにDraft Pull Requestを作成します。
+
+```bash
+gh pr create --draft
+```
+
+Pull Request本文では次を確認します。
+
+- `Closes #<issue-number>`の形式でIssueを関連付け
+- Issueの完了条件を転記し、実際の結果を確認してチェック
+- 実行したテストコマンドと結果を記載
+- `git diff`で変更全体をセルフレビュー
+- 意図しない変更や秘密情報が含まれていないことを確認
+- CI成功後にDraftを解除
+
+### ブランチ保護
+
+`main`への直接pushを禁止し、Pull RequestとCI成功を必須とします。
+通常の変更は作業ブランチで実施し、Pull Requestを経由して`main`へマージします。
+
 ## ブランチ命名
 
 Issue番号と目的が分かる名前を使用します。

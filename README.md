@@ -6,12 +6,12 @@
 
 Nixとnix-darwinを使い、ホスト・ユーザー・パッケージの設定を再現可能な形で管理するためのワークステーション構成です。
 
-macOSはnix-darwin、UbuntuとRaspberry Pi OSはstandalone Home Managerで管理します。
+macOSはnix-darwin、Ubuntu、Ubuntu on WSL、Raspberry Pi OSはstandalone Home Managerで管理します。
 
 ## Requirements
 
 - Nix（Flakesを有効化）
-- macOS、Ubuntu、またはRaspberry Pi OS
+- macOS、Ubuntu、Ubuntu on WSL、またはRaspberry Pi OS
 - 任意: direnv / nix-direnv
 - 任意: pre-commit
 
@@ -38,15 +38,24 @@ hosts/
 ├── default.nix
 ├── mac-mini/config.nix
 ├── macbook-air/config.nix
-├── rpi5/config.nix
-└── ubuntu-desktop/config.nix
+├── raspberry-pi-5/config.nix
+├── ubuntu-desktop/config.nix
+└── ubuntu-wsl/config.nix
 ```
 
 小文字kebab-caseのディレクトリ名をflake出力のhost IDとして使用します。`meta.hostname`はOS・ネットワーク上の端末名で、省略時はhost IDを使用します。
 
 - `platform = "darwin"`: nix-darwinとHome Managerを生成
 - `platform = "home-manager"`: Ubuntu・Raspberry Pi OS向けstandalone Home Managerを生成
+- `os`: `darwin`、`ubuntu`、`raspberry-pi-os`からHome ManagerのOS固有設定を選択
+- `environment`: `native`または`wsl`から実行環境固有の設定を選択
 - `role`: `desktop`、`laptop`、`server`から用途別モジュールを選択
+
+`platform = "darwin"`では`meta.hostname`をmacOSへ反映します。standalone Home ManagerはOSのhostnameを変更しないため、Linux hostの`meta.hostname`は識別用メタデータです。
+
+Home Managerは有効なツールがない場合も常に生成されます。ツールフラグは省略可能で、未指定値は`false`として扱います。未登録のツール名を指定した場合は評価エラーになります。
+
+OS固有のユーザー設定は`modules/home/platforms/<os>/`、WSLなど実行環境固有の設定は`modules/home/environments/<environment>/`、共通ツール設定は`modules/home/<tool>/`で管理します。
 
 ## User Profiles
 
@@ -65,6 +74,10 @@ userProfile.name = "test"
         ↓
 user-profiles/test.nix
 ```
+
+`guest.nix`とリポジトリテスト用の`test.nix`を除き、`user-profiles/*.nix`はデフォルトでGitのコミット対象外です。個人情報を含むプロファイルはローカルで作成し、各hostの`userProfile.name`を任意の名前へ変更してください。
+
+チームで共有するプロファイルやCIで評価するプロファイルは、`.gitignore`へ例外を追加してGitで追跡します。Flake評価に含まれるファイルは入力方式とGitの追跡状態に影響されるため、共有・CI用途では追跡を必須とします。
 
 プロファイルの形式:
 
@@ -99,6 +112,7 @@ tests/
 │   ├── roles/
 │   └── zsh/
 ├── darwin/
+│   ├── features/
 │   └── integration.nix
 └── user-profile/
     ├── default.nix

@@ -65,33 +65,33 @@ Settings
 
 nix-stationでは次の値を設定します。
 
-| 項目                                      | 今回の設定値   | 用途・有効にする場面                                     |
-| ----------------------------------------- | -------------- | -------------------------------------------------------- |
-| Ruleset Name                              | `Protect main` | Rulesets一覧で対象と目的を識別                           |
-| Enforcement status                        | `Active`       | ルールを実際に適用。検証だけの場合は`Evaluate`を使用     |
-| Bypass list                               | 空             | 緊急対応者や自動化Appへ例外を許可する場合のみ追加        |
-| Target branches                           | Default branch | デフォルトブランチを保護。固定名ならpatternで`main`指定  |
-| Restrict creations                        | 無効           | 特定名のブランチ作成を管理者などに限定する場合に有効     |
-| Restrict updates                          | 無効           | 対象ブランチの更新者をBypass対象だけに限定する場合に有効 |
-| Restrict deletions                        | 有効           | `main`など重要ブランチの誤削除を防止                     |
-| Require linear history                    | 無効           | merge commitを禁止し、履歴を直線化する場合に有効         |
-| Require deployments to succeed            | 無効           | stagingやproductionへのデプロイ成功をマージ条件に追加    |
-| Require signed commits                    | 無効           | コミット作成者の検証を厳格化する場合に有効               |
-| Require a pull request before merging     | 有効           | 直接pushを避け、レビューとCIを経由                       |
-| Required approvals                        | `0`            | チーム開発では`1`以上にして第三者承認を必須化            |
-| Dismiss stale pull request approvals      | 無効           | 承認後の追加変更で古い承認を無効化する場合に有効         |
-| Require review from Code Owners           | 無効           | 所有者ごとのレビューを必須化する場合に有効               |
-| Require approval of most recent push      | 無効           | 最後の変更をpushした本人以外の承認を必須化               |
-| Require conversation resolution           | 無効           | 未解決のレビューコメントがあるPRのマージを禁止           |
-| Allowed merge methods                     | すべて         | 履歴方針に応じてMerge、Squash、Rebaseを制限              |
-| Require status checks to pass             | 有効           | CIが成功するまでマージを禁止                             |
-| Require branches to be up to date         | 無効           | 最新の対象ブランチ上でCI成功を必須化する場合に有効       |
-| Do not require status checks on creation  | 無効           | 新規ブランチ作成時だけstatus checkを免除する場合に有効   |
-| Required status checks                    | `nix-check`    | GitHub ActionsのNix評価成功を必須化                      |
-| Block force pushes                        | 有効           | 共有履歴の強制書き換えを防止                             |
-| Require code scanning results             | 無効           | CodeQLなどの脆弱性検査をマージ条件に追加                 |
-| Require code quality results              | 無効           | 静的解析や品質基準をマージ条件に追加                     |
-| Automatically request Copilot code review | 無効           | Copilotによる自動レビューを利用する場合に有効            |
+| 項目                                      | 今回の設定値                 | 用途・有効にする場面                                     |
+| ----------------------------------------- | ---------------------------- | -------------------------------------------------------- |
+| Ruleset Name                              | `Protect main`               | Rulesets一覧で対象と目的を識別                           |
+| Enforcement status                        | `Active`                     | ルールを実際に適用。検証だけの場合は`Evaluate`を使用     |
+| Bypass list                               | 空                           | 緊急対応者や自動化Appへ例外を許可する場合のみ追加        |
+| Target branches                           | Default branch               | デフォルトブランチを保護。固定名ならpatternで`main`指定  |
+| Restrict creations                        | 無効                         | 特定名のブランチ作成を管理者などに限定する場合に有効     |
+| Restrict updates                          | 無効                         | 対象ブランチの更新者をBypass対象だけに限定する場合に有効 |
+| Restrict deletions                        | 有効                         | `main`など重要ブランチの誤削除を防止                     |
+| Require linear history                    | 無効                         | merge commitを禁止し、履歴を直線化する場合に有効         |
+| Require deployments to succeed            | 無効                         | stagingやproductionへのデプロイ成功をマージ条件に追加    |
+| Require signed commits                    | 無効                         | コミット作成者の検証を厳格化する場合に有効               |
+| Require a pull request before merging     | 有効                         | 直接pushを避け、レビューとCIを経由                       |
+| Required approvals                        | `0`                          | チーム開発では`1`以上にして第三者承認を必須化            |
+| Dismiss stale pull request approvals      | 無効                         | 承認後の追加変更で古い承認を無効化する場合に有効         |
+| Require review from Code Owners           | 無効                         | 所有者ごとのレビューを必須化する場合に有効               |
+| Require approval of most recent push      | 無効                         | 最後の変更をpushした本人以外の承認を必須化               |
+| Require conversation resolution           | 無効                         | 未解決のレビューコメントがあるPRのマージを禁止           |
+| Allowed merge methods                     | すべて                       | 履歴方針に応じてMerge、Squash、Rebaseを制限              |
+| Require status checks to pass             | 有効                         | CIが成功するまでマージを禁止                             |
+| Require branches to be up to date         | 無効                         | 最新の対象ブランチ上でCI成功を必須化する場合に有効       |
+| Do not require status checks on creation  | 無効                         | 新規ブランチ作成時だけstatus checkを免除する場合に有効   |
+| Required status checks                    | `macos-check`、`linux-check` | macOSとLinux両方のNix評価・build成功を必須化             |
+| Block force pushes                        | 有効                         | 共有履歴の強制書き換えを防止                             |
+| Require code scanning results             | 無効                         | CodeQLなどの脆弱性検査をマージ条件に追加                 |
+| Require code quality results              | 無効                         | 静的解析や品質基準をマージ条件に追加                     |
+| Automatically request Copilot code review | 無効                         | Copilotによる自動レビューを利用する場合に有効            |
 
 `Default branch`を対象にすると、デフォルトブランチ名を変更した場合もRulesetの対象が追従します。
 
@@ -99,6 +99,7 @@ nix-stationでは次の値を設定します。
 保存後、Rulesets一覧で`Protect main`が`Active`と表示されることを確認します。
 
 > [!NOTE]
+>
 > `Evaluate`はルール違反を記録しますが、ブランチ更新はブロックしません。既存リポジトリへ段階的に導入する場合の事前確認に利用できます。
 
 > [!IMPORTANT]
@@ -261,7 +262,7 @@ userProfile = {
 
 必須項目の未定義、空文字、型不正、またはプロファイルファイル不在は評価エラーです。
 
-個人用の`user-profiles/hisuilab*`は`.gitignore`対象です。Gitで追跡されないファイルは通常の純粋なFlake入力やCIに含まれないため、CIで検証する用途には`user-profiles/test.nix`とテストfixtureを使用します。
+`guest.nix`、ローダーの`default.nix`、リポジトリテスト用の`test.nix`を除き、`user-profiles/*.nix`は`.gitignore`対象です。個人プロファイルはローカルで作成し、共有・CI用途のプロファイルだけ`.gitignore`へ例外を追加してGitで追跡します。Gitで追跡されないファイルはFlakeの入力方式によって評価対象外になるため、CIでは`user-profiles/test.nix`とテストfixtureを使用します。
 
 ## モジュール構成
 
@@ -274,6 +275,13 @@ Home Managerで管理するユーザー環境は`modules/home/<tool>/default.nix
 ```text
 modules/home/
 ├── default.nix
+├── platforms/
+│   ├── darwin/default.nix
+│   ├── ubuntu/default.nix
+│   └── raspberry-pi-os/default.nix
+├── environments/
+│   ├── native/default.nix
+│   └── wsl/default.nix
 ├── roles/
 │   ├── desktop.nix
 │   ├── laptop.nix
@@ -282,7 +290,19 @@ modules/home/
 └── zsh/default.nix
 ```
 
-`modules/home/default.nix`が`meta.role`と`homeManager`設定から有効なモジュールを選択します。各ツールのモジュールはHome Managerのオプションを使用し、ユーザー単位のインストールと設定を管理します。
+`modules/home/default.nix`が`meta.os`、`meta.environment`、`meta.role`、`homeManager`設定から有効なモジュールを選択します。Home Managerはツールフラグがすべて無効でも生成され、OS、実行環境、roleの基本設定を適用します。
+
+ツール追加時は`modules/home/<tool>/default.nix`を作成し、`modules/home/default.nix`の`toolModules`へ登録します。host validatorは`homeManager`配下の任意のbooleanフラグを受け付けるため、既存host configの更新は不要です。未登録のツール名はHome Manager評価時にエラーになります。
+
+OS固有設定は次の責任で管理します。
+
+- `platforms/darwin/`: macOSユーザー固有設定
+- `platforms/ubuntu/`: Ubuntuユーザー固有設定
+- `platforms/raspberry-pi-os/`: Raspberry Pi OSユーザー固有設定
+- `environments/native/`: 通常のOS環境向け設定
+- `environments/wsl/`: WSL統合設定
+- `roles/`: OSに依存しない用途別設定
+- `<tool>/`: OS共通のツール設定
 
 ### Platformとの統合
 
@@ -290,12 +310,16 @@ macOSはnix-darwinとHome Managerを統合し、UbuntuとRaspberry Pi OSはstand
 
 ```text
 flake.nix
-├── modules/darwin/default.nix
-│   ├── modules/darwin/roles/<role>.nix
+├── modules/system/darwin/default.nix
+│   ├── modules/system/darwin/core/default.nix
+│   ├── modules/system/darwin/features/default.nix
+│   ├── modules/system/darwin/roles/<role>.nix
 │   └── Home Manager
 │       └── modules/home/default.nix
 └── standalone Home Manager
     └── modules/home/default.nix
+        ├── modules/home/platforms/<os>/default.nix
+        ├── modules/home/environments/<environment>/default.nix
         ├── modules/home/roles/<role>.nix
         └── modules/home/<tool>/default.nix
 ```
@@ -304,16 +328,59 @@ flake.nix
 
 - `hosts/default.nix`: 管理対象hostの登録
 - `flake.nix`: platform別のnix-darwin・Home Manager構成の生成
-- `lib/host-config.nix`: host設定の必須項目、platform、role、systemの検証
-- `modules/darwin/default.nix`: nix-darwinとHome Managerの統合
-- `modules/darwin/roles/<role>.nix`: macOSの用途別システム設定
+- `lib/host-config.nix`: host設定の必須項目、platform、os、environment、role、systemの検証
+- `modules/system/darwin/default.nix`: nix-darwinとHome Managerの統合
+- `modules/system/darwin/core/default.nix`: Nix設定、タイムゾーン、stateVersion
+- `modules/system/darwin/features/<feature>/`: macOS defaultsなど機能単位の設定
+- `modules/system/darwin/homebrew/default.nix`: Homebrewパッケージとactivation方針
+- `modules/system/darwin/roles/<role>.nix`: macOSの用途別システム設定
 - `modules/home/default.nix`: roleと機能フラグに応じたHome Managerモジュールの選択
+- `modules/home/platforms/<os>/`: OS固有のユーザー設定
+- `modules/home/environments/<environment>/`: native、WSLなど実行環境固有の設定
 - `modules/home/roles/<role>.nix`: OSに依存しない用途別ユーザー設定
 - `modules/home/<tool>/`: GitやZshなど、ユーザー環境の機能単位の設定
 
 nix-darwinモジュールから`modules/home/<tool>/`を直接importせず、Home Managerを経由します。モジュールの選択処理は`modules/home/default.nix`に集約します。
 
-Homebrew、ログインシェル、システムデフォルトなどmacOS固有の設定は`modules/darwin/`へ配置します。Raspberry Pi OSのブート、ディスク、ネットワーク、システムサービスは今回のNix管理対象外です。
+HomebrewやログインシェルなどmacOSシステム固有の設定は`modules/system/darwin/`へ配置します。`modules/common/`は使用せず、OSに依存しないユーザー設定はHome Managerへ配置します。
+
+macOS defaultsは次の単位で管理します。
+
+```text
+modules/system/darwin/features/
+├── default.nix
+├── appearance/default.nix
+├── dock/default.nix
+├── finder/default.nix
+└── input/default.nix
+```
+
+各featureの`default.nix`に設定例コメントを用意しています。実装時は対象featureへ設定を追加し、host側で有効化します。
+
+```nix
+darwin.features = {
+  appearance = true;
+  finder = true;
+};
+```
+
+Finderサイドバーの初期化や`killall`を伴うactivation scriptなど、既存ユーザー環境へ影響する処理は通常のFinder defaultsと分離し、明示的に有効化する独立featureとして追加します。
+
+HomebrewはmacOS hostの`darwin.homebrew`で管理します。
+
+```nix
+darwin.homebrew = {
+  enable = true;
+  brews = [ "wget" ];
+  casks = [ "ghostty" ];
+  taps = [ ];
+  masApps = { };
+};
+```
+
+`enable = true`の場合、未指定のactivation方針は`autoUpdate = true`、`upgrade = true`、`cleanup = "zap"`です。既存の手動インストールを削除する可能性があるため、`cleanup`を使用するhostでは適用前に管理対象を確認します。方針を変更する場合は`darwin.homebrew.onActivation`で上書きします。
+
+Raspberry Pi OSのブート、ディスク、ネットワーク、システムサービスは今回のNix管理対象外です。
 
 ### Host設定
 
@@ -324,22 +391,50 @@ meta = {
   hostname = "HisuiLab-Mac-mini";
   system = "aarch64-darwin";
   platform = "darwin";
+  os = "darwin";
+  environment = "native";
   role = "desktop";
 };
 ```
 
 host IDは小文字kebab-caseのディレクトリ名と`hosts/default.nix`の登録キーです。`meta.hostname`は任意で、省略時はhost IDを使用します。
 
-| platform | 対象 | flake出力 |
-|---|---|---|
-| `darwin` | macOS | `darwinConfigurations.<host-id>` |
-| `home-manager` | Ubuntu・Raspberry Pi OS | `homeConfigurations.<host-id>` |
+`darwin`では`meta.hostname`を`networking.hostName`へ反映します。standalone Home ManagerはOSのhostnameを変更できないため、Linuxの`meta.hostname`はhost識別用のメタデータです。
 
-`role`は`desktop`、`laptop`、`server`から選択します。platformとroleは独立しており、Mac miniのdesktop、Ubuntuのserverなどを表現できます。
+| platform       | 対象                                   | flake出力                        |
+| -------------- | -------------------------------------- | -------------------------------- |
+| `darwin`       | macOS                                  | `darwinConfigurations.<host-id>` |
+| `home-manager` | Ubuntu・Ubuntu on WSL・Raspberry Pi OS | `homeConfigurations.<host-id>`   |
+
+`platform`は構成の生成方式、`os`はHome ManagerのOS固有モジュール、`environment`は実行環境固有モジュール、`role`は用途別モジュールを選択します。
+
+| 項目          | 例       | 責任                                             |
+| ------------- | -------- | ------------------------------------------------ |
+| `platform`    | `darwin` | nix-darwinまたはstandalone Home Managerの選択    |
+| `os`          | `ubuntu` | `modules/home/platforms/<os>/`の選択             |
+| `environment` | `wsl`    | `modules/home/environments/<environment>/`の選択 |
+| `role`        | `server` | `modules/home/roles/<role>.nix`の選択            |
+
+`platform = "darwin"`では`os = "darwin"`かつ`environment = "native"`を指定します。`platform = "home-manager"`では`os = "ubuntu"`または`raspberry-pi-os`を指定します。現在の`environment = "wsl"`は`os = "ubuntu"`のみ対応します。
+
+Ubuntu on WSLのhost例:
+
+```nix
+meta = {
+  hostname = "ubuntu-wsl";
+  system = "x86_64-linux";
+  platform = "home-manager";
+  os = "ubuntu";
+  environment = "wsl";
+  role = "desktop";
+};
+```
+
+WSLでは`modules/home/platforms/ubuntu/`と`modules/home/environments/wsl/`の両方を読み込みます。現在は`wslu`と`BROWSER=wslview`を有効化します。Windows本体の設定やWSLディストリビューションの作成は管理対象外です。
 
 ### Home Manager設定
 
-各hostの`config.nix`でユーザー環境の機能を選択します。
+各hostの`config.nix`でユーザー環境の機能を選択します。`homeManager`自体と各フラグは省略可能で、未指定値は`false`として扱います。
 
 ```nix
 homeManager = {
@@ -350,7 +445,7 @@ homeManager = {
 
 - `homeManager.git = true`: `userProfile.git.userName`と`userProfile.git.userEmail`をGit設定へ反映
 - `homeManager.zsh = true`: 最小限のZsh設定と関連ツールを有効化
-- すべて`false`: ツール固有のHome Managerモジュールを読み込まない
+- すべて`false`: roleとHome Manager基盤のみ生成
 
 macOS統合では、`userProfile.username`をmacOSのユーザーとホームディレクトリへ関連付けます。`homeManager.zsh = true`の場合はZshをログインシェルとして設定します。`guest`と`test`は評価・ビルドテスト用とし、実機への適用時は既存のmacOSユーザーに対応するプロファイルを指定します。
 
@@ -361,6 +456,7 @@ macOS統合では、`userProfile.username`をmacOSのユーザーとホームデ
 - 各ツールのテストを`tests/home/<tool>/default.nix`で管理
 - Home Manager統合テストを`tests/home/integration.nix`で管理
 - nix-darwinからHome Managerまでの統合テストを`tests/darwin/integration.nix`で管理
+- macOS feature分流を`tests/darwin/features/default.nix`で管理
 - `darwinConfigurations.mac-mini.system`とstandalone Home Manager構成を評価
 
 完成形:
@@ -373,10 +469,13 @@ tests/
 ├── home/
 │   ├── default.nix
 │   ├── integration.nix
+│   ├── environments/default.nix
 │   ├── git/default.nix
+│   ├── platforms/default.nix
 │   ├── roles/default.nix
 │   └── zsh/default.nix
 ├── darwin/
+│   ├── features/default.nix
 │   └── integration.nix
 └── user-profile/
     ├── default.nix
@@ -394,9 +493,18 @@ GitHub Actionsは次のタイミングで実行されます。
 
 現在のCI:
 
-- Runner: `macos-latest`
-- Nix: `DeterminateSystems/nix-installer-action`
-- Command: `nix flake check`
+- `macos-check`: 全system評価とmacOS checksの実ビルド
+- `linux-check`: Ubuntu native・WSL Home Manager構成の実ビルド
+- Nix: Determinate Nix `v3.21.1`
+- Action: `v3.21.1`の完全なcommit SHAへ固定
+
+Raspberry Pi OSの`aarch64-linux`構成は`macos-check`の`--all-systems --no-build`で評価します。ARM64 self-hosted runnerやQEMUを利用者の前提にせず、Raspberry Pi OSへNixとHome Managerを導入すれば同じ構成を利用できる方針です。実機固有の問題はRaspberry Pi上での適用時に確認します。
+
+WSLは`ubuntu-latest`上でHome Manager構成を実ビルドします。これはLinuxソフトウェアとしての依存関係と生成結果を保証しますが、Windowsアプリ起動や`wslview`の実動作までは保証しません。
+
+Nixを更新する場合は、`.github/workflows/ci.yml`内のAction SHAと2箇所の`source-tag`を同じリリースへ更新します。通常はファイル1つの変更とCI再実行だけで済み、所要時間は数分程度です。Nixの挙動変更がFlake評価へ影響した場合のみ、警告や評価エラーへの対応が追加で必要です。`nixpkgs`、nix-darwin、Home Managerの更新は別管理であり、Nix本体の更新だけでは`flake.lock`の変更は不要です。
+
+Rulesetでrequired status checksを設定する場合は、旧`nix-check`ではなく`macos-check`と`linux-check`を必須にします。
 
 定義は[`.github/workflows/ci.yml`](../.github/workflows/ci.yml)にあります。
 

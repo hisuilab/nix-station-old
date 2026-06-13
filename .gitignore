@@ -17,6 +17,7 @@ result-*
 # Secrets
 .env
 .env.*
+hosts/**/secrets/secret.nix
 
 # ==================================================
 # General Cache

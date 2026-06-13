@@ -56,10 +56,11 @@ let
         [ username gitUserName gitUserEmail description ]
         profile;
 
-  loadUserProfile = {
-    name,
-    profilesDir ? ./.,
-  }:
+  loadUserProfile =
+    { name
+    , profilesDir ? ./.
+    ,
+    }:
     let
       profileName = validateProfileName name;
       profilePath = profilesDir + "/${profileName}.nix";

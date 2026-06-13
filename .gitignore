@@ -47,4 +47,7 @@ Thumbs.db
 # ==================================================
 # Local user profiles
 # ==================================================
-user-profiles/hisuilab*
+user-profiles/*.nix
+!user-profiles/default.nix
+!user-profiles/guest.nix
+!user-profiles/test.nix

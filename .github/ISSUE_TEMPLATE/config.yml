@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ideas and questions
+    url: https://github.com/hisuilab/nix-station/discussions
+    about: Use Discussions for ideas and questions that are not ready for implementation.

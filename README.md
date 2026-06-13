@@ -29,6 +29,40 @@ nix flake check path:. --no-build --all-systems
 nix build path:.#darwinConfigurations.mac-mini.system --no-link
 ```
 
+## Apply Configuration
+
+適用前に、対象hostの`userProfile.name`を実際に利用するプロファイル名へ変更します。`guest`は評価・試用向けです。
+
+macOS:
+
+```bash
+sudo nix run github:LnL7/nix-darwin/nix-darwin-24.11#darwin-rebuild -- \
+  switch --flake path:.#mac-mini
+```
+
+Ubuntu:
+
+```bash
+nix run github:nix-community/home-manager/release-24.11 -- \
+  switch --flake path:.#ubuntu-desktop
+```
+
+Ubuntu on WSL:
+
+```bash
+nix run github:nix-community/home-manager/release-24.11 -- \
+  switch --flake path:.#ubuntu-wsl
+```
+
+Raspberry Pi OS:
+
+```bash
+nix run github:nix-community/home-manager/release-24.11 -- \
+  switch --flake path:.#raspberry-pi-5
+```
+
+2回目以降も同じコマンドで更新します。Linux系hostではシステム全体ではなく、Home Managerが管理するユーザー環境だけを適用します。
+
 ## Hosts
 
 管理対象hostは[`hosts/default.nix`](hosts/default.nix)へ登録します。
@@ -56,6 +90,8 @@ hosts/
 Home Managerは有効なツールがない場合も常に生成されます。ツールフラグは省略可能で、未指定値は`false`として扱います。未登録のツール名を指定した場合は評価エラーになります。
 
 OS固有のユーザー設定は`modules/home/platforms/<os>/`、WSLなど実行環境固有の設定は`modules/home/environments/<environment>/`、共通ツール設定は`modules/home/<tool>/`で管理します。
+
+`role`は端末名ではなく用途を表します。例えば、デスクトップPCでも常時稼働サービスを中心に管理する場合は`server`を選択できます。
 
 ## User Profiles
 

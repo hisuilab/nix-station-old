@@ -1,11 +1,11 @@
 {
   meta = {
-    hostname = "HisuiLab-Ubuntu-desktop";
+    hostname = "ubuntu-wsl";
     system = "x86_64-linux";
     platform = "home-manager";
     os = "ubuntu";
-    environment = "native";
-    role = "server";
+    environment = "wsl";
+    role = "desktop";
   };
 
   userProfile.name = "guest";

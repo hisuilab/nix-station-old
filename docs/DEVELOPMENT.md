@@ -286,7 +286,9 @@ modules/home/
 │   ├── desktop.nix
 │   ├── laptop.nix
 │   └── server.nix
+├── gh/default.nix
 ├── git/default.nix
+├── cli-tools/default.nix
 └── zsh/default.nix
 ```
 
@@ -367,7 +369,7 @@ darwin.features = {
 
 Finderサイドバーの初期化や`killall`を伴うactivation scriptなど、既存ユーザー環境へ影響する処理は通常のFinder defaultsと分離し、明示的に有効化する独立featureとして追加します。
 
-HomebrewはmacOS hostの`darwin.homebrew`で管理します。
+Homebrew本体はnix-homebrewで導入し、formula・cask・Mac App Storeアプリはnix-darwinの`homebrew`設定で管理します。macOS hostでは初期状態から有効です。
 
 ```nix
 darwin.homebrew = {
@@ -378,6 +380,10 @@ darwin.homebrew = {
   masApps = { };
 };
 ```
+
+新規環境ではHomebrewを標準prefixへ導入します。既存Homebrewは`autoMigrate = true`で管理下へ移行します。Apple SiliconではRosetta用Homebrewも有効化し、`brew`ランチャーがアーキテクチャに応じたprefixを選択します。
+
+現在のnix-homebrewはnix-darwin 24.11と互換性のあるrevisionへ固定しています。nix-darwinを更新する際はnix-homebrewの固定revisionも更新し、`nix flake check path:.`でHomebrew本体のbuildまで確認します。
 
 `enable = true`の場合、未指定のactivation方針は`autoUpdate = true`、`upgrade = true`、`cleanup = "none"`です。宣言外パッケージを削除する場合だけ、host側で`cleanup = "uninstall"`または`"zap"`を明示します。
 
@@ -478,8 +484,12 @@ homeManager = {
 ```
 
 - `homeManager.git = true`: `userProfile.git.userName`と`userProfile.git.userEmail`をGit設定へ反映
-- `homeManager.zsh = true`: 最小限のZsh設定と関連ツールを有効化
+- `homeManager.zsh = true`: 最小限のZsh設定を有効化
+- `homeManager.gh = true`: GitHub CLIを有効化
+- `homeManager.cliTools = true`: Devbox、Claude Code、ターミナル操作、検索などのCLIを導入
 - すべて`false`: roleとHome Manager基盤のみ生成
+
+DockerはmacOSでは`docker-desktop` caskで管理します。Ubuntu、WSL、Raspberry Pi OSではDocker CLIをHome Managerで導入します。Docker daemonの起動とユーザー権限はシステム設定を伴うため、standalone Home Managerの管理対象外です。
 
 macOS統合では、`userProfile.username`をmacOSのユーザーとホームディレクトリへ関連付けます。`homeManager.zsh = true`の場合はZshをログインシェルとして設定します。`guest`と`test`は評価・ビルドテスト用とし、実機への適用時は既存のmacOSユーザーに対応するプロファイルを指定します。
 

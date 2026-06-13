@@ -155,7 +155,7 @@ in
       homebrewEnabled.config.homebrew.enable
       && map (brew: brew.name) homebrewEnabled.config.homebrew.brews == [ "wget" ]
       && map (cask: cask.name) homebrewEnabled.config.homebrew.casks == [ "ghostty" ]
-      && homebrewEnabled.config.homebrew.onActivation.cleanup == "zap"
+      && homebrewEnabled.config.homebrew.onActivation.cleanup == "none"
     then
       homebrewEnabled.system
     else

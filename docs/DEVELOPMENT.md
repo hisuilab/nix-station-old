@@ -51,6 +51,93 @@ Pull Request本文では次を確認します。
 `main`への直接pushを禁止し、Pull RequestとCI成功を必須とします。
 通常の変更は作業ブランチで実施し、Pull Requestを経由して`main`へマージします。
 
+#### Rulesetの作成
+
+GitHubリポジトリで次の画面を開きます。
+
+```text
+Settings
+└── Rules
+    └── Rulesets
+        └── New ruleset
+            └── New branch ruleset
+```
+
+nix-stationでは次の値を設定します。
+
+| 項目                                      | 今回の設定値   | 用途・有効にする場面                                     |
+| ----------------------------------------- | -------------- | -------------------------------------------------------- |
+| Ruleset Name                              | `Protect main` | Rulesets一覧で対象と目的を識別                           |
+| Enforcement status                        | `Active`       | ルールを実際に適用。検証だけの場合は`Evaluate`を使用     |
+| Bypass list                               | 空             | 緊急対応者や自動化Appへ例外を許可する場合のみ追加        |
+| Target branches                           | Default branch | デフォルトブランチを保護。固定名ならpatternで`main`指定  |
+| Restrict creations                        | 無効           | 特定名のブランチ作成を管理者などに限定する場合に有効     |
+| Restrict updates                          | 無効           | 対象ブランチの更新者をBypass対象だけに限定する場合に有効 |
+| Restrict deletions                        | 有効           | `main`など重要ブランチの誤削除を防止                     |
+| Require linear history                    | 無効           | merge commitを禁止し、履歴を直線化する場合に有効         |
+| Require deployments to succeed            | 無効           | stagingやproductionへのデプロイ成功をマージ条件に追加    |
+| Require signed commits                    | 無効           | コミット作成者の検証を厳格化する場合に有効               |
+| Require a pull request before merging     | 有効           | 直接pushを避け、レビューとCIを経由                       |
+| Required approvals                        | `0`            | チーム開発では`1`以上にして第三者承認を必須化            |
+| Dismiss stale pull request approvals      | 無効           | 承認後の追加変更で古い承認を無効化する場合に有効         |
+| Require review from Code Owners           | 無効           | 所有者ごとのレビューを必須化する場合に有効               |
+| Require approval of most recent push      | 無効           | 最後の変更をpushした本人以外の承認を必須化               |
+| Require conversation resolution           | 無効           | 未解決のレビューコメントがあるPRのマージを禁止           |
+| Allowed merge methods                     | すべて         | 履歴方針に応じてMerge、Squash、Rebaseを制限              |
+| Require status checks to pass             | 有効           | CIが成功するまでマージを禁止                             |
+| Require branches to be up to date         | 無効           | 最新の対象ブランチ上でCI成功を必須化する場合に有効       |
+| Do not require status checks on creation  | 無効           | 新規ブランチ作成時だけstatus checkを免除する場合に有効   |
+| Required status checks                    | `nix-check`    | GitHub ActionsのNix評価成功を必須化                      |
+| Block force pushes                        | 有効           | 共有履歴の強制書き換えを防止                             |
+| Require code scanning results             | 無効           | CodeQLなどの脆弱性検査をマージ条件に追加                 |
+| Require code quality results              | 無効           | 静的解析や品質基準をマージ条件に追加                     |
+| Automatically request Copilot code review | 無効           | Copilotによる自動レビューを利用する場合に有効            |
+
+`Default branch`を対象にすると、デフォルトブランチ名を変更した場合もRulesetの対象が追従します。
+
+設定内容を確認し、`Create`でRulesetを保存します。
+保存後、Rulesets一覧で`Protect main`が`Active`と表示されることを確認します。
+
+> [!NOTE]
+> `Evaluate`はルール違反を記録しますが、ブランチ更新はブロックしません。既存リポジトリへ段階的に導入する場合の事前確認に利用できます。
+
+> [!IMPORTANT]
+> Bypass listが空の場合、管理者もRulesetの対象になります。CI障害時などの緊急対応方法を決めてから有効化してください。
+
+#### プロジェクト別の設定例
+
+| 設定                         | 個人開発 | 少人数チーム | 本番・大規模チーム   |
+| ---------------------------- | -------- | ------------ | -------------------- |
+| Pull Request必須             | 推奨     | 必須         | 必須                 |
+| Required approvals           | `0`      | `1`          | `2`以上              |
+| Dismiss stale approvals      | 任意     | 推奨         | 必須                 |
+| Code Owners                  | 不要     | 任意         | 推奨                 |
+| Most recent pushの第三者承認 | 不要     | 任意         | 推奨                 |
+| Conversation resolution      | 任意     | 推奨         | 必須                 |
+| Status checks                | 必須     | 必須         | 必須                 |
+| Branch up to date            | 任意     | 任意         | 推奨                 |
+| Deployment成功               | 不要     | 運用時のみ   | 推奨                 |
+| Code scanning / quality      | 任意     | 推奨         | 必須                 |
+| Signed commits               | 任意     | 任意         | セキュリティ要件次第 |
+| Force push / deletion禁止    | 推奨     | 必須         | 必須                 |
+| Bypass list                  | 原則空   | 管理者を限定 | 管理チーム・App限定  |
+
+> [!TIP]
+> 最初からすべてを必須化せず、個人開発ではPRとCIから開始し、参加人数や本番影響が増えた段階で承認、Code Owners、セキュリティ検査を追加すると運用負荷を抑えられます。
+
+#### Ruleset運用のTips
+
+1. CIのjob名を変更した場合は、RulesetのRequired status checksも更新
+2. CI実績がない新しいcheckは候補に表示されないため、一度GitHub Actionsを実行
+3. Required approvalsを`1`以上にすると、個人開発では自分のPRを自分で承認できずマージ不能になる場合あり
+4. Bypass listを空にすると管理者も通常フローへ従うため、緊急対応方法を事前に決定
+5. `Restrict updates`は直接pushだけでなく通常の更新も強く制限するため、PR必須化だけが目的なら無効を維持
+6. Required status checksにはworkflow名ではなく、GitHub上に表示されるcheck名を指定
+7. Ruleset変更後はテスト用PRで、CI完了前にマージできず、成功後にマージ可能になることを確認
+
+> [!IMPORTANT]
+> 必須checkを削除または改名したままRulesetへ残すと、成功結果を生成できずマージ不能になる可能性があります。GitHub Actions変更とRuleset変更は同時に確認してください。
+
 ## ブランチ命名
 
 Issue番号と目的が分かる名前を使用します。

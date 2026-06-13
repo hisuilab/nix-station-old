@@ -16,7 +16,11 @@ let
     git = true;
     zsh = false;
   };
-  hostConfig.meta.role = "desktop";
+  hostConfig.meta = {
+    os = "darwin";
+    environment = "native";
+    role = "desktop";
+  };
   selectedModules = (import ../../../modules/home/default.nix {
     inherit homeManager hostConfig lib;
   }).imports;

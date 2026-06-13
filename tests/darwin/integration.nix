@@ -11,6 +11,8 @@ let
       hostname = hostId;
       inherit system;
       platform = "darwin";
+      os = "darwin";
+      environment = "native";
       inherit role;
     };
     userProfile.name = "test";
@@ -71,6 +73,21 @@ let
     inherit userProfile;
   };
 
+  homebrewEnabled = mkDarwinConfiguration {
+    hostId = "darwin-homebrew-test";
+    hostConfig = (makeHostConfig "macos-homebrew-test" "desktop" {
+      git = false;
+      zsh = false;
+    }) // {
+      darwin.homebrew = {
+        enable = true;
+        brews = [ "wget" ];
+        casks = [ "ghostty" ];
+      };
+    };
+    inherit userProfile;
+  };
+
   username = userProfile.username;
   enabledHome = enabled.config.home-manager.users.${username};
   gitOnlyHome = gitOnly.config.home-manager.users.${username};
@@ -93,10 +110,20 @@ in
       throw "macOS integration test failed: enabled Home Manager user or Zsh shell missing";
 
   disabledSystem =
-    if !(builtins.hasAttr username disabled.config.home-manager.users) then
+    let
+      disabledHome = disabled.config.home-manager.users.${username};
+    in
+    if
+      builtins.hasAttr username disabled.config.home-manager.users
+      && disabledHome.nixStation.homeRole == "server"
+      && !disabledHome.programs.git.enable
+      && !disabledHome.programs.zsh.enable
+      && !disabled.config.programs.zsh.enable
+      && disabled.config.users.users.${username}.shell == null
+    then
       disabled.system
     else
-      throw "macOS integration test failed: disabled Home Manager user was generated";
+      throw "macOS integration test failed: base Home Manager user was not generated";
 
   routingSystem =
     if
@@ -122,4 +149,22 @@ in
       desktop.system
     else
       throw "nix-darwin integration test failed: host role selected incorrect module";
+
+  homebrewSystem =
+    if
+      homebrewEnabled.config.homebrew.enable
+      && map (brew: brew.name) homebrewEnabled.config.homebrew.brews == [ "wget" ]
+      && map (cask: cask.name) homebrewEnabled.config.homebrew.casks == [ "ghostty" ]
+      && homebrewEnabled.config.homebrew.onActivation.cleanup == "zap"
+    then
+      homebrewEnabled.system
+    else
+      throw "nix-darwin integration test failed: Homebrew settings were not applied: ${
+        builtins.toJSON {
+          enable = homebrewEnabled.config.homebrew.enable;
+          brews = homebrewEnabled.config.homebrew.brews;
+          casks = homebrewEnabled.config.homebrew.casks;
+          cleanup = homebrewEnabled.config.homebrew.onActivation.cleanup;
+        }
+      }";
 }

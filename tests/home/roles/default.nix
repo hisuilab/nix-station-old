@@ -9,7 +9,11 @@ let
 
   selectedModules = role:
     (import ../../../modules/home/default.nix {
-      hostConfig.meta = { inherit role; };
+      hostConfig.meta = {
+        os = "darwin";
+        environment = "native";
+        inherit role;
+      };
       inherit homeManager lib;
     }).imports;
 in

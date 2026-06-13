@@ -85,9 +85,8 @@
 
             # 共通設定、Home Manager、nix-darwin設定の統合
             modules = [
-              ./modules/common/default.nix
               home-manager.darwinModules.home-manager
-              ./modules/darwin/default.nix
+              ./modules/system/darwin/default.nix
 
               # ユーザープロファイルの全項目を評価
               (builtins.deepSeq userProfile {
@@ -148,8 +147,8 @@
           userProfile = loadUserProfile hostConfig;
         };
 
-      # 開発環境・共通テストの評価system
-      checkSystem = validatedHostConfigs.mac-mini.meta.system;
+      # host名変更の影響を受けない開発・テスト用system
+      checkSystem = "aarch64-darwin";
 
       # リポジトリ内テスト専用プロファイル
       testUserProfile = userProfiles.loadUserProfile {
@@ -205,6 +204,13 @@
               userProfile = testUserProfile;
             }).roleRoutingSystem;
 
+          # Homebrew設定の統合評価
+          darwinHomebrewEval =
+            (import ./tests/darwin/integration.nix {
+              inherit mkDarwinConfiguration;
+              userProfile = testUserProfile;
+            }).homebrewSystem;
+
           # 登録済みmacOS hostのシステム評価
           macMiniEval = self.darwinConfigurations.mac-mini.system;
           macbookAirEval = self.darwinConfigurations.macbook-air.system;
@@ -221,12 +227,16 @@
         };
 
         # Raspberry Pi OS向けHome Manager構成の評価
-        aarch64-linux.rpi5HomeEval =
-          self.homeConfigurations.rpi5.activationPackage;
+        aarch64-linux.raspberryPi5HomeEval =
+          self.homeConfigurations.raspberry-pi-5.activationPackage;
 
         # Ubuntu向けHome Manager構成の評価
         x86_64-linux.ubuntuDesktopHomeEval =
           self.homeConfigurations.ubuntu-desktop.activationPackage;
+
+        # Ubuntu WSL向けHome Manager構成の評価
+        x86_64-linux.ubuntuWslHomeEval =
+          self.homeConfigurations.ubuntu-wsl.activationPackage;
       };
     };
 }

@@ -9,7 +9,11 @@ let
     git = true;
     zsh = true;
   };
-  hostConfig.meta.role = "desktop";
+  hostConfig.meta = {
+    os = "darwin";
+    environment = "native";
+    role = "desktop";
+  };
 in
 home-manager.lib.homeManagerConfiguration {
   pkgs = nixpkgs.legacyPackages.${system};

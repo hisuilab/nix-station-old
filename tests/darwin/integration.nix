@@ -6,15 +6,20 @@
 let
   system = "aarch64-darwin";
 
-  makeHostConfig = hostname: homeManager: {
+  makeHostConfig = hostId: role: homeManager: {
     meta = {
-      inherit hostname system;
+      hostname = hostId;
+      inherit system;
+      platform = "darwin";
+      inherit role;
     };
+    userProfile.name = "test";
     inherit homeManager;
   };
 
   enabled = mkDarwinConfiguration {
-    hostConfig = makeHostConfig "macos-enabled-test" {
+    hostId = "darwin-enabled-test";
+    hostConfig = makeHostConfig "macos-enabled-test" "server" {
       git = true;
       zsh = true;
     };
@@ -22,7 +27,8 @@ let
   };
 
   disabled = mkDarwinConfiguration {
-    hostConfig = makeHostConfig "macos-disabled-test" {
+    hostId = "darwin-disabled-test";
+    hostConfig = makeHostConfig "macos-disabled-test" "server" {
       git = false;
       zsh = false;
     };
@@ -30,7 +36,8 @@ let
   };
 
   gitOnly = mkDarwinConfiguration {
-    hostConfig = makeHostConfig "macos-git-test" {
+    hostId = "darwin-git-test";
+    hostConfig = makeHostConfig "macos-git-test" "server" {
       git = true;
       zsh = false;
     };
@@ -38,9 +45,28 @@ let
   };
 
   zshOnly = mkDarwinConfiguration {
-    hostConfig = makeHostConfig "macos-zsh-test" {
+    hostId = "darwin-zsh-test";
+    hostConfig = makeHostConfig "macos-zsh-test" "server" {
       git = false;
       zsh = true;
+    };
+    inherit userProfile;
+  };
+
+  laptop = mkDarwinConfiguration {
+    hostId = "darwin-laptop-test";
+    hostConfig = makeHostConfig "macos-laptop-test" "laptop" {
+      git = false;
+      zsh = false;
+    };
+    inherit userProfile;
+  };
+
+  desktop = mkDarwinConfiguration {
+    hostId = "darwin-desktop-test";
+    hostConfig = makeHostConfig "macos-desktop-test" "desktop" {
+      git = false;
+      zsh = false;
     };
     inherit userProfile;
   };
@@ -86,4 +112,14 @@ in
       gitOnly.system
     else
       throw "macOS integration test failed: Home Manager flags selected incorrect modules";
+
+  roleRoutingSystem =
+    if
+      enabled.config.nixStation.hostRole == "server"
+      && laptop.config.nixStation.hostRole == "laptop"
+      && desktop.config.nixStation.hostRole == "desktop"
+    then
+      desktop.system
+    else
+      throw "nix-darwin integration test failed: host role selected incorrect module";
 }

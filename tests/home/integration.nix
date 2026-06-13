@@ -9,12 +9,13 @@ let
     git = true;
     zsh = true;
   };
+  hostConfig.meta.role = "desktop";
 in
 home-manager.lib.homeManagerConfiguration {
   pkgs = nixpkgs.legacyPackages.${system};
 
   extraSpecialArgs = {
-    inherit homeManager userProfile;
+    inherit homeManager hostConfig userProfile;
   };
 
   modules = [

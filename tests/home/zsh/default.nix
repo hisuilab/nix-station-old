@@ -9,8 +9,9 @@ let
     git = false;
     zsh = true;
   };
+  hostConfig.meta.role = "desktop";
   selectedModules = (import ../../../modules/home/default.nix {
-    inherit homeManager lib;
+    inherit homeManager hostConfig lib;
   }).imports;
 in
 lib.runTests {

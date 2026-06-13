@@ -76,6 +76,8 @@ tests/
 │   ├── integration.nix
 │   ├── git/
 │   └── zsh/
+├── macOS/
+│   └── integration.nix
 └── user-profile/
     ├── default.nix
     └── fixtures/

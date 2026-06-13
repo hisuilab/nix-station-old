@@ -34,6 +34,35 @@
         name = userProfileName;
       };
 
+      # ホスト設定からnix-darwin構成を生成
+      mkDarwinConfiguration =
+        { hostConfig
+        , system ? hostConfig.meta.system
+        , userProfile
+        ,
+        }:
+        nix-darwin.lib.darwinSystem {
+          inherit system;
+
+          # macOSモジュールへのホスト・ユーザー設定の受け渡し
+          specialArgs = {
+            inherit hostConfig userProfile;
+            homeManager = hostConfig.homeManager;
+          };
+
+          # 共通設定、Home Manager、macOS設定の統合
+          modules = [
+            ./modules/common/default.nix
+            home-manager.darwinModules.home-manager
+            ./modules/macOS/default.nix
+
+            # ユーザープロファイルの検証
+            (builtins.deepSeq userProfile {
+              _module.args = { inherit userProfile; };
+            })
+          ];
+        };
+
     in
     {
       # 開発環境（devShell）の定義
@@ -48,30 +77,32 @@
 
       # M4 Mac mini（macOS）用のシステム定義を生成
       darwinConfigurations = {
-        "${serverConfig.meta.hostname}" = nix-darwin.lib.darwinSystem {
-          inherit system;
-          specialArgs = { inherit userProfile; };
-          modules = [
-            ./modules/common/default.nix
-
-            # プロファイル検証とモジュール引数への受け渡し
-            (builtins.deepSeq userProfile {
-              _module.args = { inherit userProfile; };
-            })
-
-            {
-              networking.hostName = serverConfig.meta.hostname;
-            }
-          ];
+        "${serverConfig.meta.hostname}" = mkDarwinConfiguration {
+          hostConfig = serverConfig;
+          inherit userProfile;
         };
       };
 
       # 評価テスト用の設定（nix flake check で検証可能にするための仕掛け）
       checks."${system}" = {
+        # Home Managerモジュール単体の統合評価
         homeModulesEval =
           (import ./tests/home/integration.nix {
             inherit home-manager nixpkgs system;
           }).activationPackage;
+        # macOSとHome Managerの有効・無効・分岐評価
+        macOSEnabledEval =
+          (import ./tests/macOS/integration.nix {
+            inherit mkDarwinConfiguration userProfile;
+          }).enabledSystem;
+        macOSDisabledEval =
+          (import ./tests/macOS/integration.nix {
+            inherit mkDarwinConfiguration userProfile;
+          }).disabledSystem;
+        macOSRoutingEval =
+          (import ./tests/macOS/integration.nix {
+            inherit mkDarwinConfiguration userProfile;
+          }).routingSystem;
         serverEval = self.darwinConfigurations.${serverConfig.meta.hostname}.system;
 
         tests =

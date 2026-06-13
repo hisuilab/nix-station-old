@@ -73,6 +73,20 @@ lib.runTests {
     expected = false;
   };
 
+  testHomeManagerPlatformRejectsDarwinSettings = {
+    expr = canValidate "ubuntu-desktop" (lib.recursiveUpdate validConfig {
+      meta = {
+        system = "x86_64-linux";
+        platform = "home-manager";
+        os = "ubuntu";
+        environment = "native";
+        role = "server";
+      };
+      darwin.homebrew.enable = true;
+    });
+    expected = false;
+  };
+
   testInvalidHostIdIsRejected = {
     expr = canValidate "HisuiLab Mac mini" validConfig;
     expected = false;

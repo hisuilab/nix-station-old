@@ -45,8 +45,7 @@ lib.runTests {
 
   testWslConfigUsesWslviewBrowser = {
     expr =
-      (import ../../../modules/home/environments/wsl/default.nix { inherit pkgs; })
-        .home.sessionVariables.BROWSER;
+      (import ../../../modules/home/environments/wsl/default.nix { inherit pkgs; }).home.sessionVariables.BROWSER;
     expected = "wslview";
   };
 }

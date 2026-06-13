@@ -234,12 +234,12 @@ nix build path:.#checks.aarch64-darwin.tests --no-link
 nix-darwinのシステム構成を適用せずにビルドします。
 
 ```bash
-nix build path:.#darwinConfigurations.server.system --no-link
+nix build path:.#darwinConfigurations.mac-mini.system --no-link
 ```
 
 ## User Profileの開発
 
-ホストが使用するプロファイルは`hosts/server/config.nix`で選択します。
+ホストが使用するプロファイルは`hosts/<host-id>/config.nix`で選択します。
 
 ```nix
 userProfile = {
@@ -274,40 +274,72 @@ Home Managerで管理するユーザー環境は`modules/home/<tool>/default.nix
 ```text
 modules/home/
 ├── default.nix
+├── roles/
+│   ├── desktop.nix
+│   ├── laptop.nix
+│   └── server.nix
 ├── git/default.nix
 └── zsh/default.nix
 ```
 
-`modules/home/default.nix`が`homeManager`設定から有効なモジュールを選択します。各ツールのモジュールはHome Managerのオプションを使用し、ユーザー単位のインストールと設定を管理します。
+`modules/home/default.nix`が`meta.role`と`homeManager`設定から有効なモジュールを選択します。各ツールのモジュールはHome Managerのオプションを使用し、ユーザー単位のインストールと設定を管理します。
 
-### macOSとの統合
+### Platformとの統合
 
-nix-darwinとHome Managerを次の経路で接続します。
+macOSはnix-darwinとHome Managerを統合し、UbuntuとRaspberry Pi OSはstandalone Home Managerを使用します。
 
 ```text
 flake.nix
-└── modules/macOS/default.nix
-    ├── modules/macOS/server.nix
-    └── Home Manager
-        └── modules/home/default.nix
-            └── modules/home/<tool>/default.nix
+├── modules/darwin/default.nix
+│   ├── modules/darwin/roles/<role>.nix
+│   └── Home Manager
+│       └── modules/home/default.nix
+└── standalone Home Manager
+    └── modules/home/default.nix
+        ├── modules/home/roles/<role>.nix
+        └── modules/home/<tool>/default.nix
 ```
 
 責務:
 
-- `flake.nix`: inputsの統合、ホスト設定の読み込み、`specialArgs`の受け渡し、nix-darwin構成の生成
-- `modules/macOS/default.nix`: macOSモジュールのエントリーポイント
-- `modules/macOS/server.nix`: server固有のmacOS設定
-- `modules/home/default.nix`: `homeManager`設定に応じたHome Managerモジュールの選択
+- `hosts/default.nix`: 管理対象hostの登録
+- `flake.nix`: platform別のnix-darwin・Home Manager構成の生成
+- `lib/host-config.nix`: host設定の必須項目、platform、role、systemの検証
+- `modules/darwin/default.nix`: nix-darwinとHome Managerの統合
+- `modules/darwin/roles/<role>.nix`: macOSの用途別システム設定
+- `modules/home/default.nix`: roleと機能フラグに応じたHome Managerモジュールの選択
+- `modules/home/roles/<role>.nix`: OSに依存しない用途別ユーザー設定
 - `modules/home/<tool>/`: GitやZshなど、ユーザー環境の機能単位の設定
 
-macOSモジュールから`modules/home/<tool>/`を直接importせず、Home Managerを経由します。モジュールの選択処理は`modules/home/default.nix`に集約し、`flake.nix`やmacOSモジュールに重複させません。
+nix-darwinモジュールから`modules/home/<tool>/`を直接importせず、Home Managerを経由します。モジュールの選択処理は`modules/home/default.nix`に集約します。
 
-Homebrew、ログインシェル、システムデフォルトなどmacOS固有の設定は`modules/macOS/`へ配置します。同じツールにユーザー設定とOS固有設定がある場合も、管理主体に応じて分離します。
+Homebrew、ログインシェル、システムデフォルトなどmacOS固有の設定は`modules/darwin/`へ配置します。Raspberry Pi OSのブート、ディスク、ネットワーク、システムサービスは今回のNix管理対象外です。
+
+### Host設定
+
+`hosts/<host-id>/config.nix`の`meta`で生成方式と用途を指定します。
+
+```nix
+meta = {
+  hostname = "HisuiLab-Mac-mini";
+  system = "aarch64-darwin";
+  platform = "darwin";
+  role = "desktop";
+};
+```
+
+host IDは小文字kebab-caseのディレクトリ名と`hosts/default.nix`の登録キーです。`meta.hostname`は任意で、省略時はhost IDを使用します。
+
+| platform | 対象 | flake出力 |
+|---|---|---|
+| `darwin` | macOS | `darwinConfigurations.<host-id>` |
+| `home-manager` | Ubuntu・Raspberry Pi OS | `homeConfigurations.<host-id>` |
+
+`role`は`desktop`、`laptop`、`server`から選択します。platformとroleは独立しており、Mac miniのdesktop、Ubuntuのserverなどを表現できます。
 
 ### Home Manager設定
 
-`hosts/server/config.nix`のフラグでユーザー環境の機能を選択します。
+各hostの`config.nix`でユーザー環境の機能を選択します。
 
 ```nix
 homeManager = {
@@ -328,27 +360,30 @@ macOS統合では、`userProfile.username`をmacOSのユーザーとホームデ
 - Home Managerから`modules/home/default.nix`、`modules/home/<tool>/`までの読み込み経路を統合テスト
 - 各ツールのテストを`tests/home/<tool>/default.nix`で管理
 - Home Manager統合テストを`tests/home/integration.nix`で管理
-- macOSモジュールからHome Managerまでの統合テストを`tests/macOS/integration.nix`で管理
-- `darwinConfigurations.server.system`の評価とビルドを確認
+- nix-darwinからHome Managerまでの統合テストを`tests/darwin/integration.nix`で管理
+- `darwinConfigurations.mac-mini.system`とstandalone Home Manager構成を評価
 
 完成形:
 
 ```text
 tests/
 ├── default.nix
+├── host-config/
+│   └── default.nix
 ├── home/
 │   ├── default.nix
 │   ├── integration.nix
 │   ├── git/default.nix
+│   ├── roles/default.nix
 │   └── zsh/default.nix
-├── macOS/
+├── darwin/
 │   └── integration.nix
 └── user-profile/
     ├── default.nix
     └── fixtures/
 ```
 
-複数ホストや異なるsystemへの対応時は、構成生成関数へ`system`を引数として渡し、単一のグローバル値への依存を避けます。
+host追加時は`hosts/<host-id>/config.nix`を作成し、`hosts/default.nix`へ登録します。
 
 ## CI
 

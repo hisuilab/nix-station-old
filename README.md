@@ -6,12 +6,12 @@
 
 Nixとnix-darwinを使い、ホスト・ユーザー・パッケージの設定を再現可能な形で管理するためのワークステーション構成です。
 
-現在は、macOSサーバー構成の評価、ユーザープロファイルの選択と検証、GitHub Actionsによる`nix flake check`を中心に整備しています。
+macOSはnix-darwin、UbuntuとRaspberry Pi OSはstandalone Home Managerで管理します。
 
 ## Requirements
 
 - Nix（Flakesを有効化）
-- macOS（現在の主要な評価対象は`aarch64-darwin`）
+- macOS、Ubuntu、またはRaspberry Pi OS
 - 任意: direnv / nix-direnv
 - 任意: pre-commit
 
@@ -26,12 +26,31 @@ nix flake check path:. --no-build --all-systems
 システム構成をビルドだけ行い、現在のmacOSへ適用しない場合:
 
 ```bash
-nix build path:.#darwinConfigurations.server.system --no-link
+nix build path:.#darwinConfigurations.mac-mini.system --no-link
 ```
+
+## Hosts
+
+管理対象hostは[`hosts/default.nix`](hosts/default.nix)へ登録します。
+
+```text
+hosts/
+├── default.nix
+├── mac-mini/config.nix
+├── macbook-air/config.nix
+├── rpi5/config.nix
+└── ubuntu-desktop/config.nix
+```
+
+小文字kebab-caseのディレクトリ名をflake出力のhost IDとして使用します。`meta.hostname`はOS・ネットワーク上の端末名で、省略時はhost IDを使用します。
+
+- `platform = "darwin"`: nix-darwinとHome Managerを生成
+- `platform = "home-manager"`: Ubuntu・Raspberry Pi OS向けstandalone Home Managerを生成
+- `role`: `desktop`、`laptop`、`server`から用途別モジュールを選択
 
 ## User Profiles
 
-ホストが使用するプロファイルは[`hosts/server/config.nix`](hosts/server/config.nix)で選択します。
+ホストが使用するプロファイルは各`hosts/<host-id>/config.nix`で選択します。
 
 ```nix
 userProfile = {
@@ -71,12 +90,15 @@ Flakeは通常、Gitで追跡されているファイルを入力として評価
 ```text
 tests/
 ├── default.nix
+├── host-config/
+│   └── default.nix
 ├── home/
 │   ├── default.nix
 │   ├── integration.nix
 │   ├── git/
+│   ├── roles/
 │   └── zsh/
-├── macOS/
+├── darwin/
 │   └── integration.nix
 └── user-profile/
     ├── default.nix

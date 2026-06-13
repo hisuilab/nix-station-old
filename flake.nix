@@ -6,10 +6,21 @@
     # 安定版のNixOS / Nixチャンネル
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
 
+    # 安定版に未収録のCLIツール
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     # macOSのシステム設定をNixで管理
     nix-darwin = {
       url = "github:LnL7/nix-darwin/nix-darwin-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Homebrew本体をnix-darwinから導入
+    # nix-darwin 24.11と互換性のあるrevisionへ固定
+    nix-homebrew = {
+      url = "github:zhaofengli/nix-homebrew/20e4702906fb0a8de16902621689cafef445a35d";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nix-darwin.follows = "nix-darwin";
     };
 
     # ユーザー環境をOS横断で管理
@@ -20,7 +31,7 @@
   };
 
   # 2. host設定からシステム・ユーザー構成を生成
-  outputs = { self, nixpkgs, nix-darwin, home-manager, ... }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nix-darwin, nix-homebrew, home-manager, ... }:
     let
       # host設定とユーザープロファイルの読み込み
       hostConfigLib = import ./lib/host-config.nix { };
@@ -81,12 +92,25 @@
               hostConfig = validatedHostConfig;
               inherit hostId userProfile;
               homeManager = validatedHostConfig.homeManager;
+              nixpkgsUnstable = nixpkgs-unstable;
             };
 
             # 共通設定、Home Manager、nix-darwin設定の統合
             modules = [
               home-manager.darwinModules.home-manager
+              nix-homebrew.darwinModules.nix-homebrew
               ./modules/system/darwin/default.nix
+
+              # Homebrew本体の導入と既存インストールの移行
+              {
+                nix-homebrew = {
+                  enable = true;
+                  enableRosetta = validatedHostConfig.meta.system == "aarch64-darwin";
+                  user = userProfile.username;
+                  autoMigrate = true;
+                  mutableTaps = true;
+                };
+              }
 
               # ユーザープロファイルの全項目を評価
               (builtins.deepSeq userProfile {
@@ -119,6 +143,7 @@
               hostConfig = validatedHostConfig;
               inherit hostId userProfile;
               homeManager = validatedHostConfig.homeManager;
+              nixpkgsUnstable = nixpkgs-unstable;
             };
 
             # ユーザー環境とLinuxホームディレクトリの統合
@@ -173,6 +198,7 @@
           homeModulesEval =
             (import ./tests/home/integration.nix {
               inherit home-manager nixpkgs;
+              nixpkgsUnstable = nixpkgs-unstable;
               system = checkSystem;
             }).activationPackage;
 
@@ -219,7 +245,10 @@
           tests =
             let
               pkgs = nixpkgs.legacyPackages.${checkSystem};
-              results = import ./tests { inherit pkgs; };
+              results = import ./tests {
+                inherit pkgs;
+                nixpkgsUnstable = nixpkgs-unstable;
+              };
             in
             if results == [ ]
             then pkgs.runCommand "tests-pass" { } "touch $out"

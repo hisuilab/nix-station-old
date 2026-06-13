@@ -1,6 +1,7 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
-  # Raspberry Pi OSユーザー固有のHome Manager設定の追加先
+  home.packages = [ pkgs.docker-client ];
+
   # OSのブート、ネットワーク、systemdシステムサービスは管理対象外
 }

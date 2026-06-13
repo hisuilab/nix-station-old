@@ -1,6 +1,7 @@
 { homeManager
 , hostConfig
 , lib
+, nixpkgsUnstable
 , pkgs
 , userProfile
 , ...
@@ -47,7 +48,7 @@ in
       backupFileExtension = "backup";
 
       extraSpecialArgs = {
-        inherit homeManager hostConfig userProfile;
+        inherit homeManager hostConfig nixpkgsUnstable userProfile;
       };
 
       users.${username} = import ../../home/default.nix;

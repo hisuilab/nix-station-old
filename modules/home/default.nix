@@ -5,6 +5,8 @@ let
 
   # ツール追加時は名前とモジュールの対応だけを追記
   toolModules = {
+    cliTools = ./cli-tools/default.nix;
+    gh = ./gh/default.nix;
     git = ./git/default.nix;
     zsh = ./zsh/default.nix;
   };

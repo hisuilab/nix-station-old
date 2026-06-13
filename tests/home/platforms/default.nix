@@ -43,6 +43,20 @@ lib.runTests {
     expected = false;
   };
 
+  testUbuntuInstallsDockerClient = {
+    expr = map
+      (package: package.pname or package.name)
+      (import ../../../modules/home/platforms/ubuntu/default.nix { inherit pkgs; }).home.packages;
+    expected = [ "docker" ];
+  };
+
+  testRaspberryPiOsInstallsDockerClient = {
+    expr = map
+      (package: package.pname or package.name)
+      (import ../../../modules/home/platforms/raspberry-pi-os/default.nix { inherit pkgs; }).home.packages;
+    expected = [ "docker" ];
+  };
+
   testUnknownOperatingSystemIsRejected = {
     expr = (builtins.tryEval (
       builtins.deepSeq (selectedModules "unknown") true

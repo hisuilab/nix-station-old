@@ -1,4 +1,4 @@
-{ home-manager, nixpkgs, system }:
+{ home-manager, nixpkgs, nixpkgsUnstable, system }:
 
 let
   userProfiles = import ../../user-profiles { };
@@ -6,6 +6,7 @@ let
     name = "test";
   };
   homeManager = {
+    cliTools = true;
     git = true;
     zsh = true;
   };
@@ -19,7 +20,7 @@ home-manager.lib.homeManagerConfiguration {
   pkgs = nixpkgs.legacyPackages.${system};
 
   extraSpecialArgs = {
-    inherit homeManager hostConfig userProfile;
+    inherit homeManager hostConfig nixpkgsUnstable userProfile;
   };
 
   modules = [

@@ -82,7 +82,7 @@ let
       darwin.homebrew = {
         enable = true;
         brews = [ "wget" ];
-        casks = [ "ghostty" ];
+        casks = [ "slack" ];
       };
     };
     inherit userProfile;
@@ -152,9 +152,12 @@ in
 
   homebrewSystem =
     if
-      homebrewEnabled.config.homebrew.enable
+      homebrewEnabled.config.nix-homebrew.enable
+      && homebrewEnabled.config.nix-homebrew.autoMigrate
+      && homebrewEnabled.config.nix-homebrew.user == userProfile.username
+      && homebrewEnabled.config.homebrew.enable
       && map (brew: brew.name) homebrewEnabled.config.homebrew.brews == [ "wget" ]
-      && map (cask: cask.name) homebrewEnabled.config.homebrew.casks == [ "ghostty" ]
+      && map (cask: cask.name) homebrewEnabled.config.homebrew.casks == [ "slack" ]
       && homebrewEnabled.config.homebrew.onActivation.cleanup == "none"
     then
       homebrewEnabled.system

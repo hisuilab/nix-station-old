@@ -11,6 +11,8 @@
   userProfile.name = "guest";
 
   homeManager = {
+    cliTools = true;
+    gh = true;
     git = false;
     zsh = false;
   };
@@ -23,10 +25,40 @@
   };
 
   darwin.homebrew = {
-    enable = false;
-    # brews = [ "wget" ];
-    # casks = [ "ghostty" ];
-    # taps = [ ];
-    # masApps = { };
+    enable = true;
+    casks = [
+      "google-chrome"
+      "google-drive"
+
+      "tailscale-app"
+      "windows-app"
+
+      "ghostty"
+
+      "zed"
+      "visual-studio-code"
+
+      "codex-app"
+
+      "docker-desktop"
+
+      "karabiner-elements"
+      "logi-options+"
+
+      "slack"
+      "discord"
+      "linear"
+      "zoom"
+
+      "affinity"
+
+      "raycast"
+      "keycastr"
+
+      "font-meslo-lg-nerd-font"
+    ];
+    masApps = {
+      RunCat = 1429033973;
+    };
   };
 }

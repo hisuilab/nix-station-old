@@ -11,7 +11,9 @@
   userProfile.name = "guest";
 
   homeManager = {
-    git = false;
-    zsh = false;
+    cliTools = true;
+    gh = true;
+    git = true;
+    zsh = true;
   };
 }

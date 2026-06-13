@@ -1,0 +1,66 @@
+name: Feature
+description: 機能追加や構成変更を提案する
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        実装内容と完了条件を分けて記載してください。
+
+  - type: textarea
+    id: overview
+    attributes:
+      label: 概要
+      description: 解決したい問題と目的を記載
+      placeholder: |
+        現在の問題:
+        実現したい状態:
+    validations:
+      required: true
+
+  - type: textarea
+    id: design
+    attributes:
+      label: 設計
+      description: 責務、構成、制約、採用理由を記載
+      placeholder: |
+        - 責務:
+        - 構成:
+        - 制約:
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: タスク
+      description: 実装手順をチェックリストで記載
+      value: |
+        - [ ] テスト作成
+        - [ ] 実装
+        - [ ] ドキュメント更新
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 完了条件
+      description: 実装後に一つずつ検証できる条件を記載
+      value: |
+        - [ ] 期待する設定が評価される
+        - [ ] 無効な設定が読み込まれない
+        - [ ] `nix flake check path:. --no-build --all-systems`が成功する
+    validations:
+      required: true
+
+  - type: textarea
+    id: related
+    attributes:
+      label: 関連Issue
+      description: 依存するIssueや関連するDiscussionを記載
+      placeholder: |
+        Depends on #1
+        Related to #2

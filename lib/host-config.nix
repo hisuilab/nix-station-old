@@ -1,6 +1,8 @@
 {}:
 
 let
+  registry = import ./host-registry.nix;
+
   isNonEmptyString = value:
     builtins.isString value && value != "";
 
@@ -11,6 +13,14 @@ let
       values
     else
       throw "host '${hostId}': every ${fieldName} value must be a boolean";
+
+  hasDarwinSettings = config:
+    let
+      darwin = config.darwin or { };
+    in
+    (darwin.features or { }) != { }
+    || (darwin.homebrew or { }) != { }
+    || builtins.removeAttrs darwin [ "features" "homebrew" ] != { };
 
   validateHostConfig =
     { config
@@ -29,37 +39,33 @@ let
     else if !(config.meta ? system) || !isNonEmptyString config.meta.system then
       throw "host '${hostId}': meta.system must be a non-empty string"
     else if !(config.meta ? platform)
-      || !(builtins.elem config.meta.platform [ "darwin" "home-manager" ]) then
-      throw "host '${hostId}': meta.platform must be 'darwin' or 'home-manager'"
+      || !(builtins.elem config.meta.platform registry.platforms) then
+      throw "host '${hostId}': unsupported meta.platform '${config.meta.platform or "<missing>"}'"
     else if !(config.meta ? os)
-      || !(builtins.elem config.meta.os [ "darwin" "ubuntu" "raspberry-pi-os" ]) then
-      throw "host '${hostId}': meta.os must be 'darwin', 'ubuntu', or 'raspberry-pi-os'"
+      || !(builtins.hasAttr config.meta.os registry.operatingSystems) then
+      throw "host '${hostId}': unsupported meta.os '${config.meta.os or "<missing>"}'"
     else if !(config.meta ? environment)
-      || !(builtins.elem config.meta.environment [ "native" "wsl" ]) then
-      throw "host '${hostId}': meta.environment must be 'native' or 'wsl'"
+      || !(builtins.hasAttr config.meta.environment registry.environments) then
+      throw "host '${hostId}': unsupported meta.environment '${config.meta.environment or "<missing>"}'"
     else if !(config.meta ? role)
-      || !(builtins.elem config.meta.role [ "desktop" "laptop" "server" ]) then
-      throw "host '${hostId}': meta.role must be 'desktop', 'laptop', or 'server'"
-    else if config.meta.platform == "darwin"
-      && builtins.match ".*-darwin" config.meta.system == null then
-      throw "host '${hostId}': darwin platform requires a Darwin system"
-    else if config.meta.platform == "darwin" && config.meta.os != "darwin" then
-      throw "host '${hostId}': darwin platform requires meta.os = 'darwin'"
-    else if config.meta.platform == "darwin" && config.meta.environment != "native" then
-      throw "host '${hostId}': darwin platform requires meta.environment = 'native'"
-    else if config.meta.platform == "home-manager"
-      && builtins.match ".*-linux" config.meta.system == null then
-      throw "host '${hostId}': home-manager platform currently requires a Linux system"
-    else if config.meta.platform == "home-manager" && config.meta.os == "darwin" then
-      throw "host '${hostId}': home-manager platform requires a Linux operating system"
-    else if config.meta.environment == "wsl" && config.meta.os != "ubuntu" then
-      throw "host '${hostId}': wsl environment currently requires meta.os = 'ubuntu'"
+      || !(builtins.hasAttr config.meta.role registry.roles) then
+      throw "host '${hostId}': unsupported meta.role '${config.meta.role or "<missing>"}'"
+    else if registry.operatingSystems.${config.meta.os}.platform != config.meta.platform then
+      throw "host '${hostId}': meta.os '${config.meta.os}' requires meta.platform = '${registry.operatingSystems.${config.meta.os}.platform}'"
+    else if !(builtins.elem config.meta.system registry.operatingSystems.${config.meta.os}.systems) then
+      throw "host '${hostId}': meta.system '${config.meta.system}' is not supported by meta.os '${config.meta.os}'"
+    else if !(builtins.elem config.meta.environment registry.operatingSystems.${config.meta.os}.environments) then
+      throw "host '${hostId}': meta.environment '${config.meta.environment}' is not supported by meta.os '${config.meta.os}'"
     else if !(config ? userProfile) || !builtins.isAttrs config.userProfile then
       throw "host '${hostId}': userProfile must be an attribute set"
     else if !(config.userProfile ? name) || !isNonEmptyString config.userProfile.name then
       throw "host '${hostId}': userProfile.name must be a non-empty string"
     else if config ? darwin && !builtins.isAttrs config.darwin then
       throw "host '${hostId}': darwin must be an attribute set"
+    else if config.meta.platform != "darwin"
+      && config ? darwin
+      && hasDarwinSettings config then
+      throw "host '${hostId}': darwin settings are only valid for meta.platform = 'darwin'"
     else if (config.darwin or { }) ? homebrew
       && !builtins.isAttrs config.darwin.homebrew then
       throw "host '${hostId}': darwin.homebrew must be an attribute set"

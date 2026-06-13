@@ -1,23 +1,12 @@
 { hostConfig, lib, homeManager, ... }:
 
 let
+  registry = import ../../lib/host-registry.nix;
+
   # ツール追加時は名前とモジュールの対応だけを追記
   toolModules = {
     git = ./git/default.nix;
     zsh = ./zsh/default.nix;
-  };
-
-  # OS固有のHome Manager設定
-  platformModules = {
-    darwin = ./platforms/darwin/default.nix;
-    ubuntu = ./platforms/ubuntu/default.nix;
-    raspberry-pi-os = ./platforms/raspberry-pi-os/default.nix;
-  };
-
-  # native・WSLなど実行環境固有のHome Manager設定
-  environmentModules = {
-    native = ./environments/native/default.nix;
-    wsl = ./environments/wsl/default.nix;
   };
 
   unknownTools = builtins.filter
@@ -25,24 +14,20 @@ let
     (builtins.attrNames homeManager);
 
   platformModule =
-    if builtins.hasAttr hostConfig.meta.os platformModules then
-      platformModules.${hostConfig.meta.os}
+    if builtins.hasAttr hostConfig.meta.os registry.operatingSystems then
+      registry.operatingSystems.${hostConfig.meta.os}.homeModule
     else
       throw "unsupported Home Manager operating system: ${hostConfig.meta.os}";
 
   environmentModule =
-    if builtins.hasAttr hostConfig.meta.environment environmentModules then
-      environmentModules.${hostConfig.meta.environment}
+    if builtins.hasAttr hostConfig.meta.environment registry.environments then
+      registry.environments.${hostConfig.meta.environment}.homeModule
     else
       throw "unsupported Home Manager environment: ${hostConfig.meta.environment}";
 
   roleModule =
-    if hostConfig.meta.role == "desktop" then
-      ./roles/desktop.nix
-    else if hostConfig.meta.role == "laptop" then
-      ./roles/laptop.nix
-    else if hostConfig.meta.role == "server" then
-      ./roles/server.nix
+    if builtins.hasAttr hostConfig.meta.role registry.roles then
+      registry.roles.${hostConfig.meta.role}.homeModule
     else
       throw "unsupported Home Manager host role: ${hostConfig.meta.role}";
 
@@ -58,7 +43,7 @@ in
       throw "unsupported Home Manager tools: ${builtins.concatStringsSep ", " unknownTools}";
 
   options.nixStation.homeRole = lib.mkOption {
-    type = lib.types.enum [ "desktop" "laptop" "server" ];
+    type = lib.types.enum (builtins.attrNames registry.roles);
     readOnly = true;
     internal = true;
     description = "Selected Home Manager host role";

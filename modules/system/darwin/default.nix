@@ -7,6 +7,8 @@
 }:
 
 let
+  registry = import ../../../lib/host-registry.nix;
+
   # macOSユーザー名の取得
   username = userProfile.username;
 in
@@ -16,19 +18,11 @@ in
     ./core/default.nix
     ./features/default.nix
     ./homebrew/default.nix
-  ] ++ (
-    if hostConfig.meta.role == "server" then
-      [ ./roles/server.nix ]
-    else if hostConfig.meta.role == "laptop" then
-      [ ./roles/laptop.nix ]
-    else if hostConfig.meta.role == "desktop" then
-      [ ./roles/desktop.nix ]
-    else
-      throw "unsupported nix-darwin host role: ${hostConfig.meta.role}"
-  );
+    registry.roles.${hostConfig.meta.role}.darwinModule
+  ];
 
   options.nixStation.hostRole = lib.mkOption {
-    type = lib.types.enum [ "desktop" "laptop" "server" ];
+    type = lib.types.enum (builtins.attrNames registry.roles);
     readOnly = true;
     internal = true;
     description = "Selected macOS host role";

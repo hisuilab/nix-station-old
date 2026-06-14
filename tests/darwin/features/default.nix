@@ -116,6 +116,21 @@ lib.runTests {
     };
   };
 
+  testDockActivationConfiguresFileHandlers = {
+    expr = {
+      browser = lib.hasInfix
+        ''duti -s com.google.Chrome "$handler" all''
+        laptopDockModule.system.activationScripts.postActivation.text;
+      documents = lib.hasInfix
+        ''duti -s com.microsoft.VSCode "$handler" all''
+        laptopDockModule.system.activationScripts.postActivation.text;
+    };
+    expected = {
+      browser = true;
+      documents = true;
+    };
+  };
+
   testAppearanceActivationConfiguresUserPreferences = {
     expr = {
       multicolor = lib.hasInfix

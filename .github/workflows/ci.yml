@@ -54,3 +54,12 @@ jobs:
       # 4. WSL構成をLinuxソフトウェアレベルで実ビルド
       - name: Build WSL Home Manager configuration
         run: nix build path:.#checks.x86_64-linux.ubuntuWslHomeEval --no-link
+
+  nix-check:
+    needs:
+      - macos-check
+      - linux-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm all Nix checks passed
+        run: echo "All Nix checks passed."

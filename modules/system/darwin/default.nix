@@ -30,6 +30,9 @@ in
   };
 
   config = {
+    # nix-darwin 25.05: user-scoped オプションの適用対象ユーザーを指定
+    system.primaryUser = username;
+
     # Home Manager対象ユーザーの作成
     users.users.${username} = {
       name = username;

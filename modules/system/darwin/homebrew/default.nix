@@ -15,7 +15,6 @@ in
       taps = homebrewConfig.taps or [ ];
       brews = homebrewConfig.brews or [ ];
       casks = homebrewConfig.casks or [ ];
-      masApps = homebrewConfig.masApps or { };
 
       onActivation = homebrewConfig.onActivation or {
         autoUpdate = true;
@@ -23,5 +22,17 @@ in
         cleanup = "none";
       };
     };
+
+    system.activationScripts.postActivation.text = lib.mkAfter ''
+      echo ""
+      echo "------------------------------------------------------------"
+      echo " App Store アプリを mas でインストールするには:"
+      echo ""
+      echo "   RunCat     : mas install 1429033973"
+      echo "   Xcode      : mas install 497799835"
+      echo "   GarageBand : mas install 682658836"
+      echo "------------------------------------------------------------"
+      echo ""
+    '';
   };
 }

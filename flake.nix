@@ -4,28 +4,24 @@
   # 1. 外部リポジトリ（依存関係）の定義
   inputs = {
     # 安定版のNixOS / Nixチャンネル
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
 
     # 安定版に未収録のCLIツール
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # macOSのシステム設定をNixで管理
     nix-darwin = {
-      url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+      url = "github:LnL7/nix-darwin/nix-darwin-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Homebrew本体をnix-darwinから導入
-    # nix-darwin 24.11と互換性のあるrevisionへ固定
-    nix-homebrew = {
-      url = "github:zhaofengli/nix-homebrew/20e4702906fb0a8de16902621689cafef445a35d";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nix-darwin.follows = "nix-darwin";
-    };
+    # macOS 26 (Tahoe) サポートのため HEAD に更新
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
     # ユーザー環境をOS横断で管理
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

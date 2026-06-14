@@ -13,8 +13,20 @@
   homeManager = {
     cliTools = true;
     gh = true;
-    git = false;
-    zsh = false;
+    git = true;
+    zsh = true;
+    p10k = {
+      enable = true;
+      configFile = ../../modules/home/p10k/p10k.zsh;
+    };
+    ghostty = {
+      enable = true;
+      configFile = ../../modules/home/ghostty/config;
+    };
+    zed = {
+      enable = true;
+      configFile = ../../modules/home/zed/settings.json;
+    };
   };
 
   darwin.features = {

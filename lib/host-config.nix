@@ -14,6 +14,28 @@ let
     else
       throw "host '${hostId}': every ${fieldName} value must be a boolean";
 
+  validateManagedToolConfig = hostId: name: value:
+    let
+      allowedKeys = [ "configFile" "enable" ];
+      unknownKeys = builtins.filter
+        (key: !(builtins.elem key allowedKeys))
+        (builtins.attrNames value);
+      enable = value.enable or false;
+      configFile = value.configFile or null;
+    in
+    if !builtins.isAttrs value then
+      throw "host '${hostId}': homeManager.${name} must be an attribute set"
+    else if unknownKeys != [ ] then
+      throw "host '${hostId}': unsupported homeManager.${name} settings"
+    else if !builtins.isBool enable then
+      throw "host '${hostId}': homeManager.${name}.enable must be a boolean"
+    else if configFile != null && !builtins.isPath configFile then
+      throw "host '${hostId}': homeManager.${name}.configFile must be a path or null"
+    else
+      {
+        inherit configFile enable;
+      };
+
   hasDarwinSettings = config:
     let
       darwin = config.darwin or { };
@@ -77,10 +99,21 @@ let
       throw "host '${hostId}': darwin.homebrew.manageInstallation must be a boolean"
     else
       let
-        homeManager = validateBooleanAttrs
+        rawHomeManager = config.homeManager or { };
+        managedTools = [ "ghostty" "p10k" "zed" ];
+        booleanHomeManager = validateBooleanAttrs
           hostId
           "homeManager"
-          (config.homeManager or { });
+          (builtins.removeAttrs rawHomeManager managedTools);
+        homeManager = booleanHomeManager // builtins.listToAttrs (
+          builtins.concatMap
+            (name:
+              if builtins.hasAttr name rawHomeManager then [{
+                inherit name;
+                value = validateManagedToolConfig hostId name rawHomeManager.${name};
+              }] else [ ])
+            managedTools
+        );
         darwinFeatures = validateBooleanAttrs
           hostId
           "darwin.features"

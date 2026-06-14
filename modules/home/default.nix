@@ -7,7 +7,10 @@ let
   toolModules = {
     cliTools = ./cli-tools/default.nix;
     gh = ./gh/default.nix;
+    ghostty = ./ghostty/default.nix;
     git = ./git/default.nix;
+    p10k = ./p10k/default.nix;
+    zed = ./zed/default.nix;
     zsh = ./zsh/default.nix;
   };
 
@@ -34,7 +37,15 @@ let
       throw "unsupported Home Manager host role: ${hostConfig.meta.role}";
 
   enabledToolModules = builtins.concatMap
-    (name: lib.optional (homeManager.${name} or false) toolModules.${name})
+    (name:
+      let
+        value = homeManager.${name} or false;
+        enabled =
+          if builtins.isAttrs value
+          then value.enable or false
+          else value;
+      in
+      lib.optional enabled toolModules.${name})
     (builtins.attrNames toolModules);
 in
 {

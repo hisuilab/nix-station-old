@@ -56,6 +56,53 @@ lib.runTests {
     expected = false;
   };
 
+  testP10kConfigIsNormalized = {
+    expr = (validate "mac-mini" (lib.recursiveUpdate validConfig {
+      homeManager.p10k = {
+        enable = true;
+        configFile = ../../modules/home/p10k/p10k.zsh;
+      };
+    })).homeManager.p10k;
+    expected = {
+      enable = true;
+      configFile = ../../modules/home/p10k/p10k.zsh;
+    };
+  };
+
+  testP10kBooleanConfigIsRejected = {
+    expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
+      homeManager.p10k = true;
+    });
+    expected = false;
+  };
+
+  testUnknownP10kSettingIsRejected = {
+    expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
+      homeManager.p10k.unknown = true;
+    });
+    expected = false;
+  };
+
+  testManagedToolConfigDefaults = {
+    expr = (validate "mac-mini" (lib.recursiveUpdate validConfig {
+      homeManager.ghostty = { };
+    })).homeManager.ghostty;
+    expected = {
+      enable = false;
+      configFile = null;
+    };
+  };
+
+  testManagedToolConfigFileMustBePath = {
+    expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
+      homeManager.zed = {
+        enable = true;
+        configFile = "./settings.json";
+      };
+    });
+    expected = false;
+  };
+
   testDarwinFeaturesDefaultToEmpty = {
     expr = (validate "mac-mini" validConfig).darwin.features;
     expected = { };

@@ -42,15 +42,8 @@ in
       fi
     done
 
-    for handler in public.html http https; do
-      launchctl asuser "$user_id" sudo --user=${userProfile.username} \
-        ${pkgs.duti}/bin/duti -s com.google.Chrome "$handler" all
-    done
-
-    for handler in public.xml public.xhtml xml xhtml; do
-      launchctl asuser "$user_id" sudo --user=${userProfile.username} \
-        ${pkgs.duti}/bin/duti -s com.microsoft.VSCode "$handler" all
-    done
+    launchctl asuser "$user_id" sudo --user=${userProfile.username} \
+      ${pkgs.defaultbrowser}/bin/defaultbrowser chrome || true
 
     launchctl asuser "$user_id" sudo --user=${userProfile.username} \
       killall cfprefsd 2>/dev/null || true

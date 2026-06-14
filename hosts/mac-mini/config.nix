@@ -74,10 +74,7 @@
 
       "font-meslo-lg-nerd-font"
     ];
-    masApps = {
-      RunCat = 1429033973;
-      Xcode = 497799835;
-      GarageBand = 682658836;
-    };
+    # AppStoreアプリは nix では管理対象から外す
+    # 詳細:masでのAppStoreの認証が sudo 権限だと受け付けないため、エラーになる。
   };
 }

@@ -26,6 +26,7 @@ hosts/**/secrets/secret.nix
 .cache/
 .eslintcache
 .stylelintcache
+/tmp/
 
 # ==================================================
 # IDE / Editor

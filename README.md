@@ -6,12 +6,12 @@
 
 Nixとnix-darwinを使い、ホスト・ユーザー・パッケージの設定を再現可能な形で管理するためのワークステーション構成です。
 
-現在は、macOSサーバー構成の評価、ユーザープロファイルの選択と検証、GitHub Actionsによる`nix flake check`を中心に整備しています。
+macOSはnix-darwin、Ubuntu、Ubuntu on WSL、Raspberry Pi OSはstandalone Home Managerで管理します。
 
 ## Requirements
 
 - Nix（Flakesを有効化）
-- macOS（現在の主要な評価対象は`aarch64-darwin`）
+- macOS、Ubuntu、Ubuntu on WSL、またはRaspberry Pi OS
 - 任意: direnv / nix-direnv
 - 任意: pre-commit
 
@@ -26,12 +26,80 @@ nix flake check path:. --no-build --all-systems
 システム構成をビルドだけ行い、現在のmacOSへ適用しない場合:
 
 ```bash
-nix build path:.#darwinConfigurations.server.system --no-link
+nix build path:.#darwinConfigurations.mac-mini.system --no-link
 ```
+
+## Apply Configuration
+
+適用前に、対象hostの`userProfile.name`を実際に利用するプロファイル名へ変更します。`guest`は評価・試用向けです。
+
+macOS:
+
+```bash
+sudo nix run github:LnL7/nix-darwin/nix-darwin-24.11#darwin-rebuild -- \
+  switch --flake path:.#mac-mini
+```
+
+Ubuntu:
+
+```bash
+nix run github:nix-community/home-manager/release-24.11 -- \
+  switch --flake path:.#ubuntu-desktop
+```
+
+Ubuntu on WSL:
+
+```bash
+nix run github:nix-community/home-manager/release-24.11 -- \
+  switch --flake path:.#ubuntu-wsl
+```
+
+Raspberry Pi OS:
+
+```bash
+nix run github:nix-community/home-manager/release-24.11 -- \
+  switch --flake path:.#raspberry-pi-5
+```
+
+2回目以降も同じコマンドで更新します。Linux系hostではシステム全体ではなく、Home Managerが管理するユーザー環境だけを適用します。
+
+macOSでは初回適用時にHomebrew本体も自動導入されます。既存のHomebrewがある場合はnix-homebrewが管理下へ移行し、適用後は`brew`コマンドを利用できます。
+
+## Hosts
+
+管理対象hostは[`hosts/default.nix`](hosts/default.nix)へ登録します。
+
+```text
+hosts/
+├── default.nix
+├── mac-mini/config.nix
+├── macbook-air/config.nix
+├── raspberry-pi-5/config.nix
+├── ubuntu-desktop/config.nix
+└── ubuntu-wsl/config.nix
+```
+
+小文字kebab-caseのディレクトリ名をflake出力のhost IDとして使用します。`meta.hostname`はOS・ネットワーク上の端末名で、省略時はhost IDを使用します。
+
+- `platform = "darwin"`: nix-darwinとHome Managerを生成
+- `platform = "home-manager"`: Ubuntu・Raspberry Pi OS向けstandalone Home Managerを生成
+- `os`: `darwin`、`ubuntu`、`raspberry-pi-os`からHome ManagerのOS固有設定を選択
+- `environment`: `native`または`wsl`から実行環境固有の設定を選択
+- `role`: `desktop`、`laptop`、`server`から用途別モジュールを選択
+
+`platform = "darwin"`では`meta.hostname`をmacOSへ反映します。standalone Home ManagerはOSのhostnameを変更しないため、Linux hostの`meta.hostname`は識別用メタデータです。
+
+Home Managerは有効なツールがない場合も常に生成されます。ツールフラグは省略可能で、未指定値は`false`として扱います。未登録のツール名を指定した場合は評価エラーになります。
+
+OS固有のユーザー設定は`modules/home/platforms/<os>/`、WSLなど実行環境固有の設定は`modules/home/environments/<environment>/`、共通ツール設定は`modules/home/<tool>/`で管理します。
+
+`role`は端末名ではなく用途を表します。例えば、デスクトップPCでも常時稼働サービスを中心に管理する場合は`server`を選択できます。
+
+標準hostではGitHub CLI、Devbox、Claude Codeなどの汎用CLIツールをHome Managerで有効化します。macOS hostではDocker DesktopをHomebrew経由で導入し、Linux hostではDocker CLIをHome Managerで導入します。GitHub認証は適用後に`gh auth login`で行います。
 
 ## User Profiles
 
-ホストが使用するプロファイルは[`hosts/server/config.nix`](hosts/server/config.nix)で選択します。
+ホストが使用するプロファイルは各`hosts/<host-id>/config.nix`で選択します。
 
 ```nix
 userProfile = {
@@ -46,6 +114,10 @@ userProfile.name = "test"
         ↓
 user-profiles/test.nix
 ```
+
+`guest.nix`とリポジトリテスト用の`test.nix`を除き、`user-profiles/*.nix`はデフォルトでGitのコミット対象外です。個人情報を含むプロファイルはローカルで作成し、各hostの`userProfile.name`を任意の名前へ変更してください。
+
+チームで共有するプロファイルやCIで評価するプロファイルは、`.gitignore`へ例外を追加してGitで追跡します。Flake評価に含まれるファイルは入力方式とGitの追跡状態に影響されるため、共有・CI用途では追跡を必須とします。
 
 プロファイルの形式:
 
@@ -71,12 +143,16 @@ Flakeは通常、Gitで追跡されているファイルを入力として評価
 ```text
 tests/
 ├── default.nix
+├── host-config/
+│   └── default.nix
 ├── home/
 │   ├── default.nix
 │   ├── integration.nix
 │   ├── git/
+│   ├── roles/
 │   └── zsh/
-├── macOS/
+├── darwin/
+│   ├── features/
 │   └── integration.nix
 └── user-profile/
     ├── default.nix

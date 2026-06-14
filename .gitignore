@@ -17,6 +17,7 @@ result-*
 # Secrets
 .env
 .env.*
+hosts/**/secrets/secret.nix
 
 # ==================================================
 # General Cache
@@ -25,6 +26,7 @@ result-*
 .cache/
 .eslintcache
 .stylelintcache
+/tmp/
 
 # ==================================================
 # IDE / Editor
@@ -46,4 +48,7 @@ Thumbs.db
 # ==================================================
 # Local user profiles
 # ==================================================
-user-profiles/hisuilab*
+user-profiles/*.nix
+!user-profiles/default.nix
+!user-profiles/guest.nix
+!user-profiles/test.nix

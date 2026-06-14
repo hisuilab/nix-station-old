@@ -5,15 +5,61 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  nix-check:
+  macos-check:
     runs-on: macos-latest
     steps:
       # 1. コードのチェックアウト
       - name: Checkout repository
         uses: actions/checkout@v4
-      # 2. GitHub Actions環境へのNixのインストール
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-      # 3. Flakeの構文・依存・型評価のテストを実行
-      - name: Run nix flake check
-        run: nix flake check
+      # 2. 固定バージョンのDeterminate Nixをインストール
+      - name: Install Determinate Nix
+        uses: DeterminateSystems/determinate-nix-action@9adf02b41cfdac2632e1c16f0480ff5bf3b05dd6 # v3.21.1
+        with:
+          source-tag: v3.21.1
+      # 3. Git管理外の実機プロファイルをCI用fixtureで補完
+      - name: Create CI user profile
+        run: |
+          cat > user-profiles/hisuilab.nix <<'EOF'
+          {
+            username = "hisuilab";
+            description = "CI user profile";
+            git = {
+              userName = "hisuilab";
+              userEmail = "ci@example.com";
+            };
+          }
+          EOF
+          git add -f user-profiles/hisuilab.nix
+      # 4. 全systemの構文・依存・型評価
+      - name: Evaluate all systems
+        run: nix flake check path:. --no-build --all-systems
+      # 5. macOS checksを実ビルド
+      - name: Build macOS checks
+        run: nix flake check path:.
+
+  linux-check:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. コードのチェックアウト
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      # 2. macOSと同じ固定バージョンのNixをインストール
+      - name: Install Determinate Nix
+        uses: DeterminateSystems/determinate-nix-action@9adf02b41cfdac2632e1c16f0480ff5bf3b05dd6 # v3.21.1
+        with:
+          source-tag: v3.21.1
+      # 3. Ubuntu native構成を実ビルド
+      - name: Build Ubuntu Home Manager configuration
+        run: nix build path:.#checks.x86_64-linux.ubuntuDesktopHomeEval --no-link
+      # 4. WSL構成をLinuxソフトウェアレベルで実ビルド
+      - name: Build WSL Home Manager configuration
+        run: nix build path:.#checks.x86_64-linux.ubuntuWslHomeEval --no-link
+
+  nix-check:
+    needs:
+      - macos-check
+      - linux-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm all Nix checks passed
+        run: echo "All Nix checks passed."

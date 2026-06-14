@@ -6,11 +6,17 @@ let
     config.xdg.dataHome = "/Users/test/.local/share";
   };
   homeManager = {
+    cliTools = false;
     git = false;
     zsh = true;
   };
+  hostConfig.meta = {
+    os = "darwin";
+    environment = "native";
+    role = "desktop";
+  };
   selectedModules = (import ../../../modules/home/default.nix {
-    inherit homeManager lib;
+    inherit homeManager hostConfig lib;
   }).imports;
 in
 lib.runTests {
@@ -53,29 +59,4 @@ lib.runTests {
     };
   };
 
-  testZshToolsAreEnabled = {
-    expr = lib.all (enabled: enabled) [
-      module.programs.bat.enable
-      module.programs.direnv.enable
-      module.programs.eza.enable
-      module.programs.fzf.enable
-      module.programs.zoxide.enable
-    ];
-    expected = true;
-  };
-
-  testNixDirenvIsEnabled = {
-    expr = module.programs.direnv.nix-direnv.enable;
-    expected = true;
-  };
-
-  testZshIntegrationsAreEnabled = {
-    expr = lib.all (enabled: enabled) [
-      module.programs.direnv.enableZshIntegration
-      module.programs.eza.enableZshIntegration
-      module.programs.fzf.enableZshIntegration
-      module.programs.zoxide.enableZshIntegration
-    ];
-    expected = true;
-  };
 }

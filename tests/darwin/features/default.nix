@@ -8,9 +8,13 @@ let
   };
   laptopDockModule = import ../../../modules/system/darwin/features/dock/default.nix {
     hostConfig.meta.role = "laptop";
+    inherit lib pkgs;
+    userProfile.username = "test";
   };
   desktopDockModule = import ../../../modules/system/darwin/features/dock/default.nix {
     hostConfig.meta.role = "desktop";
+    inherit lib pkgs;
+    userProfile.username = "test";
   };
   finderModule = import ../../../modules/system/darwin/features/finder/default.nix {
     inherit pkgs;
@@ -73,6 +77,42 @@ lib.runTests {
     expected = {
       autohide = false;
       orientation = "left";
+    };
+  };
+
+  testDockActivationConfiguresApplications = {
+    expr = {
+      apps = lib.hasInfix
+        (lib.escapeShellArgs [
+          "/System/Applications/Apps.app"
+          "/Applications/Google Chrome.app"
+          "/Applications/Slack.app"
+          "/Applications/Discord.app"
+          "/System/Applications/Photos.app"
+          "/System/Applications/Notes.app"
+          "/Applications/Visual Studio Code.app"
+          "/Applications/Zed.app"
+          "/Applications/Codex.app"
+          "/Applications/Ghostty.app"
+          "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app"
+          "/System/Applications/System Settings.app"
+        ])
+        laptopDockModule.system.activationScripts.postActivation.text;
+      refreshesPreferences = lib.hasInfix
+        "killall cfprefsd"
+        laptopDockModule.system.activationScripts.postActivation.text;
+      removesExistingApps = lib.hasInfix
+        ''dockutil --remove all --no-restart "$dock_plist"''
+        laptopDockModule.system.activationScripts.postActivation.text;
+      targetsUserPreferences = lib.hasInfix
+        ''dock_plist="/Users/test/Library/Preferences/com.apple.dock.plist"''
+        laptopDockModule.system.activationScripts.postActivation.text;
+    };
+    expected = {
+      apps = true;
+      refreshesPreferences = true;
+      removesExistingApps = true;
+      targetsUserPreferences = true;
     };
   };
 

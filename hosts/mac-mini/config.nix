@@ -18,10 +18,10 @@
   };
 
   darwin.features = {
-    # appearance = true;
-    # dock = true;
-    # finder = true;
-    # input = true;
+    appearance = true;
+    dock = true;
+    finder = true;
+    input = true;
   };
 
   darwin.homebrew = {

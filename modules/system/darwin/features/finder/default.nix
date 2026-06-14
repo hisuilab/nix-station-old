@@ -22,6 +22,8 @@ in
 
     install -d -o ${username} -g staff "${homeDirectory}/Projects"
 
+    as_user defaults write com.apple.finder ShowSidebar -bool true
+
     as_user ${mysides} remove all
     as_user ${mysides} add Home "file://${homeDirectory}"
 

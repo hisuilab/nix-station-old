@@ -157,10 +157,18 @@ lib.runTests {
   };
 
   testFinderSidebarStartsWithHome = {
-    expr = lib.hasInfix
-      "add Home \"file:///Users/test\"\n\nfor directory in Desktop Downloads Documents Pictures Music Movies Projects; do"
-      finderModule.system.activationScripts.postActivation.text;
-    expected = true;
+    expr = {
+      visible = lib.hasInfix
+        "defaults write com.apple.finder ShowSidebar -bool true"
+        finderModule.system.activationScripts.postActivation.text;
+      startsWithHome = lib.hasInfix
+        "add Home \"file:///Users/test\"\n\nfor directory in Desktop Downloads Documents Pictures Music Movies Projects; do"
+        finderModule.system.activationScripts.postActivation.text;
+    };
+    expected = {
+      visible = true;
+      startsWithHome = true;
+    };
   };
 
   testInputDefaultsAreConfigured = {

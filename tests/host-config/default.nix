@@ -73,6 +73,13 @@ lib.runTests {
     expected = false;
   };
 
+  testDarwinHomebrewInstallationManagementMustBeBoolean = {
+    expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
+      darwin.homebrew.manageInstallation = "yes";
+    });
+    expected = false;
+  };
+
   testHomeManagerPlatformRejectsDarwinSettings = {
     expr = canValidate "ubuntu-desktop" (lib.recursiveUpdate validConfig {
       meta = {

@@ -38,8 +38,8 @@ in
       shell = pkgs.zsh;
     };
 
-    # Zshのシステム有効化
-    programs.zsh.enable = homeManager.zsh or false;
+    # macOS標準のZshからnix-darwinの環境変数とPATHを読み込む
+    programs.zsh.enable = true;
 
     # nix-darwinとHome Managerの接続
     home-manager = {

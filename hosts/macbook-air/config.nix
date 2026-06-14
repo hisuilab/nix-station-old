@@ -8,13 +8,13 @@
     role = "laptop";
   };
 
-  userProfile.name = "guest";
+  userProfile.name = "hisuilab";
 
   homeManager = {
     cliTools = true;
     gh = true;
-    git = false;
-    zsh = false;
+    git = true;
+    zsh = true;
   };
 
   darwin.features = {
@@ -26,6 +26,7 @@
 
   darwin.homebrew = {
     enable = true;
+    manageInstallation = false;
     casks = [
       "google-chrome"
       "google-drive"

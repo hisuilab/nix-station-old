@@ -5,6 +5,11 @@ let
 in
 {
   config = lib.mkIf (homebrewConfig.enable or false) {
+    environment.systemPath = lib.mkBefore [
+      "/opt/homebrew/bin"
+      "/opt/homebrew/sbin"
+    ];
+
     homebrew = {
       enable = true;
       taps = homebrewConfig.taps or [ ];

@@ -88,6 +88,20 @@ let
     inherit userProfile;
   };
 
+  existingHomebrew = mkDarwinConfiguration {
+    hostId = "darwin-existing-homebrew-test";
+    hostConfig = (makeHostConfig "macos-existing-homebrew-test" "laptop" {
+      git = false;
+      zsh = false;
+    }) // {
+      darwin.homebrew = {
+        enable = true;
+        manageInstallation = false;
+      };
+    };
+    inherit userProfile;
+  };
+
   username = userProfile.username;
   enabledHome = enabled.config.home-manager.users.${username};
   gitOnlyHome = gitOnly.config.home-manager.users.${username};
@@ -118,7 +132,7 @@ in
       && disabledHome.nixStation.homeRole == "server"
       && !disabledHome.programs.git.enable
       && !disabledHome.programs.zsh.enable
-      && !disabled.config.programs.zsh.enable
+      && disabled.config.programs.zsh.enable
       && disabled.config.users.users.${username}.shell == null
     then
       disabled.system
@@ -129,7 +143,7 @@ in
     if
       gitOnlyHome.programs.git.enable
       && !gitOnlyHome.programs.zsh.enable
-      && !gitOnly.config.programs.zsh.enable
+      && gitOnly.config.programs.zsh.enable
       && gitOnly.config.users.users.${username}.shell == null
       && !zshOnlyHome.programs.git.enable
       && zshOnlyHome.programs.zsh.enable
@@ -159,6 +173,15 @@ in
       && map (brew: brew.name) homebrewEnabled.config.homebrew.brews == [ "wget" ]
       && map (cask: cask.name) homebrewEnabled.config.homebrew.casks == [ "slack" ]
       && homebrewEnabled.config.homebrew.onActivation.cleanup == "none"
+      && builtins.match
+        "^/opt/homebrew/bin:/opt/homebrew/sbin:.*"
+        homebrewEnabled.config.environment.systemPath
+        != null
+      && !existingHomebrew.config.nix-homebrew.enable
+      && builtins.match
+        "^/opt/homebrew/bin:/opt/homebrew/sbin:.*"
+        existingHomebrew.config.environment.systemPath
+        != null
     then
       homebrewEnabled.system
     else

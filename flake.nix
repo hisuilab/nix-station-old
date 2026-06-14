@@ -104,7 +104,8 @@
               # Homebrew本体の導入と既存インストールの移行
               {
                 nix-homebrew = {
-                  enable = true;
+                  enable =
+                    validatedHostConfig.darwin.homebrew.manageInstallation or true;
                   enableRosetta = validatedHostConfig.meta.system == "aarch64-darwin";
                   user = userProfile.username;
                   autoMigrate = true;

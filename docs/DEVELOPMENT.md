@@ -65,33 +65,33 @@ Settings
 
 nix-stationでは次の値を設定します。
 
-| 項目                                      | 今回の設定値                 | 用途・有効にする場面                                     |
-| ----------------------------------------- | ---------------------------- | -------------------------------------------------------- |
-| Ruleset Name                              | `Protect main`               | Rulesets一覧で対象と目的を識別                           |
-| Enforcement status                        | `Active`                     | ルールを実際に適用。検証だけの場合は`Evaluate`を使用     |
-| Bypass list                               | 空                           | 緊急対応者や自動化Appへ例外を許可する場合のみ追加        |
-| Target branches                           | Default branch               | デフォルトブランチを保護。固定名ならpatternで`main`指定  |
-| Restrict creations                        | 無効                         | 特定名のブランチ作成を管理者などに限定する場合に有効     |
-| Restrict updates                          | 無効                         | 対象ブランチの更新者をBypass対象だけに限定する場合に有効 |
-| Restrict deletions                        | 有効                         | `main`など重要ブランチの誤削除を防止                     |
-| Require linear history                    | 無効                         | merge commitを禁止し、履歴を直線化する場合に有効         |
-| Require deployments to succeed            | 無効                         | stagingやproductionへのデプロイ成功をマージ条件に追加    |
-| Require signed commits                    | 無効                         | コミット作成者の検証を厳格化する場合に有効               |
-| Require a pull request before merging     | 有効                         | 直接pushを避け、レビューとCIを経由                       |
-| Required approvals                        | `0`                          | チーム開発では`1`以上にして第三者承認を必須化            |
-| Dismiss stale pull request approvals      | 無効                         | 承認後の追加変更で古い承認を無効化する場合に有効         |
-| Require review from Code Owners           | 無効                         | 所有者ごとのレビューを必須化する場合に有効               |
-| Require approval of most recent push      | 無効                         | 最後の変更をpushした本人以外の承認を必須化               |
-| Require conversation resolution           | 無効                         | 未解決のレビューコメントがあるPRのマージを禁止           |
-| Allowed merge methods                     | すべて                       | 履歴方針に応じてMerge、Squash、Rebaseを制限              |
-| Require status checks to pass             | 有効                         | CIが成功するまでマージを禁止                             |
-| Require branches to be up to date         | 無効                         | 最新の対象ブランチ上でCI成功を必須化する場合に有効       |
-| Do not require status checks on creation  | 無効                         | 新規ブランチ作成時だけstatus checkを免除する場合に有効   |
-| Required status checks                    | `macos-check`、`linux-check` | macOSとLinux両方のNix評価・build成功を必須化             |
-| Block force pushes                        | 有効                         | 共有履歴の強制書き換えを防止                             |
-| Require code scanning results             | 無効                         | CodeQLなどの脆弱性検査をマージ条件に追加                 |
-| Require code quality results              | 無効                         | 静的解析や品質基準をマージ条件に追加                     |
-| Automatically request Copilot code review | 無効                         | Copilotによる自動レビューを利用する場合に有効            |
+| 項目                                      | 今回の設定値   | 用途・有効にする場面                                     |
+| ----------------------------------------- | -------------- | -------------------------------------------------------- |
+| Ruleset Name                              | `Protect main` | Rulesets一覧で対象と目的を識別                           |
+| Enforcement status                        | `Active`       | ルールを実際に適用。検証だけの場合は`Evaluate`を使用     |
+| Bypass list                               | 空             | 緊急対応者や自動化Appへ例外を許可する場合のみ追加        |
+| Target branches                           | Default branch | デフォルトブランチを保護。固定名ならpatternで`main`指定  |
+| Restrict creations                        | 無効           | 特定名のブランチ作成を管理者などに限定する場合に有効     |
+| Restrict updates                          | 無効           | 対象ブランチの更新者をBypass対象だけに限定する場合に有効 |
+| Restrict deletions                        | 有効           | `main`など重要ブランチの誤削除を防止                     |
+| Require linear history                    | 無効           | merge commitを禁止し、履歴を直線化する場合に有効         |
+| Require deployments to succeed            | 無効           | stagingやproductionへのデプロイ成功をマージ条件に追加    |
+| Require signed commits                    | 無効           | コミット作成者の検証を厳格化する場合に有効               |
+| Require a pull request before merging     | 有効           | 直接pushを避け、レビューとCIを経由                       |
+| Required approvals                        | `0`            | チーム開発では`1`以上にして第三者承認を必須化            |
+| Dismiss stale pull request approvals      | 無効           | 承認後の追加変更で古い承認を無効化する場合に有効         |
+| Require review from Code Owners           | 無効           | 所有者ごとのレビューを必須化する場合に有効               |
+| Require approval of most recent push      | 無効           | 最後の変更をpushした本人以外の承認を必須化               |
+| Require conversation resolution           | 無効           | 未解決のレビューコメントがあるPRのマージを禁止           |
+| Allowed merge methods                     | すべて         | 履歴方針に応じてMerge、Squash、Rebaseを制限              |
+| Require status checks to pass             | 有効           | CIが成功するまでマージを禁止                             |
+| Require branches to be up to date         | 無効           | 最新の対象ブランチ上でCI成功を必須化する場合に有効       |
+| Do not require status checks on creation  | 無効           | 新規ブランチ作成時だけstatus checkを免除する場合に有効   |
+| Required status checks                    | `nix-check`    | macOSとLinux両方の成功を集約したcheckを必須化            |
+| Block force pushes                        | 有効           | 共有履歴の強制書き換えを防止                             |
+| Require code scanning results             | 無効           | CodeQLなどの脆弱性検査をマージ条件に追加                 |
+| Require code quality results              | 無効           | 静的解析や品質基準をマージ条件に追加                     |
+| Automatically request Copilot code review | 無効           | Copilotによる自動レビューを利用する場合に有効            |
 
 `Default branch`を対象にすると、デフォルトブランチ名を変更した場合もRulesetの対象が追従します。
 
@@ -128,7 +128,7 @@ nix-stationでは次の値を設定します。
 
 #### Ruleset運用のTips
 
-1. CIのjob名を変更した場合は、RulesetのRequired status checksも更新
+1. 集約jobの`nix-check`を変更した場合は、RulesetのRequired status checksも更新
 2. CI実績がない新しいcheckは候補に表示されないため、一度GitHub Actionsを実行
 3. Required approvalsを`1`以上にすると、個人開発では自分のPRを自分で承認できずマージ不能になる場合あり
 4. Bypass listを空にすると管理者も通常フローへ従うため、緊急対応方法を事前に決定
@@ -559,16 +559,20 @@ GitHub Actionsは次のタイミングで実行されます。
 
 - `macos-check`: 全system評価とmacOS checksの実ビルド
 - `linux-check`: Ubuntu native・WSL Home Manager構成の実ビルド
+- `nix-check`: macOSとLinuxの両jobが成功した場合だけ成功する集約check
 - Nix: Determinate Nix `v3.21.1`
 - Action: `v3.21.1`の完全なcommit SHAへ固定
+- 更新: Dependabotが毎週月曜日9時（Asia/Tokyo）にGitHub Actionsの更新PRを作成
 
 Raspberry Pi OSの`aarch64-linux`構成は`macos-check`の`--all-systems --no-build`で評価します。ARM64 self-hosted runnerやQEMUを利用者の前提にせず、Raspberry Pi OSへNixとHome Managerを導入すれば同じ構成を利用できる方針です。実機固有の問題はRaspberry Pi上での適用時に確認します。
 
 WSLは`ubuntu-latest`上でHome Manager構成を実ビルドします。これはLinuxソフトウェアとしての依存関係と生成結果を保証しますが、Windowsアプリ起動や`wslview`の実動作までは保証しません。
 
-Nixを更新する場合は、`.github/workflows/ci.yml`内のAction SHAと2箇所の`source-tag`を同じリリースへ更新します。通常はファイル1つの変更とCI再実行だけで済み、所要時間は数分程度です。Nixの挙動変更がFlake評価へ影響した場合のみ、警告や評価エラーへの対応が追加で必要です。`nixpkgs`、nix-darwin、Home Managerの更新は別管理であり、Nix本体の更新だけでは`flake.lock`の変更は不要です。
+Determinate Nix Actionはリリースのcommit SHAへ固定します。`source-tag`は指定せず、固定したActionリリースが持つデフォルトのDeterminate Nixバージョンを利用することで、ActionとNixのバージョンずれを防ぎます。
 
-Rulesetでrequired status checksを設定する場合は、旧`nix-check`ではなく`macos-check`と`linux-check`を必須にします。
+GitHub Actionsの更新は[`.github/dependabot.yml`](../.github/dependabot.yml)で管理します。Dependabotが作成した更新PRでSHA、バージョンコメント、CI結果を確認してからマージします。`nixpkgs`、nix-darwin、Home Managerの更新は別管理であり、Action更新だけでは`flake.lock`の変更は不要です。
+
+Rulesetでrequired status checksを設定する場合は、集約jobの`nix-check`を必須にします。個別job名をRulesetへ直接登録せず、workflow内の分割や追加がRuleset設定へ波及しない構成にします。
 
 定義は[`.github/workflows/ci.yml`](../.github/workflows/ci.yml)にあります。
 

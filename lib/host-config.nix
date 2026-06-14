@@ -119,18 +119,21 @@ let
           "darwin.features"
           (config.darwin.features or { });
       in
-      builtins.deepSeq [ homeManager darwinFeatures ] (
-        config // {
-          meta = config.meta // {
-            hostname = config.meta.hostname or hostId;
-          };
-          inherit homeManager;
-          darwin = (config.darwin or { }) // {
-            features = darwinFeatures;
-            homebrew = config.darwin.homebrew or { };
-          };
-        }
-      );
+      if (homeManager.p10k.enable or false) && !(homeManager.zsh or false) then
+        throw "host '${hostId}': homeManager.p10k.enable requires homeManager.zsh = true"
+      else
+        builtins.deepSeq [ homeManager darwinFeatures ] (
+          config // {
+            meta = config.meta // {
+              hostname = config.meta.hostname or hostId;
+            };
+            inherit homeManager;
+            darwin = (config.darwin or { }) // {
+              features = darwinFeatures;
+              homebrew = config.darwin.homebrew or { };
+            };
+          }
+        );
 in
 {
   inherit validateHostConfig;

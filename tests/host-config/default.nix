@@ -58,9 +58,12 @@ lib.runTests {
 
   testP10kConfigIsNormalized = {
     expr = (validate "mac-mini" (lib.recursiveUpdate validConfig {
-      homeManager.p10k = {
-        enable = true;
-        configFile = ../../modules/home/p10k/p10k.zsh;
+      homeManager = {
+        p10k = {
+          enable = true;
+          configFile = ../../modules/home/p10k/p10k.zsh;
+        };
+        zsh = true;
       };
     })).homeManager.p10k;
     expected = {
@@ -72,6 +75,19 @@ lib.runTests {
   testP10kBooleanConfigIsRejected = {
     expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
       homeManager.p10k = true;
+    });
+    expected = false;
+  };
+
+  testP10kRequiresZsh = {
+    expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
+      homeManager = {
+        p10k = {
+          enable = true;
+          configFile = ../../modules/home/p10k/p10k.zsh;
+        };
+        zsh = false;
+      };
     });
     expected = false;
   };

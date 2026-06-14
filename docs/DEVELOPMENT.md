@@ -287,8 +287,17 @@ modules/home/
 │   ├── laptop.nix
 │   └── server.nix
 ├── gh/default.nix
+├── ghostty/
+│   ├── config
+│   └── default.nix
 ├── git/default.nix
+├── p10k/
+│   ├── default.nix
+│   └── p10k.zsh
 ├── cli-tools/default.nix
+├── zed/
+│   ├── default.nix
+│   └── settings.json
 └── zsh/default.nix
 ```
 
@@ -485,9 +494,20 @@ homeManager = {
 
 - `homeManager.git = true`: `userProfile.git.userName`と`userProfile.git.userEmail`をGit設定へ反映
 - `homeManager.zsh = true`: 最小限のZsh設定を有効化
+- `homeManager.p10k.enable = true`: Powerlevel10k本体とテーマを有効化
+- `homeManager.p10k.configFile`: `~/.p10k.zsh`として配置する設定ファイル。`null`ならテーマのみ有効
+- `homeManager.ghostty.enable = true`: Ghostty設定管理を有効化
+- `homeManager.ghostty.configFile`: Ghosttyへ配置する設定ファイル。`null`なら配布しない
+- `homeManager.zed.enable = true`: Zed設定管理を有効化
+- `homeManager.zed.configFile`: Zedへ配置する設定ファイル。`null`なら配布しない
 - `homeManager.gh = true`: GitHub CLIを有効化
 - `homeManager.cliTools = true`: Devbox、Claude Code、ターミナル操作、検索などのCLIを導入
 - すべて`false`: roleとHome Manager基盤のみ生成
+
+すべてのhostで`p10k`、`ghostty`、`zed`を明示します。`server` roleではGUIアプリの
+`ghostty`と`zed`を無効化し、`p10k.enable`は`zsh`が有効なhostでのみ有効化します。
+これらのツールは共通して`enable`と`configFile`で構成し、hostごとに設定ファイルを
+差し替えられます。
 
 DockerはmacOSでは`docker-desktop` caskで管理します。Ubuntu、WSL、Raspberry Pi OSではDocker CLIをHome Managerで導入します。Docker daemonの起動とユーザー権限はシステム設定を伴うため、standalone Home Managerの管理対象外です。
 

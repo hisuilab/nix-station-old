@@ -40,22 +40,63 @@ lib.runTests {
   };
 
   testAppearanceDefaultsAreConfigured = {
-    expr = appearanceModule.system.defaults.NSGlobalDomain;
+    expr = {
+      global = appearanceModule.system.defaults.NSGlobalDomain;
+      airDrop = appearanceModule.system.defaults.controlcenter.AirDrop;
+    };
     expected = {
-      AppleInterfaceStyle = "Dark";
-      AppleInterfaceStyleSwitchesAutomatically = false;
-      AppleShowAllExtensions = true;
+      global = {
+        AppleInterfaceStyle = "Dark";
+        AppleInterfaceStyleSwitchesAutomatically = false;
+        AppleShowAllExtensions = true;
+      };
+      airDrop = false;
     };
   };
 
   testLaptopDockAutoHides = {
-    expr = laptopDockModule.system.defaults.dock.autohide;
-    expected = true;
+    expr = {
+      autohide = laptopDockModule.system.defaults.dock.autohide;
+      orientation = laptopDockModule.system.defaults.dock.orientation;
+    };
+    expected = {
+      autohide = true;
+      orientation = "bottom";
+    };
   };
 
   testDesktopDockRemainsVisible = {
-    expr = desktopDockModule.system.defaults.dock.autohide;
-    expected = false;
+    expr = {
+      autohide = desktopDockModule.system.defaults.dock.autohide;
+      orientation = desktopDockModule.system.defaults.dock.orientation;
+    };
+    expected = {
+      autohide = false;
+      orientation = "left";
+    };
+  };
+
+  testAppearanceActivationConfiguresUserPreferences = {
+    expr = {
+      multicolor = lib.hasInfix
+        "defaults delete NSGlobalDomain AppleAccentColor"
+        appearanceModule.system.activationScripts.postActivation.text;
+      siriMenu = lib.hasInfix
+        "defaults write com.apple.Siri StatusMenuVisible -bool false"
+        appearanceModule.system.activationScripts.postActivation.text;
+      spotlightMenu = lib.hasInfix
+        "defaults -currentHost write com.apple.Spotlight MenuItemHidden -bool true"
+        appearanceModule.system.activationScripts.postActivation.text;
+      spotlightShortcut = lib.hasInfix
+        ''-c "Set :AppleSymbolicHotKeys:64:enabled false"''
+        appearanceModule.system.activationScripts.postActivation.text;
+    };
+    expected = {
+      multicolor = true;
+      siriMenu = true;
+      spotlightMenu = true;
+      spotlightShortcut = true;
+    };
   };
 
   testFinderDefaultsAreConfigured = {

@@ -8,7 +8,7 @@
     role = "desktop";
   };
 
-  userProfile.name = "guest";
+  userProfile.name = "hisuilab";
 
   homeManager = {
     cliTools = true;
@@ -51,7 +51,7 @@
       "visual-studio-code"
 
       "codex-app"
-      "ollama"
+      "ollama-app"
 
       "docker-desktop"
 
@@ -66,7 +66,7 @@
       "affinity"
       "blender"
       "obs"
-      "davinci-resolve"
+      # davinci-resolve は Homebrew cask から削除済み。公式サイトから手動インストール要
       "elgato-stream-deck"
 
       "raycast"

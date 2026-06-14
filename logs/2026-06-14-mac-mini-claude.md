@@ -322,6 +322,38 @@ Warning: Cask ollama was renamed to ollama-app.
 
 ---
 
-## 進行中のエラー・成功記録
+## エラー 9: PlistBuddy `Set` がキー未存在で失敗
 
-（以降、コマンド実行ごとに追記）
+### エラー内容
+
+```
+Set: Entry, ":AppleSymbolicHotKeys:64:enabled", Does Not Exist
+```
+
+`modules/system/darwin/features/appearance/default.nix` の activation script 内で発生。
+
+### 原因
+
+- `PlistBuddy -c "Set :path value"` はキーが既存の場合のみ動作する
+- Mac mini 初回セットアップでは `com.apple.symbolichotkeys.plist` にキー `64`（Spotlight ホットキー）が未初期化
+- MacBook Air では既存キーを `Set` で上書きできていたが、Mac mini では存在しないため失敗
+
+### 対処（実施済み）
+
+`modules/system/darwin/features/appearance/default.nix` を修正:
+
+1. `Add :AppleSymbolicHotKeys:64 dict` でキー 64 の dict を作成（既存なら `2>/dev/null || true` で無視）
+2. `Add :AppleSymbolicHotKeys:64:enabled bool false` で値を追加
+3. Add が失敗（既存）した場合は `Set` にフォールバック
+
+---
+
+## 最終結果: darwin-rebuild switch 成功
+
+すべてのエラーを解消し、2回目の `darwin-rebuild switch` が完全に成功：
+
+- Homebrew: 23 casks すべてインストール済み
+- Dock: 12 アプリ固定完了
+- Finder サイドバー: 9 項目追加
+- Home Manager: 設定適用済み
+- PlistBuddy: Spotlight ホットキー無効化完了

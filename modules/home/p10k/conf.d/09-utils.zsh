@@ -1,23 +1,48 @@
 # ============================================================
-# plain-mode: p10k を一時的に無効化するトグル関数
+# theme: プロンプトテーマ切替えコマンド
 # ============================================================
-# 用途: ターミナル出力を LLM に貼り付ける際などに
-#       描画文字・カラーコードを排除したいとき
-#
 # 使い方:
-#   plain-mode   → シンプルな PS1 に切替え (p10k の precmd を除去)
-#   plain-mode   → もう一度呼ぶと p10k を復帰 (p10k reload)
+#   theme         → トグル (p10k ↔ plain)
+#   theme p10k    → p10k を有効化
+#   theme plain   → シンプル PS1 に切替え (LLM 共有時など)
 
-function plain-mode() {
-  if (( ${precmd_functions[(I)_p9k_precmd]} )); then
-    # p10k が有効 → 無効化
-    precmd_functions=( ${precmd_functions[@]:#_p9k_precmd} )
-    PS1='%~'$'\n''%# '
-    RPROMPT=''
-    print -P '%F{11}plain mode%f  (run plain-mode again to restore p10k)'
-  else
-    # p10k が無効 → 復帰
-    p10k reload
-    print -P '%F{10}p10k restored%f'
-  fi
+function theme() {
+  local p10k_active=$(( ${precmd_functions[(I)_p9k_precmd]} > 0 ))
+
+  case ${1:-} in
+    p10k)
+      if (( p10k_active )); then
+        print -P '%F{10}already using p10k%f'
+        return
+      fi
+      p10k reload
+      print -P '%F{10}theme: p10k%f'
+      ;;
+    plain)
+      if (( !p10k_active )); then
+        print -P '%F{11}already in plain mode%f'
+        return
+      fi
+      precmd_functions=( ${precmd_functions[@]:#_p9k_precmd} )
+      PS1='%~'$'\n''%# '
+      RPROMPT=''
+      print -P '%F{11}theme: plain%f  (run: theme p10k to restore)'
+      ;;
+    '')
+      # 引数なし → トグル
+      if (( p10k_active )); then
+        theme plain
+      else
+        theme p10k
+      fi
+      ;;
+    *)
+      print -P '%F{1}unknown theme: %f'"$1" >&2
+      print 'usage: theme [p10k|plain]' >&2
+      return 1
+      ;;
+  esac
 }
+
+# Tab 補完
+compdef '_arguments "1:theme:(p10k plain)"' theme

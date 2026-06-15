@@ -17,6 +17,7 @@ local -r C_SUCCESS=84    # Green #50FA7B
 local -r C_SUCCESS_ALT=78   # slightly deeper green
 local -r C_WARNING=215   # Orange #FFB86C
 local -r C_ERROR=203     # Red #FF5555
+local -r C_LANG_WARM=212 # pink #FF79C6 (Ruby/Scala/Erlang/Laravel)
 
 # VCS foreground (on top of semantic background colors)
 typeset -g C_VCS_CLEAN_FG=234     # dark on bright green

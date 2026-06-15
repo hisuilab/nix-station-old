@@ -16,6 +16,7 @@ local -r C_SUCCESS=48
 local -r C_SUCCESS_ALT=37
 local -r C_WARNING=93
 local -r C_ERROR=198
+local -r C_LANG_WARM=198  # hot pink (Ruby/Scala/Erlang/Laravel)
 
 # VCS
 typeset -g C_VCS_CLEAN_FG=0

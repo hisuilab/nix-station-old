@@ -16,6 +16,7 @@ local -r C_SUCCESS=108
 local -r C_SUCCESS_ALT=142
 local -r C_WARNING=136
 local -r C_ERROR=167
+local -r C_LANG_WARM=167  # warm red (Ruby/Scala/Erlang/Laravel)
 
 # VCS
 typeset -g C_VCS_CLEAN_FG=234

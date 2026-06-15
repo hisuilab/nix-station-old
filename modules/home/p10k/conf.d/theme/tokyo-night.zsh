@@ -1,7 +1,6 @@
 # ============================================================
 # Tokyo Night Theme Palette
 # ============================================================
-# https://github.com/folke/tokyonight.nvim
 
 # Base
 local -r C_DARK=235

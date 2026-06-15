@@ -1,8 +1,6 @@
 # ============================================================
 # Nord Theme Palette
 # ============================================================
-# https://www.nordtheme.com/
-# Polar Night / Snow Storm / Frost / Aurora
 
 # Base
 local -r C_DARK=236

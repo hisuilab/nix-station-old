@@ -38,11 +38,12 @@ typeset -g P10K_THEME="${P10K_THEME:-cyberpunk}"
   source "${p10k_conf_dir}/02-elements.zsh"
   source "${p10k_conf_dir}/03-layout.zsh"
   source "${p10k_conf_dir}/04-prompt-core.zsh"
-  source "${p10k_conf_dir}/05-segments.zsh"
-  source "${p10k_conf_dir}/06-devtools.zsh"
-  source "${p10k_conf_dir}/07-cloud.zsh"
-  source "${p10k_conf_dir}/08-behavior.zsh"
-  source "${p10k_conf_dir}/09-utils.zsh"
+  source "${p10k_conf_dir}/05-vcs.zsh"
+  source "${p10k_conf_dir}/06-segments.zsh"
+  source "${p10k_conf_dir}/07-devtools.zsh"
+  source "${p10k_conf_dir}/08-cloud.zsh"
+  source "${p10k_conf_dir}/09-behavior.zsh"
+  source "${p10k_conf_dir}/10-utils.zsh"
 
   # 設定再読込
   (( ! $+functions[p10k] )) || p10k reload

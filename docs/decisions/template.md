@@ -1,0 +1,10 @@
+# 意思決定の記録: <branch-or-topic>
+
+> レビュー参照 → `docs/reviews/YYYY-MM-DD-<branch-or-topic>.md`
+> 記録日: YYYY-MM-DD
+
+---
+
+| # | 判断 | 理由・備考 |
+|---|---|---|
+| 1 | 対応する / 見送る / 設計変更 | |

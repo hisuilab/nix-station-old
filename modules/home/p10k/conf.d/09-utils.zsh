@@ -65,7 +65,9 @@ function theme() {
       typeset -g P10K_THEME=$1
       # plain mode 中でも呼ばれる可能性があるため、未登録なら追加
       (( ${precmd_functions[(I)_p9k_precmd]} )) || add-zsh-hook precmd _p9k_precmd
-      p10k reload
+      # p10k reload だけでは POWERLEVEL9K_* の色変数が再設定されない。
+      # 設定ファイルを再 source することで palette ごと再適用する。
+      source "${POWERLEVEL9K_CONFIG_FILE:-${HOME}/.p10k.zsh}"
       print -P "%F{10}theme: $1%f"
       ;;
   esac

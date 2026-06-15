@@ -49,6 +49,7 @@ typeset -g P10K_THEME="cyberpunk"
   source "${p10k_conf_dir}/06-devtools.zsh"
   source "${p10k_conf_dir}/07-cloud.zsh"
   source "${p10k_conf_dir}/08-behavior.zsh"
+  source "${p10k_conf_dir}/09-utils.zsh"
 
   # 設定再読込
   (( ! $+functions[p10k] )) || p10k reload

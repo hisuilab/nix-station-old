@@ -5,23 +5,23 @@
 # Polar Night / Snow Storm / Frost / Aurora
 
 # Base
-local -r C_DARK=238      # Nord1 #3B4252
-local -r C_WHITE=153     # Nord9 #81A1C1 (frost blue-white)
-local -r C_BLACK=235     # Nord0 #2E3440
+local -r C_DARK=236
+local -r C_WHITE=254
+local -r C_BLACK=0
 
 # Primary
-local -r C_PRIMARY=67     # Nord10 #5E81AC (frost dark blue, dir)
-local -r C_ACCENT=110  # Nord8 #88C0D0 (frost cyan, vcs modified)
+local -r C_PRIMARY=67
+local -r C_ACCENT=110
 
 # Semantic
-local -r C_SUCCESS=108   # Nord14 #A3BE8C (aurora green)
-local -r C_SUCCESS_ALT=72   # slightly deeper green
-local -r C_WARNING=222   # Nord13 #EBCB8B (aurora yellow)
-local -r C_ERROR=131     # Nord11 #BF616A (aurora red)
-local -r C_LANG_WARM=173 # light orange/salmon (Ruby/Scala/Erlang/Laravel)
+local -r C_SUCCESS=151     
+local -r C_SUCCESS_ALT=110 
+local -r C_WARNING=180     
+local -r C_ERROR=174       
+local -r C_LANG_WARM=173   
 
 # VCS foreground (on top of semantic background colors)
-typeset -g C_VCS_CLEAN_FG=235      # dark on green
-typeset -g C_VCS_MODIFIED_FG=235   # dark on cyan
-typeset -g C_VCS_UNTRACKED_FG=222  # yellow on deeper green
-typeset -g C_VCS_CONFLICTED_FG=253  # light on red
+typeset -g C_VCS_CLEAN_FG=0
+typeset -g C_VCS_MODIFIED_FG=255
+typeset -g C_VCS_UNTRACKED_FG=255
+typeset -g C_VCS_CONFLICTED_FG=255

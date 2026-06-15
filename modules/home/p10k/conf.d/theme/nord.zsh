@@ -1,5 +1,5 @@
 # ============================================================
-# 🧊 Nord Theme Palette
+# Nord Theme Palette
 # ============================================================
 # https://www.nordtheme.com/
 # Polar Night / Snow Storm / Frost / Aurora

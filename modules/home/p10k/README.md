@@ -19,11 +19,11 @@ p10k/
     ├── 08-behavior.zsh    # instant prompt / transient prompt などの挙動
     ├── 09-utils.zsh       # theme コマンド定義
     └── theme/
-        ├── cyberpunk.zsh   # 🌃 サイバーパンク
-        ├── dracula.zsh     # 🧛 ドラキュラ
-        ├── gruvbox.zsh     # 🌿 グルーブボックス
-        ├── nord.zsh        # 🧊 ノルド
-        └── tokyo-night.zsh # 🗼 トーキョーナイト
+        ├── cyberpunk.zsh   # サイバーパンク
+        ├── dracula.zsh     # ドラキュラ
+        ├── gruvbox.zsh     # グルーブボックス
+        ├── nord.zsh        # ノルド
+        └── tokyo-night.zsh # トーキョーナイト
 ```
 
 ## theme コマンド

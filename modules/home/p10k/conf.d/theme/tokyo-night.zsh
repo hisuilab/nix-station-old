@@ -1,5 +1,5 @@
 # ============================================================
-# 🌃 Tokyo Night Theme Palette
+# Tokyo Night Theme Palette
 # ============================================================
 # https://github.com/folke/tokyonight.nvim
 

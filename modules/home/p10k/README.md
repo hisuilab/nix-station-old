@@ -43,9 +43,28 @@ theme plain        # プレーンな PS1 に切替え (LLM への貼り付け時
 
 ```zsh
 # conf.d/theme/mytheme.zsh
-local -r C_DARK=...
-local -r C_WHITE=...
-# ... (cyberpunk.zsh を参考に)
+
+# Base
+local -r C_DARK=...          # 背景色
+local -r C_WHITE=...         # 前景色
+local -r C_BLACK=...         # 暗めの背景色
+
+# Primary
+local -r C_PRIMARY=...       # ディレクトリ・主要セグメント背景
+local -r C_ACCENT=...        # VCS 変更中・アクセントセグメント背景
+
+# Semantic
+local -r C_SUCCESS=...       # 成功・正常状態
+local -r C_SUCCESS_ALT=...   # 成功の補助色
+local -r C_WARNING=...       # 警告状態
+local -r C_ERROR=...         # エラー・危険状態
+local -r C_LANG_WARM=...     # Ruby/Scala/Erlang/Laravel 系の背景色
+
+# VCS foreground (on top of semantic background colors)
+typeset -g C_VCS_CLEAN_FG=...       # クリーン時の文字色
+typeset -g C_VCS_MODIFIED_FG=...    # 変更あり時の文字色
+typeset -g C_VCS_UNTRACKED_FG=...   # 未追跡ファイルありの文字色
+typeset -g C_VCS_CONFLICTED_FG=...  # コンフリクトありの文字色
 ```
 
 ## Nix 適用

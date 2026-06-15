@@ -63,7 +63,7 @@ typeset -g POWERLEVEL9K_ASDF_JULIA_FOREGROUND=$C_BLACK
 typeset -g POWERLEVEL9K_ASDF_JULIA_BACKGROUND=$C_SUCCESS
 
 # ============================================================
-# Python 系 - インディゴ背景
+# Python 系 - C_PRIMARY 背景
 # ============================================================
 # virtualenv: Python 仮想環境
 typeset -g POWERLEVEL9K_VIRTUALENV_FOREGROUND=$C_WHITE
@@ -134,7 +134,7 @@ typeset -g POWERLEVEL9K_GO_VERSION_BACKGROUND=$C_SUCCESS_ALT
 typeset -g POWERLEVEL9K_GO_VERSION_PROJECT_ONLY=true
 
 # ============================================================
-# Rust 系 - ネオンパープル背景
+# Rust 系 - C_ACCENT 背景
 # ============================================================
 # rust_version
 typeset -g POWERLEVEL9K_RUST_VERSION_FOREGROUND=$C_WHITE
@@ -158,7 +158,7 @@ typeset -g POWERLEVEL9K_RVM_SHOW_GEMSET=false
 typeset -g POWERLEVEL9K_RVM_SHOW_PREFIX=false
 
 # ============================================================
-# Java 系 - ネオンパープル背景
+# Java 系 - C_ACCENT 背景
 # ============================================================
 # java_version
 typeset -g POWERLEVEL9K_JAVA_VERSION_FOREGROUND=$C_WHITE
@@ -174,7 +174,7 @@ typeset -g POWERLEVEL9K_JENV_PROMPT_ALWAYS_SHOW=false
 typeset -g POWERLEVEL9K_JENV_SHOW_SYSTEM=true
 
 # ============================================================
-# PHP 系 - ネオンパープル背景
+# PHP 系 - C_ACCENT 背景
 # ============================================================
 # php_version
 typeset -g POWERLEVEL9K_PHP_VERSION_FOREGROUND=$C_WHITE
@@ -193,7 +193,7 @@ typeset -g POWERLEVEL9K_LARAVEL_VERSION_FOREGROUND=$C_WHITE
 typeset -g POWERLEVEL9K_LARAVEL_VERSION_BACKGROUND=$C_LANG_WARM
 
 # ============================================================
-# .NET 系 - ネオンパープル背景
+# .NET 系 - C_ACCENT 背景
 # ============================================================
 # dotnet_version
 typeset -g POWERLEVEL9K_DOTNET_VERSION_FOREGROUND=$C_WHITE
@@ -201,7 +201,7 @@ typeset -g POWERLEVEL9K_DOTNET_VERSION_BACKGROUND=$C_ACCENT
 typeset -g POWERLEVEL9K_DOTNET_VERSION_PROJECT_ONLY=true
 
 # ============================================================
-# Perl 系 - インディゴ背景
+# Perl 系 - C_PRIMARY 背景
 # ============================================================
 # plenv
 typeset -g POWERLEVEL9K_PLENV_FOREGROUND=$C_WHITE
@@ -217,7 +217,7 @@ typeset -g POWERLEVEL9K_PERLBREW_PROJECT_ONLY=true
 typeset -g POWERLEVEL9K_PERLBREW_SHOW_PREFIX=false
 
 # ============================================================
-# Lua 系 - インディゴ背景
+# Lua 系 - C_PRIMARY 背景
 # ============================================================
 # luaenv
 typeset -g POWERLEVEL9K_LUAENV_FOREGROUND=$C_WHITE
@@ -237,7 +237,7 @@ typeset -g POWERLEVEL9K_SCALAENV_PROMPT_ALWAYS_SHOW=false
 typeset -g POWERLEVEL9K_SCALAENV_SHOW_SYSTEM=true
 
 # ============================================================
-# Haskell 系 - ネオンパープル背景
+# Haskell 系 - C_ACCENT 背景
 # ============================================================
 # haskell_stack
 typeset -g POWERLEVEL9K_HASKELL_STACK_FOREGROUND=$C_WHITE

@@ -3,6 +3,7 @@
 # ============================================================
 # 使い方:
 #   theme              → トグル (p10k ↔ plain)
+#   theme list         → 利用可能なテーマを表示
 #   theme plain        → シンプル PS1 に切替え (LLM 共有時など)
 #   theme cyberpunk    → p10k サイバーパンクテーマに切替え
 #   theme gruvbox      → p10k グルーブボックステーマに切替え
@@ -14,6 +15,22 @@ function theme() {
   local p10k_conf_dir="${HOME}/.p10k.d"
 
   case ${1:-} in
+    list)
+      local -a p10k_themes=( ${p10k_conf_dir}/theme/*.zsh(N:t:r) )
+      print -P '%B available themes:%b'
+      if (( !p10k_active )); then
+        print -P "  %F{10}plain%f %F{8}← current%f"
+      else
+        print -P "  %F{7}plain%f"
+      fi
+      for t in $p10k_themes; do
+        if (( p10k_active )) && [[ $t == $P10K_THEME ]]; then
+          print -P "  %F{10}${t}%f %F{8}← current%f"
+        else
+          print -P "  %F{7}${t}%f"
+        fi
+      done
+      ;;
     plain)
       if (( !p10k_active )); then
         print -P '%F{11}already in plain mode%f'
@@ -51,7 +68,7 @@ function theme() {
 # Tab 補完: conf.d/theme/ のファイルを動的に列挙 + plain を追加
 function _theme_complete() {
   local p10k_conf_dir="${HOME}/.p10k.d"
-  local -a themes=( plain ${p10k_conf_dir}/theme/*.zsh(N:t:r) )
+  local -a themes=( list plain ${p10k_conf_dir}/theme/*.zsh(N:t:r) )
   _arguments "1:theme:(${themes[*]})"
 }
 compdef _theme_complete theme

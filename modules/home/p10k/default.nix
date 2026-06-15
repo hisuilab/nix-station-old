@@ -8,6 +8,7 @@ in
     packages = [ pkgs.zsh-powerlevel10k ];
   } // lib.optionalAttrs (p10k.configFile != null) {
     file.".p10k.zsh".source = p10k.configFile;
+    file.".p10k.d".source = ./conf.d;
   };
 
   programs.zsh.initExtra = ''

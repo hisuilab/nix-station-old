@@ -2,7 +2,7 @@
 # vcs: Git ステータス
 # ============================================================
 # GitHub ロゴアイコン
-typeset -g POWERLEVEL9K_VCS_VISUAL_IDENTIFIER_EXPANSION=$' '
+typeset -g POWERLEVEL9K_VCS_VISUAL_IDENTIFIER_EXPANSION=$' '
 
 # 前景色 (アイコン・テキスト) - 一元管理された色定義を参照
 typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=$C_VCS_CLEAN_FG
@@ -19,7 +19,7 @@ typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND=$C_ERROR
 typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND=$C_DARK
 
 # ブランチアイコン
-typeset -g POWERLEVEL9K_VCS_BRANCH_ICON=' '
+typeset -g POWERLEVEL9K_VCS_BRANCH_ICON=' '
 # 未追跡ファイルアイコン
 typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON='?'
 

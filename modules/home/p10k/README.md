@@ -20,11 +20,11 @@ p10k/
     ├── 09-behavior.zsh    # instant prompt / transient prompt などの挙動
     ├── 10-utils.zsh       # theme コマンド定義
     └── theme/
-        ├── cyberpunk.zsh   # サイバーパンク
-        ├── dracula.zsh     # ドラキュラ
-        ├── gruvbox.zsh     # グルーブボックス
-        ├── nord.zsh        # ノルド
-        └── tokyo-night.zsh # トーキョーナイト
+        ├── cyberpunk.zsh
+        ├── dracula.zsh
+        ├── gruvbox.zsh
+        ├── nord.zsh
+        └── tokyo-night.zsh
 ```
 
 ## theme コマンド
@@ -32,8 +32,8 @@ p10k/
 ```zsh
 theme              # トグル (p10k ↔ plain)
 theme list         # 利用可能なテーマを一覧表示
-theme cyberpunk    # サイバーパンクテーマに切替え
-theme gruvbox      # グルーブボックステーマに切替え
+theme cyberpunk    # cyberpunkテーマに切替え
+theme gruvbox      # gruvboxテーマに切替え
 theme plain        # プレーンな PS1 に切替え (LLM への貼り付け時など)
 ```
 

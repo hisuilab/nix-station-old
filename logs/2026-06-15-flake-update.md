@@ -156,7 +156,7 @@ sudo nix run github:LnL7/nix-darwin/nix-darwin-24.11#darwin-rebuild -- \
 **残存警告:**
 
 - `activate-user` — 既知の home-manager / nix-darwin 互換性問題。動作に影響なし
-- `/Applications/Nix Apps is not owned by nix-darwin, skipping App linking` — 初回ビルド直後の過渡状態。再度 `darwin-rebuild switch` を実行すると解消する場合がある
+- `/Applications/Nix Apps is not owned by nix-darwin, skipping App linking` — 2回目の実行後も継続。後述の対処が必要
 
 **手動対応が必要なもの (App Store):**
 
@@ -164,6 +164,42 @@ sudo nix run github:LnL7/nix-darwin/nix-darwin-24.11#darwin-rebuild -- \
 mas install 1429033973  # RunCat
 mas install 497799835   # Xcode
 mas install 682658836   # GarageBand
+```
+
+---
+
+## `/Applications/Nix Apps` 問題の詳細
+
+### 症状
+
+```
+warning: /Applications/Nix Apps is not owned by nix-darwin, skipping App linking...
+```
+
+sudo あり・なし どちらで実行しても解消しない。
+
+### 原因
+
+ディレクトリの状態:
+
+```
+dr-xr-xr-x@  root  1 Jan 1970  /Applications/Nix Apps
+  拡張属性: com.apple.provenance
+```
+
+- mtime が epoch 0 → nix ストアにコピーされた nix-darwin 管理ディレクトリ
+- `com.apple.provenance` → macOS がシステム側で作成したと判断している
+- nix-darwin は自分のアクティベーション記録でこのディレクトリを「所有」しているか確認するが、
+  新規セットアップや以前の世代のメタデータが失われていると「管理外」と判断してスキップする
+
+### 対処
+
+ディレクトリを削除してから再ビルドすることで nix-darwin が作り直す。
+
+```bash
+sudo rm -rf "/Applications/Nix Apps"
+sudo nix run github:LnL7/nix-darwin/nix-darwin-24.11#darwin-rebuild -- \
+  switch --flake path:.#macbook-air
 ```
 
 ---

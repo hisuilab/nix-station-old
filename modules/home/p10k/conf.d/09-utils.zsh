@@ -2,22 +2,18 @@
 # theme: プロンプトテーマ切替えコマンド
 # ============================================================
 # 使い方:
-#   theme         → トグル (p10k ↔ plain)
-#   theme p10k    → p10k を有効化
-#   theme plain   → シンプル PS1 に切替え (LLM 共有時など)
+#   theme              → トグル (p10k ↔ plain)
+#   theme plain        → シンプル PS1 に切替え (LLM 共有時など)
+#   theme cyberpunk    → p10k サイバーパンクテーマに切替え
+#   theme gruvbox      → p10k グルーブボックステーマに切替え
+#
+# 新テーマの追加: conf.d/theme/<name>.zsh を置くだけでよい
 
 function theme() {
   local p10k_active=$(( ${precmd_functions[(I)_p9k_precmd]} > 0 ))
+  local p10k_conf_dir="${HOME}/.p10k.d"
 
   case ${1:-} in
-    p10k)
-      if (( p10k_active )); then
-        print -P '%F{10}already using p10k%f'
-        return
-      fi
-      p10k reload
-      print -P '%F{10}theme: p10k%f'
-      ;;
     plain)
       if (( !p10k_active )); then
         print -P '%F{11}already in plain mode%f'
@@ -26,23 +22,36 @@ function theme() {
       precmd_functions=( ${precmd_functions[@]:#_p9k_precmd} )
       PS1='%~'$'\n''%# '
       RPROMPT=''
-      print -P '%F{11}theme: plain%f  (run: theme p10k to restore)'
+      print -P '%F{11}theme: plain%f  (run: theme to restore)'
       ;;
     '')
       # 引数なし → トグル
       if (( p10k_active )); then
         theme plain
       else
-        theme p10k
+        p10k reload
+        print -P "%F{10}theme: ${P10K_THEME}%f"
       fi
       ;;
     *)
-      print -P '%F{1}unknown theme: %f'"$1" >&2
-      print 'usage: theme [p10k|plain]' >&2
-      return 1
+      # p10k サブテーマ (cyberpunk / gruvbox / …)
+      if [[ ! -f "${p10k_conf_dir}/theme/${1}.zsh" ]]; then
+        print -P "%F{1}unknown theme: %f$1" >&2
+        local -a available=( ${p10k_conf_dir}/theme/*.zsh(N:t:r) )
+        print "available: plain ${available[*]}" >&2
+        return 1
+      fi
+      typeset -g P10K_THEME=$1
+      p10k reload
+      print -P "%F{10}theme: $1%f"
       ;;
   esac
 }
 
-# Tab 補完
-compdef '_arguments "1:theme:(p10k plain)"' theme
+# Tab 補完: conf.d/theme/ のファイルを動的に列挙 + plain を追加
+function _theme_complete() {
+  local p10k_conf_dir="${HOME}/.p10k.d"
+  local -a themes=( plain ${p10k_conf_dir}/theme/*.zsh(N:t:r) )
+  _arguments "1:theme:(${themes[*]})"
+}
+compdef _theme_complete theme

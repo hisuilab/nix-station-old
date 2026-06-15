@@ -20,7 +20,8 @@
 # Theme Select
 # ============================================================
 # cyberpunk / gruvbox
-typeset -g P10K_THEME="cyberpunk"
+# 未設定なら cyberpunk をデフォルトに。設定済み (theme コマンド後) はそのまま保持。
+typeset -g P10K_THEME="${P10K_THEME:-cyberpunk}"
 
 # オプションの一時変更
 'builtin' 'local' '-a' 'p10k_config_opts'

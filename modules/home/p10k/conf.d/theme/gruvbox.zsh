@@ -18,7 +18,7 @@ local -r C_WARNING=136   # #AF8700 amber
 local -r C_ERROR=167     # #D75F5F warm red
 local -r C_LANG_WARM=167 # #D75F5F warm red (Ruby/Scala/Erlang/Laravel)
 
-# VCS
+# VCS foreground (on top of semantic background colors)
 typeset -g C_VCS_CLEAN_FG=234
 typeset -g C_VCS_MODIFIED_FG=223
 typeset -g C_VCS_UNTRACKED_FG=136

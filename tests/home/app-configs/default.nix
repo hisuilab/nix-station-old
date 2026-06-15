@@ -66,12 +66,12 @@ lib.runTests {
     expr = {
       init = lib.hasInfix
         ''source "/Users/test/.p10k.zsh"''
-        p10kModule.programs.zsh.initExtra;
+        p10kModule.programs.zsh.initContent;
       package = map (package: package.pname) p10kModule.home.packages;
       source = p10kModule.home.file.".p10k.zsh".source;
       theme = lib.hasInfix
         "/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
-        p10kModule.programs.zsh.initExtra;
+        p10kModule.programs.zsh.initContent;
     };
     expected = {
       init = true;
@@ -85,12 +85,12 @@ lib.runTests {
     expr = {
       config = lib.hasInfix
         ".p10k.zsh"
-        p10kDisabledModule.programs.zsh.initExtra;
+        p10kDisabledModule.programs.zsh.initContent;
       package = map (package: package.pname) p10kDisabledModule.home.packages;
       source = p10kDisabledModule.home ? file;
       theme = lib.hasInfix
         "/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
-        p10kDisabledModule.programs.zsh.initExtra;
+        p10kDisabledModule.programs.zsh.initContent;
     };
     expected = {
       config = false;

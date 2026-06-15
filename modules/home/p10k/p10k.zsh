@@ -15,7 +15,12 @@
 # ステートファイル ($XDG_DATA_HOME/p10k/theme) があればそれを使用、なければ tokyo-night。
 typeset -g P10K_CONF_DIR="${HOME}/.p10k.d"
 local _p10k_state="${XDG_DATA_HOME:-${HOME}/.local/share}/p10k/theme"
-typeset -g P10K_THEME="${P10K_THEME:-$(cat "$_p10k_state" 2>/dev/null || echo tokyo-night)}"
+# state ファイルがあれば最優先。なければ環境変数、それもなければデフォルト。
+if [[ -f "$_p10k_state" ]]; then
+  typeset -g P10K_THEME="$(<"$_p10k_state")"
+else
+  typeset -g P10K_THEME="${P10K_THEME:-tokyo-night}"
+fi
 
 # オプションの一時変更
 'builtin' 'local' '-a' 'p10k_config_opts'

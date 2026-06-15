@@ -4,23 +4,23 @@
 # https://draculatheme.com/
 
 # Base
-local -r C_DARK=235      # Background #282A36
-local -r C_WHITE=255     # Foreground #F8F8F2
-local -r C_BLACK=234     # Darker background
+local -r C_DARK=236
+local -r C_WHITE=255
+local -r C_BLACK=0
 
 # Primary
-local -r C_PRIMARY=61     # Comment #6272A4 (muted purple, dir)
-local -r C_ACCENT=141  # Purple #BD93F9 (vcs modified)
+local -r C_PRIMARY=061
+local -r C_ACCENT=099
 
 # Semantic
-local -r C_SUCCESS=84    # Green #50FA7B
-local -r C_SUCCESS_ALT=78   # slightly deeper green
-local -r C_WARNING=215   # Orange #FFB86C
-local -r C_ERROR=203     # Red #FF5555
-local -r C_LANG_WARM=212 # pink #FF79C6 (Ruby/Scala/Erlang/Laravel)
+local -r C_SUCCESS=77
+local -r C_SUCCESS_ALT=074
+local -r C_WARNING=215
+local -r C_ERROR=212
+local -r C_LANG_WARM=215
 
 # VCS foreground (on top of semantic background colors)
-typeset -g C_VCS_CLEAN_FG=234     # dark on bright green
-typeset -g C_VCS_MODIFIED_FG=255  # white on purple
-typeset -g C_VCS_UNTRACKED_FG=215  # orange on deeper green
-typeset -g C_VCS_CONFLICTED_FG=255  # white on red
+typeset -g C_VCS_CLEAN_FG=0
+typeset -g C_VCS_MODIFIED_FG=255
+typeset -g C_VCS_UNTRACKED_FG=255
+typeset -g C_VCS_CONFLICTED_FG=255

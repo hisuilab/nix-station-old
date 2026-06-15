@@ -10,8 +10,8 @@ local -r C_WHITE=153     # Nord9 #81A1C1 (frost blue-white)
 local -r C_BLACK=235     # Nord0 #2E3440
 
 # Primary
-local -r C_INDIGO=67     # Nord10 #5E81AC (frost dark blue, dir)
-local -r C_NEON_PURPLE=110  # Nord8 #88C0D0 (frost cyan, vcs modified)
+local -r C_PRIMARY=67     # Nord10 #5E81AC (frost dark blue, dir)
+local -r C_ACCENT=110  # Nord8 #88C0D0 (frost cyan, vcs modified)
 
 # Semantic
 local -r C_SUCCESS=108   # Nord14 #A3BE8C (aurora green)

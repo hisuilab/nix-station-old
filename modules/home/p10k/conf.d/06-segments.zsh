@@ -22,7 +22,7 @@ typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VERBOSE=false
 # direnv: direnv 状態
 # ============================================================
 typeset -g POWERLEVEL9K_DIRENV_FOREGROUND=$C_WHITE
-typeset -g POWERLEVEL9K_DIRENV_BACKGROUND=$C_NEON_PURPLE
+typeset -g POWERLEVEL9K_DIRENV_BACKGROUND=$C_ACCENT
 
 # ============================================================
 # nordvpn: NordVPN 状態 (Linux)
@@ -72,7 +72,7 @@ typeset -g POWERLEVEL9K_MIDNIGHT_COMMANDER_BACKGROUND=$C_SUCCESS_ALT
 # nix_shell: nix シェル
 # ============================================================
 typeset -g POWERLEVEL9K_NIX_SHELL_FOREGROUND=$C_WHITE
-typeset -g POWERLEVEL9K_NIX_SHELL_BACKGROUND=$C_INDIGO
+typeset -g POWERLEVEL9K_NIX_SHELL_BACKGROUND=$C_PRIMARY
 
 # ============================================================
 # disk_usage: ディスク使用量
@@ -106,7 +106,7 @@ typeset -g POWERLEVEL9K_VI_MODE_INSERT_FOREGROUND=$C_SUCCESS
 # ram: メモリ使用量
 # ============================================================
 typeset -g POWERLEVEL9K_RAM_FOREGROUND=$C_WHITE
-typeset -g POWERLEVEL9K_RAM_BACKGROUND=$C_NEON_PURPLE
+typeset -g POWERLEVEL9K_RAM_BACKGROUND=$C_ACCENT
 
 # ============================================================
 # swap: スワップ使用量
@@ -130,7 +130,7 @@ typeset -g POWERLEVEL9K_LOAD_CRITICAL_BACKGROUND=$C_ERROR
 # todo: todo.txt タスク数
 # ============================================================
 typeset -g POWERLEVEL9K_TODO_FOREGROUND=$C_WHITE
-typeset -g POWERLEVEL9K_TODO_BACKGROUND=$C_INDIGO
+typeset -g POWERLEVEL9K_TODO_BACKGROUND=$C_PRIMARY
 # タスクがない場合は非表示
 typeset -g POWERLEVEL9K_TODO_HIDE_ZERO_TOTAL=true
 typeset -g POWERLEVEL9K_TODO_HIDE_ZERO_FILTERED=false
@@ -153,7 +153,7 @@ typeset -g POWERLEVEL9K_TASKWARRIOR_BACKGROUND=$C_SUCCESS_ALT
 # per_directory_history: ディレクトリ別履歴 (OMZ)
 # ============================================================
 typeset -g POWERLEVEL9K_PER_DIRECTORY_HISTORY_LOCAL_FOREGROUND=$C_WHITE
-typeset -g POWERLEVEL9K_PER_DIRECTORY_HISTORY_LOCAL_BACKGROUND=$C_INDIGO
+typeset -g POWERLEVEL9K_PER_DIRECTORY_HISTORY_LOCAL_BACKGROUND=$C_PRIMARY
 typeset -g POWERLEVEL9K_PER_DIRECTORY_HISTORY_GLOBAL_FOREGROUND=$C_BLACK
 typeset -g POWERLEVEL9K_PER_DIRECTORY_HISTORY_GLOBAL_BACKGROUND=$C_SUCCESS_ALT
 
@@ -171,7 +171,7 @@ typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND=$C_WHITE
 typeset -g POWERLEVEL9K_CONTEXT_ROOT_BACKGROUND=$C_ERROR
 # SSH 接続時 - ネオンパープル
 typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND=$C_WHITE
-typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_BACKGROUND=$C_NEON_PURPLE
+typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_BACKGROUND=$C_ACCENT
 # 通常時
 typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=$C_WHITE
 typeset -g POWERLEVEL9K_CONTEXT_BACKGROUND=$C_DARK

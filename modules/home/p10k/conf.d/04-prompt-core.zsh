@@ -25,7 +25,7 @@ typeset -g POWERLEVEL9K_PROMPT_CHAR_LEFT_{LEFT,RIGHT}_WHITESPACE=
 # ============================================================
 # dir: カレントディレクトリ
 # ============================================================
-typeset -g POWERLEVEL9K_DIR_BACKGROUND=$C_INDIGO
+typeset -g POWERLEVEL9K_DIR_BACKGROUND=$C_PRIMARY
 typeset -g POWERLEVEL9K_DIR_FOREGROUND=$C_WHITE
 # フォルダアイコン (デフォルト + 右にスペース)
 typeset -g POWERLEVEL9K_DIR_VISUAL_IDENTIFIER_EXPANSION='${P9K_VISUAL_IDENTIFIER} '

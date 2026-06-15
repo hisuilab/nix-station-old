@@ -9,8 +9,8 @@ local -r C_WHITE=255     # Foreground #F8F8F2
 local -r C_BLACK=234     # Darker background
 
 # Primary
-local -r C_INDIGO=61     # Comment #6272A4 (muted purple, dir)
-local -r C_NEON_PURPLE=141  # Purple #BD93F9 (vcs modified)
+local -r C_PRIMARY=61     # Comment #6272A4 (muted purple, dir)
+local -r C_ACCENT=141  # Purple #BD93F9 (vcs modified)
 
 # Semantic
 local -r C_SUCCESS=84    # Green #50FA7B

@@ -8,8 +8,8 @@ local -r C_WHITE=223
 local -r C_BLACK=234
 
 # Primary
-local -r C_INDIGO=66
-local -r C_NEON_PURPLE=95
+local -r C_PRIMARY=66
+local -r C_ACCENT=95
 
 # Semantic
 local -r C_SUCCESS=108

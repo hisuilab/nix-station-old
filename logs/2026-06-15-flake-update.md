@@ -95,17 +95,29 @@ nix-darwin 25.05 でこの方式は deprecated になり、25.11 で削除予定
 
 ## 対処
 
-### `macMiniEval` / `macbookAirEval` をチェックから除外
+### `macMiniEval` / `macbookAirEval` をモック評価に置換
+
+`self.darwinConfigurations.mac-mini.system` (実 userProfile が必要) の代わりに、
+`mkDarwinConfiguration` を直接呼んで `testUserProfile` を差し込む方式に変更。
 
 ```nix
-# 削除した行 (flake.nix)
-# 登録済みmacOS hostのシステム評価
-macMiniEval    = self.darwinConfigurations.mac-mini.system;
-macbookAirEval = self.darwinConfigurations.macbook-air.system;
+# flake.nix checks ブロック
+macMiniMockEval = (mkDarwinConfiguration {
+  hostConfig   = validatedHostConfigs."mac-mini";
+  hostId       = "mac-mini";
+  userProfile  = testUserProfile;   # gitignore対象の hisuilab.nix の代替
+}).system;
+
+macbookAirMockEval = (mkDarwinConfiguration {
+  hostConfig   = validatedHostConfigs."macbook-air";
+  hostId       = "macbook-air";
+  userProfile  = testUserProfile;
+}).system;
 ```
 
-実ホスト設定の評価は `darwin-rebuild switch --flake .` でローカル実行するものとし、
-`nix flake check` のスコープからは除外する。
+**保証できること:** ホスト固有の設定 (darwin.features, darwin.homebrew, homeManager フラグ) の構造的な正当性  
+**保証できないこと:** 実際のユーザー名・メールアドレスなどユーザープロファイル依存の値の正確性  
+→ それは `darwin-rebuild switch` のローカル実行で担保する
 
 ### `activate-user` 警告
 

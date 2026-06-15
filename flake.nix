@@ -234,6 +234,18 @@
               userProfile = testUserProfile;
             }).homebrewSystem;
 
+          # 登録済みmacOS hostのシステム評価 (userProfile はテスト用モックで代替)
+          macMiniMockEval = (mkDarwinConfiguration {
+            hostConfig = validatedHostConfigs."mac-mini";
+            hostId = "mac-mini";
+            userProfile = testUserProfile;
+          }).system;
+          macbookAirMockEval = (mkDarwinConfiguration {
+            hostConfig = validatedHostConfigs."macbook-air";
+            hostId = "macbook-air";
+            userProfile = testUserProfile;
+          }).system;
+
           # host schema、Home Manager、user-profileの単体テスト
           tests =
             let

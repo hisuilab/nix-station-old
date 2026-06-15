@@ -234,10 +234,6 @@
               userProfile = testUserProfile;
             }).homebrewSystem;
 
-          # 登録済みmacOS hostのシステム評価
-          macMiniEval = self.darwinConfigurations.mac-mini.system;
-          macbookAirEval = self.darwinConfigurations.macbook-air.system;
-
           # host schema、Home Manager、user-profileの単体テスト
           tests =
             let

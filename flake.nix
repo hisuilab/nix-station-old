@@ -260,17 +260,24 @@
             else throw "tests failed: ${builtins.toJSON results}";
         };
 
-        # Raspberry Pi OS向けHome Manager構成の評価
-        aarch64-linux.raspberryPi5HomeEval =
-          self.homeConfigurations.raspberry-pi-5.activationPackage;
+        # 登録済みLinux hostの構成評価 (userProfile はテスト用モックで代替)
+        aarch64-linux.raspberryPi5MockEval = (mkHomeConfiguration {
+          hostConfig = validatedHostConfigs."raspberry-pi-5";
+          hostId = "raspberry-pi-5";
+          userProfile = testUserProfile;
+        }).activationPackage;
 
-        # Ubuntu向けHome Manager構成の評価
-        x86_64-linux.ubuntuDesktopHomeEval =
-          self.homeConfigurations.ubuntu-desktop.activationPackage;
+        x86_64-linux.ubuntuDesktopMockEval = (mkHomeConfiguration {
+          hostConfig = validatedHostConfigs."ubuntu-desktop";
+          hostId = "ubuntu-desktop";
+          userProfile = testUserProfile;
+        }).activationPackage;
 
-        # Ubuntu WSL向けHome Manager構成の評価
-        x86_64-linux.ubuntuWslHomeEval =
-          self.homeConfigurations.ubuntu-wsl.activationPackage;
+        x86_64-linux.ubuntuWslMockEval = (mkHomeConfiguration {
+          hostConfig = validatedHostConfigs."ubuntu-wsl";
+          hostId = "ubuntu-wsl";
+          userProfile = testUserProfile;
+        }).activationPackage;
       };
     };
 }

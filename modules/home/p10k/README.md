@@ -12,12 +12,13 @@ p10k/
     ├── 01-palette.zsh     # テーマファイルを source するだけ
     ├── 02-elements.zsh    # プロンプト要素 (左/右) の並び順
     ├── 03-layout.zsh      # 区切り文字・フレーム・ギャップなどのレイアウト
-    ├── 04-prompt-core.zsh # dir / vcs / status / prompt_char の設定
-    ├── 05-segments.zsh    # 汎用セグメント (時刻・コマンド実行時間など)
-    ├── 06-devtools.zsh    # 言語・ランタイム系セグメント
-    ├── 07-cloud.zsh       # クラウド・インフラ系セグメント
-    ├── 08-behavior.zsh    # instant prompt / transient prompt などの挙動
-    ├── 09-utils.zsh       # theme コマンド定義
+    ├── 04-prompt-core.zsh # os_icon / dir / status / prompt_char の設定
+    ├── 05-vcs.zsh         # Git ステータス・カスタムフォーマッタ
+    ├── 06-segments.zsh    # 汎用セグメント (時刻・コマンド実行時間など)
+    ├── 07-devtools.zsh    # 言語・ランタイム系セグメント
+    ├── 08-cloud.zsh       # クラウド・インフラ系セグメント
+    ├── 09-behavior.zsh    # instant prompt / transient prompt などの挙動
+    ├── 10-utils.zsh       # theme コマンド定義
     └── theme/
         ├── cyberpunk.zsh   # サイバーパンク
         ├── dracula.zsh     # ドラキュラ

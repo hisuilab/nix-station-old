@@ -39,6 +39,8 @@ function theme() {
       precmd_functions=( ${precmd_functions[@]:#_p9k_precmd} )
       PS1='%~'$'\n''%# '
       RPROMPT=''
+      local _p10k_state="${XDG_DATA_HOME:-${HOME}/.local/share}/p10k/theme"
+      mkdir -p "${_p10k_state:h}" && echo plain > "$_p10k_state"
       print -P '%F{11}theme: plain%f  (run: theme to restore)'
       ;;
     '')
@@ -63,6 +65,8 @@ function theme() {
         return 1
       fi
       typeset -g P10K_THEME=$1
+      local _p10k_state="${XDG_DATA_HOME:-${HOME}/.local/share}/p10k/theme"
+      mkdir -p "${_p10k_state:h}" && echo "$1" > "$_p10k_state"
       # plain mode 中でも呼ばれる可能性があるため、未登録なら追加
       (( ${precmd_functions[(I)_p9k_precmd]} )) || add-zsh-hook precmd _p9k_precmd
       # p10k reload だけでは POWERLEVEL9K_* の色変数が再設定されない。

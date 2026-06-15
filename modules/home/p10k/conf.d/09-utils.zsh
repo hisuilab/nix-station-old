@@ -46,6 +46,10 @@ function theme() {
       if (( p10k_active )); then
         theme plain
       else
+        # _p9k_precmd を precmd_functions へ戻してから reload する。
+        # reload は _p9k__force_must_init=1 を立てるだけで、
+        # 実際の再初期化は次回の _p9k_precmd 実行時に行われるため。
+        add-zsh-hook precmd _p9k_precmd
         p10k reload
         print -P "%F{10}theme: ${P10K_THEME}%f"
       fi
@@ -59,6 +63,8 @@ function theme() {
         return 1
       fi
       typeset -g P10K_THEME=$1
+      # plain mode 中でも呼ばれる可能性があるため、未登録なら追加
+      (( ${precmd_functions[(I)_p9k_precmd]} )) || add-zsh-hook precmd _p9k_precmd
       p10k reload
       print -P "%F{10}theme: $1%f"
       ;;

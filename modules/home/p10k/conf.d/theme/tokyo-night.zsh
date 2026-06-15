@@ -4,23 +4,23 @@
 # https://github.com/folke/tokyonight.nvim
 
 # Base
-local -r C_DARK=233      # Background #1a1b26
-local -r C_WHITE=146     # Foreground #a9b1d6
-local -r C_BLACK=232     # Darker #16161e
+local -r C_DARK=235
+local -r C_WHITE=255
+local -r C_BLACK=0
 
 # Primary
-local -r C_PRIMARY=61     # Dark Blue #3d59a1 (dir)
-local -r C_ACCENT=97   # Purple #9d7cd8 (vcs modified)
+local -r C_PRIMARY=069
+local -r C_ACCENT=099
 
 # Semantic
-local -r C_SUCCESS=107   # Green #9ece6a
-local -r C_SUCCESS_ALT=65   # deeper green
-local -r C_WARNING=179   # Yellow #e0af68
-local -r C_ERROR=210     # Red/Pink #f7768e
-local -r C_LANG_WARM=215 # orange #ff9e64 (Ruby/Scala/Erlang/Laravel)
+local -r C_SUCCESS=079
+local -r C_SUCCESS_ALT=081
+local -r C_WARNING=215
+local -r C_ERROR=211
+local -r C_LANG_WARM=209
 
 # VCS foreground (on top of semantic background colors)
-typeset -g C_VCS_CLEAN_FG=232     # dark on green
-typeset -g C_VCS_MODIFIED_FG=255  # white on purple
-typeset -g C_VCS_UNTRACKED_FG=232  # dark on alt green
-typeset -g C_VCS_CONFLICTED_FG=255  # white on pink/red
+typeset -g C_VCS_CLEAN_FG=0
+typeset -g C_VCS_MODIFIED_FG=255
+typeset -g C_VCS_UNTRACKED_FG=255
+typeset -g C_VCS_CONFLICTED_FG=255

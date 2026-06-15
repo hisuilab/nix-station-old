@@ -17,7 +17,7 @@ local -r C_SUCCESS=77
 local -r C_SUCCESS_ALT=074
 local -r C_WARNING=215
 local -r C_ERROR=212
-local -r C_LANG_WARM=215
+local -r C_LANG_WARM=209
 
 # VCS foreground (on top of semantic background colors)
 typeset -g C_VCS_CLEAN_FG=0

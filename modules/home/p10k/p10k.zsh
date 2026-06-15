@@ -4,7 +4,7 @@
 # フォント: MesloLGS NF (Nerd Font v3)
 #
 # 設定ファイル構成: conf.d/ を参照
-# テーマ切替: theme コマンド (09-utils.zsh で定義)
+# テーマ切替: theme コマンド (10-utils.zsh で定義)
 # カラーマップ確認:
 #   for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
 

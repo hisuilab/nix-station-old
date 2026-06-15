@@ -1,6 +1,5 @@
 # 意思決定の記録: feat/config-improvements
 
-> レビュー参照 → `docs/reviews/2026-06-16-feat-config-improvements.md`
 > 記録日: 2026-06-16
 
 ---

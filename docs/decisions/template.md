@@ -1,6 +1,5 @@
 # 意思決定の記録: <branch-or-topic>
 
-> レビュー参照 → `docs/reviews/YYYY-MM-DD-<branch-or-topic>.md`
 > 記録日: YYYY-MM-DD
 
 ---

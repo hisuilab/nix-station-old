@@ -23,7 +23,6 @@ lib.runTests {
   testRepositoryTestProfileLoads = {
     expr = userProfiles.loadUserProfile {
       name = "test";
-      profilesDir = ./.;
     };
     expected = {
       username = "test";

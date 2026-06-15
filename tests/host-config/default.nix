@@ -289,4 +289,14 @@ lib.runTests {
     expected = false;
   };
 
+  testRepositoryProvidesFiveHosts = {
+    expr = builtins.attrNames (import ../../hosts);
+    expected = [
+      "mac-mini"
+      "macbook-air"
+      "raspberry-pi-5"
+      "ubuntu-desktop"
+      "ubuntu-wsl"
+    ];
+  };
 }

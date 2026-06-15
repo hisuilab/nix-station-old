@@ -175,7 +175,6 @@
       # リポジトリ内テスト専用プロファイル
       testUserProfile = userProfiles.loadUserProfile {
         name = "test";
-        profilesDir = ./tests/user-profile;
       };
     in
     {

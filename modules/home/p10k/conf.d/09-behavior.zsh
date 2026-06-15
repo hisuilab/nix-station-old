@@ -1,19 +1,4 @@
 # ============================================================
-# カスタムセグメント例
-# ============================================================
-function prompt_example() {
-  p10k segment -b $C_ERROR -f $C_WHITE -i '⭐' -t 'hello, %n'
-}
-
-# instant prompt 用
-function instant_prompt_example() {
-  prompt_example
-}
-
-typeset -g POWERLEVEL9K_EXAMPLE_FOREGROUND=$C_WHITE
-typeset -g POWERLEVEL9K_EXAMPLE_BACKGROUND=$C_ERROR
-
-# ============================================================
 # Transient Prompt
 # ============================================================
 # off: 無効 / always: 常に / same-dir: ディレクトリ変更時以外

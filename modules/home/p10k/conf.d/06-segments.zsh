@@ -247,3 +247,17 @@ typeset -g POWERLEVEL9K_TIME_BACKGROUND=$C_DARK
 typeset -g POWERLEVEL9K_TIME_FORMAT='%D{%H:%M:%S}'
 # コマンド実行時に時刻を更新
 typeset -g POWERLEVEL9K_TIME_UPDATE_ON_COMMAND=false
+
+# ============================================================
+# カスタムセグメント例
+# ============================================================
+function prompt_example() {
+  p10k segment -b $C_ACCENT -f $C_WHITE -i '' -t 'hello, %n'
+}
+
+function instant_prompt_example() {
+  prompt_example
+}
+
+typeset -g POWERLEVEL9K_EXAMPLE_FOREGROUND=$C_WHITE
+typeset -g POWERLEVEL9K_EXAMPLE_BACKGROUND=$C_ACCENT

@@ -14,6 +14,7 @@
 # 利用可能: cyberpunk / dracula / gruvbox / nord / tokyo-night
 # 未設定なら cyberpunk をデフォルトに。設定済み (theme コマンド後) はそのまま保持。
 typeset -g P10K_THEME="${P10K_THEME:-cyberpunk}"
+typeset -g P10K_CONF_DIR="${HOME}/.p10k.d"
 
 # オプションの一時変更
 'builtin' 'local' '-a' 'p10k_config_opts'
@@ -31,8 +32,7 @@ typeset -g P10K_THEME="${P10K_THEME:-cyberpunk}"
   # Zsh 5.1以上が必要
   [[ $ZSH_VERSION == (5.<1->*|<6->.*) ]] || return
 
-  # 分割設定ファイルのディレクトリ (~/.p10k.d/ へ Nix が配置)
-  local p10k_conf_dir="${HOME}/.p10k.d"
+  local p10k_conf_dir="${P10K_CONF_DIR}"
 
   source "${p10k_conf_dir}/01-palette.zsh"    || return
   source "${p10k_conf_dir}/02-elements.zsh"

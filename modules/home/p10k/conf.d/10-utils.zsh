@@ -12,7 +12,7 @@
 
 function theme() {
   local p10k_active=$(( ${precmd_functions[(I)_p9k_precmd]} > 0 ))
-  local p10k_conf_dir="${HOME}/.p10k.d"
+  local p10k_conf_dir="${P10K_CONF_DIR}"
 
   case ${1:-} in
     list)
@@ -75,7 +75,7 @@ function theme() {
 
 # Tab 補完: conf.d/theme/ のファイルを動的に列挙 + plain を追加
 function _theme_complete() {
-  local p10k_conf_dir="${HOME}/.p10k.d"
+  local p10k_conf_dir="${P10K_CONF_DIR}"
   local -a themes=( list plain ${p10k_conf_dir}/theme/*.zsh(N:t:r) )
   _arguments "1:theme:(${themes[*]})"
 }

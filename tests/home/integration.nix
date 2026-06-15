@@ -1,9 +1,9 @@
 { home-manager, nixpkgs, nixpkgsUnstable, system }:
 
 let
-  userProfiles = import ../../user-profiles { };
-  userProfile = userProfiles.loadUserProfile {
+  userProfile = (import ../../user-profiles { }).loadUserProfile {
     name = "test";
+    profilesDir = ../user-profile;
   };
   homeManager = {
     cliTools = true;

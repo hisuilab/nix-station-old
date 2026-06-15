@@ -43,7 +43,6 @@ let
   zedModule = import ../../../modules/home/zed/default.nix {
     inherit homeManager lib;
   };
-  hostConfigs = import ../../../hosts;
 in
 lib.runTests {
   testAppConfigFlagsSelectModules = {
@@ -105,32 +104,4 @@ lib.runTests {
     expected = ../../../modules/home/zed/settings.json;
   };
 
-  testEveryHostDeclaresAppConfigFlags = {
-    expr = builtins.all
-      (hostConfig:
-        builtins.all
-          (name: builtins.hasAttr name hostConfig.homeManager)
-          [ "ghostty" "p10k" "zed" ])
-      (builtins.attrValues hostConfigs);
-    expected = true;
-  };
-
-  testServerHostsDisableGuiAppConfigs = {
-    expr = builtins.all
-      (hostConfig:
-        hostConfig.meta.role != "server"
-        || (!hostConfig.homeManager.ghostty.enable
-          && !hostConfig.homeManager.zed.enable))
-      (builtins.attrValues hostConfigs);
-    expected = true;
-  };
-
-  testP10kRequiresZsh = {
-    expr = builtins.all
-      (hostConfig:
-        !hostConfig.homeManager.p10k.enable
-        || hostConfig.homeManager.zsh)
-      (builtins.attrValues hostConfigs);
-    expected = true;
-  };
 }

@@ -133,6 +133,41 @@ nix flake check  →  全チェック通過 (警告なし)
 
 ---
 
+## macbook-air 実機ビルド確認 (2026-06-15)
+
+```bash
+sudo nix run github:LnL7/nix-darwin/nix-darwin-24.11#darwin-rebuild -- \
+  switch --flake path:.#macbook-air
+```
+
+> nix-darwin-24.11 の `darwin-rebuild` バイナリをブートストラップとして使用し、
+> flake 側は 25.05 の設定でビルドする構成。macbook-air 初回セットアップ時の
+> 典型的なパターン。
+
+**結果:** 成功
+
+| 項目 | 状態 |
+|---|---|
+| システム設定 (appearance, dock, finder, input) | 適用済み |
+| Homebrew 19 パッケージ | インストール済み |
+| Home Manager (zsh, git, p10k, ghostty, zed) | アクティベーション済み |
+| Finder サイドバー | 設定済み |
+
+**残存警告:**
+
+- `activate-user` — 既知の home-manager / nix-darwin 互換性問題。動作に影響なし
+- `/Applications/Nix Apps is not owned by nix-darwin, skipping App linking` — 初回ビルド直後の過渡状態。再度 `darwin-rebuild switch` を実行すると解消する場合がある
+
+**手動対応が必要なもの (App Store):**
+
+```bash
+mas install 1429033973  # RunCat
+mas install 497799835   # Xcode
+mas install 682658836   # GarageBand
+```
+
+---
+
 ## 今後の対応
 
 26.05 へのメジャーアップグレードを行う際は以下を同時に更新する。

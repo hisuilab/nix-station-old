@@ -166,10 +166,10 @@ typeset -g POWERLEVEL9K_CPU_ARCH_BACKGROUND=$C_SUCCESS_ALT
 # ============================================================
 # context: user@hostname
 # ============================================================
-# root 時 - ホットピンク
+# root 時 - C_ERROR 背景
 typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND=$C_WHITE
 typeset -g POWERLEVEL9K_CONTEXT_ROOT_BACKGROUND=$C_ERROR
-# SSH 接続時 - ネオンパープル
+# SSH 接続時 - C_ACCENT 背景
 typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND=$C_WHITE
 typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_BACKGROUND=$C_ACCENT
 # 通常時

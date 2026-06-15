@@ -12,9 +12,9 @@
 
   homeManager = {
     cliTools = true;
+    zsh = true;
     gh = true;
     git = true;
-    zsh = true;
     p10k = {
       enable = true;
       configFile = ../../modules/home/p10k/p10k.zsh;

@@ -8,7 +8,7 @@
     role = "desktop";
   };
 
-  userProfile.name = "guest";
+  userProfile.name = "hisuilab";
 
   homeManager = {
     cliTools = true;

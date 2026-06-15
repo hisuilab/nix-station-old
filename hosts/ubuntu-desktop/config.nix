@@ -8,24 +8,24 @@
     role = "server";
   };
 
-  userProfile.name = "guest";
+  userProfile.name = "hisuilab";
 
   homeManager = {
     cliTools = true;
+    zsh = true;
     gh = true;
     git = true;
-    zsh = true;
     p10k = {
       enable = true;
       configFile = ../../modules/home/p10k/p10k.zsh;
     };
     ghostty = {
-      enable = false;
-      configFile = null;
+      enable = true;
+      configFile = ../../modules/home/ghostty/config;
     };
     zed = {
-      enable = false;
-      configFile = null;
+      enable = true;
+      configFile = ../../modules/home/zed/settings.json;
     };
   };
 }

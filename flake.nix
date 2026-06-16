@@ -48,6 +48,18 @@
       darwinHosts = lib.filterAttrs (_: h: h.meta.platform == "darwin") validatedHostConfigs;
       homeManagerHosts = lib.filterAttrs (_: h: h.meta.platform == "home-manager") validatedHostConfigs;
 
+      # homeManagerHosts を meta.system でグループ化（Linux MockEval 自動展開用）
+      homeManagerHostsBySystem =
+        let
+          systems = lib.unique (
+            map (h: h.meta.system) (builtins.attrValues homeManagerHosts)
+          );
+        in
+        builtins.listToAttrs (map (system: {
+          name = system;
+          value = lib.filterAttrs (_: h: h.meta.system == system) homeManagerHosts;
+        }) systems);
+
       # hostが指定したユーザープロファイルを取得
       loadUserProfile = hostConfig:
         userProfiles.loadUserProfile {
@@ -241,24 +253,11 @@
             else throw "tests failed: ${builtins.toJSON results}";
         };
 
-        # 登録済みLinux hostの構成評価 (userProfile はテスト用モックで代替)
-        aarch64-linux.raspberryPi5MockEval = (mkHomeConfiguration {
-          hostConfig = validatedHostConfigs."raspberry-pi-5";
-          hostId = "raspberry-pi-5";
-          userProfile = testUserProfile;
-        }).activationPackage;
-
-        x86_64-linux.ubuntuDesktopMockEval = (mkHomeConfiguration {
-          hostConfig = validatedHostConfigs."ubuntu-desktop";
-          hostId = "ubuntu-desktop";
-          userProfile = testUserProfile;
-        }).activationPackage;
-
-        x86_64-linux.ubuntuWslMockEval = (mkHomeConfiguration {
-          hostConfig = validatedHostConfigs."ubuntu-wsl";
-          hostId = "ubuntu-wsl";
-          userProfile = testUserProfile;
-        }).activationPackage;
-      };
+        # 登録済みLinux hostの構成評価 (userProfile はテスト用モックで代替、host追加時に自動展開)
+      } // builtins.mapAttrs (system: hosts:
+        builtins.mapAttrs (hostId: hostConfig:
+          (mkHomeConfiguration { inherit hostConfig hostId; userProfile = testUserProfile; }).activationPackage
+        ) hosts
+      ) homeManagerHostsBySystem;
     };
 }

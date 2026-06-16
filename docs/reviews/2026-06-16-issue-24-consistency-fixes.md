@@ -24,6 +24,7 @@
 | 5 | [`flake.nix` L190-222](../../flake.nix#L190) | `tests/darwin/integration.nix` を同じ引数で5回 `import` している（`darwinEnabledEval` / `darwinDisabledEval` / `darwinRoutingEval` / `darwinRoleRoutingEval` / `darwinHomebrewEval`）。Nix のキャッシュで実害はないが冗長 | `let darwinTests = import ./tests/darwin/integration.nix { ... }; in` で1度だけ bind し各フィールドを参照 |
 | 6 | [`user-profiles/default.nix` L74](../../user-profiles/default.nix#L74) | `validateProfileName` と `validateUserProfile` がエクスポートされているが外部から使われていない。PR #23 の #12（`importUserProfile` 除去）と合わせて整理できる | 未使用エクスポートを削除し `loadUserProfile` に一本化 |
 | 7 | [`modules/system/darwin/homebrew/default.nix` L26](../../modules/system/darwin/homebrew/default.nix#L26) | nix-darwin の activation-scripts は DAG ではなくハードコードされたテンプレート順（`homebrew.text` → `postUserActivation.text` 固定）。`brew bundle` はインストール・アップデート量が多い場合に長時間かかるため、後続の `postUserActivation`（Home Manager・Dock・Finder 設定）がブロックされる。順序の変更はテンプレートが固定のためできない | `system.activationScripts.homebrew.text = lib.mkForce ""` で自動実行を無効化し、`postUserActivation` の末尾へ移設するか、Brewfile を別ファイルで管理して `darwin-rebuild switch` 後に手動で `brew bundle` を実行する構成へ変更する |
+| 8 | [`hosts/mac-mini/Brewfile`](../../hosts/mac-mini/Brewfile) / [`hosts/macbook-air/Brewfile`](../../hosts/macbook-air/Brewfile) | Brewfile を per-host 単位で管理しているが、laptop と desktop で共通アプリが多く重複が生じる。`role` 単位（desktop/laptop）での共通 Brewfile と ホスト固有差分の分離が考慮されていない。また以下の懸念がある: (1) `brew bundle cleanup` を別途実行しないと削除したアプリが自動削除されない (2) `darwin-rebuild switch` 一発完結でなくなり手順が増えた (3) メッセージのコマンドが nix-station ディレクトリからの相対パス前提 (4) README/DEVELOPMENT.md のセットアップ手順が未更新 | role 単位の共通 Brewfile（`roles/desktop/Brewfile` 等）とホスト差分の include 構成を検討する。cleanup 手順と初回セットアップ手順をドキュメントへ追記する |
 
 ---
 
@@ -39,6 +40,7 @@
 - **#3** DEVELOPMENT.md: managed tool 追加手順に `host-registry.nix` 更新が未記載
 - **#4** DEVELOPMENT.md: `autoMigrate` / `mutableTaps` が設定可能になった旨が未記載
 - **#7** darwin Homebrew activation 順序: `brew bundle` が `postUserActivation` をブロック
+- **#8** Brewfile の粒度と運用: per-host 単位のため laptop/desktop 共通アプリが重複・ドキュメント未更新
 
 ### 低（コードの整理）
 

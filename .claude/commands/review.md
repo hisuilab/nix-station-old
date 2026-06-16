@@ -18,7 +18,8 @@
    ```
    > 意思決定の記録 → `docs/decisions/YYYY-MM-DD-issue-N-topic.md`
    ```
-6. コミットする: `docs(review): add review for issue-N topic`
+6. 同時に `docs/decisions/YYYY-MM-DD-issue-N-topic.md` を空テンプレートで生成する
+7. コミットは `/stage` で行う（自動コミット禁止）
 
 ## 注意
 

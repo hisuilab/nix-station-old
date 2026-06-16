@@ -392,7 +392,7 @@ darwin.homebrew = {
 
 新規環境ではHomebrewを標準prefixへ導入します。既存Homebrewは`autoMigrate = true`で管理下へ移行します。Apple SiliconではRosetta用Homebrewも有効化し、`brew`ランチャーがアーキテクチャに応じたprefixを選択します。
 
-現在のnix-homebrewはnix-darwin 24.11と互換性のあるrevisionへ固定しています。nix-darwinを更新する際はnix-homebrewの固定revisionも更新し、`nix flake check path:.`でHomebrew本体のbuildまで確認します。
+現在のnix-homebrewはnix-darwin 25.05と互換性のあるrevisionへ固定しています。nix-darwinを更新する際はnix-homebrewの固定revisionも更新し、`nix flake check path:.`でHomebrew本体のbuildまで確認します。
 
 `enable = true`の場合、未指定のactivation方針は`autoUpdate = true`、`upgrade = true`、`cleanup = "none"`です。宣言外パッケージを削除する場合だけ、host側で`cleanup = "uninstall"`または`"zap"`を明示します。
 
@@ -523,7 +523,7 @@ macOS統合では、`userProfile.username`をmacOSのユーザーとホームデ
 - macOS feature分流を`tests/darwin/features/default.nix`で管理
 - `darwinConfigurations.mac-mini.system`とstandalone Home Manager構成を評価
 
-完成形:
+現在のテスト構成:
 
 ```text
 tests/
@@ -533,7 +533,10 @@ tests/
 ├── home/
 │   ├── default.nix
 │   ├── integration.nix
+│   ├── app-configs/default.nix
+│   ├── cli-tools/default.nix
 │   ├── environments/default.nix
+│   ├── gh/default.nix
 │   ├── git/default.nix
 │   ├── platforms/default.nix
 │   ├── roles/default.nix
@@ -558,13 +561,13 @@ GitHub Actionsは次のタイミングで実行されます。
 現在のCI:
 
 - `macos-check`: 全system評価とmacOS checksの実ビルド
-- `linux-check`: Ubuntu native・WSL Home Manager構成の実ビルド
+- `linux-check`: Ubuntu native・WSL・Raspberry Pi 5 Home Manager構成の実ビルド
 - `nix-check`: macOSとLinuxの両jobが成功した場合だけ成功する集約check
 - Nix: Determinate Nix `v3.21.1`
 - Action: `v3.21.1`の完全なcommit SHAへ固定
 - 更新: Dependabotが毎週月曜日9時（Asia/Tokyo）にGitHub Actionsの更新PRを作成
 
-Raspberry Pi OSの`aarch64-linux`構成は`macos-check`の`--all-systems --no-build`で評価します。ARM64 self-hosted runnerやQEMUを利用者の前提にせず、Raspberry Pi OSへNixとHome Managerを導入すれば同じ構成を利用できる方針です。実機固有の問題はRaspberry Pi上での適用時に確認します。
+Raspberry Pi OSの`aarch64-linux`構成は`linux-check`でQEMUエミュレーションを使って実ビルドします。`docker/setup-qemu-action`でaarch64を有効化し、Nix設定に`extra-platforms = aarch64-linux`を追加することで、x86_64-linuxランナー上でaarch64-linuxパッケージをビルドできます。実機（Raspberry Pi 5）が手元にない状態でもCIでビルドを保証します。
 
 WSLは`ubuntu-latest`上でHome Manager構成を実ビルドします。これはLinuxソフトウェアとしての依存関係と生成結果を保証しますが、Windowsアプリ起動や`wslview`の実動作までは保証しません。
 

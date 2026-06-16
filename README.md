@@ -36,28 +36,28 @@ nix build path:.#darwinConfigurations.mac-mini.system --no-link
 macOS:
 
 ```bash
-sudo nix run github:LnL7/nix-darwin/nix-darwin-24.11#darwin-rebuild -- \
+sudo nix run github:LnL7/nix-darwin/nix-darwin-25.05#darwin-rebuild -- \
   switch --flake path:.#mac-mini
 ```
 
 Ubuntu:
 
 ```bash
-nix run github:nix-community/home-manager/release-24.11 -- \
+nix run github:nix-community/home-manager/release-25.05 -- \
   switch --flake path:.#ubuntu-desktop
 ```
 
 Ubuntu on WSL:
 
 ```bash
-nix run github:nix-community/home-manager/release-24.11 -- \
+nix run github:nix-community/home-manager/release-25.05 -- \
   switch --flake path:.#ubuntu-wsl
 ```
 
 Raspberry Pi OS:
 
 ```bash
-nix run github:nix-community/home-manager/release-24.11 -- \
+nix run github:nix-community/home-manager/release-25.05 -- \
   switch --flake path:.#raspberry-pi-5
 ```
 

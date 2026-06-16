@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       # 2. aarch64-linux エミュレーション（Raspberry Pi 5 ビルド用）
       - name: Set up QEMU for aarch64 emulation
-        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff9c09cf8f5a1e4f0c0 # v3.6.0
+        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0
       # 3. macOSと同じ固定バージョンのNixをインストール（aarch64-linux を追加プラットフォームとして登録）
       - name: Install Determinate Nix
         uses: DeterminateSystems/determinate-nix-action@9adf02b41cfdac2632e1c16f0480ff5bf3b05dd6 # v3.21.1

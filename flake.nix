@@ -55,29 +55,23 @@
         };
 
       # nix-darwinとHome Managerを統合したmacOS構成を生成
+      # hostConfig は呼び出し元で validateHostConfig 済みであること
       mkDarwinConfiguration =
         { hostConfig
         , hostId
         , userProfile
         ,
         }:
-        let
-          validatedHostConfig = hostConfigLib.validateHostConfig {
-            config = hostConfig;
-            inherit hostId;
-          };
-        in
-        if validatedHostConfig.meta.platform != "darwin" then
+        if hostConfig.meta.platform != "darwin" then
           throw "host '${hostId}': darwin configuration requires meta.platform = 'darwin'"
         else
           nix-darwin.lib.darwinSystem {
-            system = validatedHostConfig.meta.system;
+            system = hostConfig.meta.system;
 
             # nix-darwinモジュールへのhost・ユーザー設定の受け渡し
             specialArgs = {
-              hostConfig = validatedHostConfig;
-              inherit hostId userProfile;
-              homeManager = validatedHostConfig.homeManager;
+              inherit hostConfig hostId userProfile;
+              homeManager = hostConfig.homeManager;
               nixpkgsUnstable = nixpkgs-unstable;
             };
 
@@ -91,8 +85,8 @@
               {
                 nix-homebrew = {
                   enable =
-                    validatedHostConfig.darwin.homebrew.manageInstallation or true;
-                  enableRosetta = validatedHostConfig.meta.system == "aarch64-darwin";
+                    hostConfig.darwin.homebrew.manageInstallation or true;
+                  enableRosetta = hostConfig.meta.system == "aarch64-darwin";
                   user = userProfile.username;
                   autoMigrate = true;
                   mutableTaps = true;
@@ -107,29 +101,23 @@
           };
 
       # UbuntuとRaspberry Pi OS向けstandalone Home Manager構成を生成
+      # hostConfig は呼び出し元で validateHostConfig 済みであること
       mkHomeConfiguration =
         { hostConfig
         , hostId
         , userProfile
         ,
         }:
-        let
-          validatedHostConfig = hostConfigLib.validateHostConfig {
-            config = hostConfig;
-            inherit hostId;
-          };
-        in
-        if validatedHostConfig.meta.platform != "home-manager" then
+        if hostConfig.meta.platform != "home-manager" then
           throw "host '${hostId}': Home Manager configuration requires meta.platform = 'home-manager'"
         else
           home-manager.lib.homeManagerConfiguration {
-            pkgs = nixpkgs.legacyPackages.${validatedHostConfig.meta.system};
+            pkgs = nixpkgs.legacyPackages.${hostConfig.meta.system};
 
             # Home Managerモジュールへのhost・ユーザー設定の受け渡し
             extraSpecialArgs = {
-              hostConfig = validatedHostConfig;
-              inherit hostId userProfile;
-              homeManager = validatedHostConfig.homeManager;
+              inherit hostConfig hostId userProfile;
+              homeManager = hostConfig.homeManager;
               nixpkgsUnstable = nixpkgs-unstable;
             };
 

@@ -4,20 +4,25 @@
 }:
 
 let
+  hostConfigLib = import ../../lib/host-config.nix { };
   system = "aarch64-darwin";
 
-  makeHostConfig = hostId: role: homeManager: {
-    meta = {
-      hostname = hostId;
-      inherit system;
-      platform = "darwin";
-      os = "darwin";
-      environment = "native";
-      inherit role;
+  makeHostConfig = hostId: role: homeManager:
+    hostConfigLib.validateHostConfig {
+      inherit hostId;
+      config = {
+        meta = {
+          hostname = hostId;
+          inherit system;
+          platform = "darwin";
+          os = "darwin";
+          environment = "native";
+          inherit role;
+        };
+        userProfile.name = "test";
+        inherit homeManager;
+      };
     };
-    userProfile.name = "test";
-    inherit homeManager;
-  };
 
   enabled = mkDarwinConfiguration {
     hostId = "darwin-enabled-test";

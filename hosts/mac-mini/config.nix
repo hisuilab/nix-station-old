@@ -36,45 +36,9 @@
     input = true;
   };
 
+  # GUI アプリ・App Store アプリは hosts/mac-mini/Brewfile で管理する。
+  # パッケージ適用: darwin-rebuild switch 後に brew bundle --file hosts/mac-mini/Brewfile
   darwin.homebrew = {
     enable = true;
-    casks = [
-      "google-chrome"
-      "google-drive"
-
-      "tailscale-app"
-      "windows-app"
-
-      "ghostty"
-
-      "zed"
-      "visual-studio-code"
-
-      "codex-app"
-      "ollama-app"
-
-      "docker-desktop"
-
-      "karabiner-elements"
-      "logi-options+"
-
-      "slack"
-      "discord"
-      "linear"
-      "zoom"
-
-      "affinity"
-      "blender"
-      "obs"
-      # davinci-resolve は Homebrew cask から削除済み。公式サイトから手動インストール要
-      "elgato-stream-deck"
-
-      "raycast"
-      "keycastr"
-
-      "font-meslo-lg-nerd-font"
-    ];
-    # AppStoreアプリは nix では管理対象から外す
-    # 詳細:masでのAppStoreの認証が sudo 権限だと受け付けないため、エラーになる。
   };
 }

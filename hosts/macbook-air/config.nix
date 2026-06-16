@@ -36,42 +36,11 @@
     input = true;
   };
 
+  # GUI アプリ・App Store アプリは hosts/macbook-air/Brewfile で管理する。
+  # パッケージ適用: darwin-rebuild switch 後に brew bundle --file hosts/macbook-air/Brewfile
+  # manageInstallation = false: Homebrew は既存インストールを使用する
   darwin.homebrew = {
     enable = true;
     manageInstallation = false;
-    casks = [
-      "google-chrome"
-      "google-drive"
-
-      "tailscale-app"
-      "windows-app"
-
-      "ghostty"
-
-      "zed"
-      "visual-studio-code"
-
-      "codex-app"
-
-      "docker-desktop"
-
-      "karabiner-elements"
-      "logi-options+"
-
-      "slack"
-      "discord"
-      "linear"
-      "zoom"
-
-      "affinity"
-
-      "raycast"
-      "keycastr"
-
-      "font-meslo-lg-nerd-font"
-    ];
-    masApps = {
-      RunCat = 1429033973;
-    };
   };
 }

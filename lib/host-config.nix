@@ -106,7 +106,7 @@ let
     else
       let
         rawHomeManager = config.homeManager or { };
-        managedTools = [ "ghostty" "p10k" "zed" ];
+        managedTools = registry.managedTools;
         booleanHomeManager = validateBooleanAttrs
           hostId
           "homeManager"

@@ -52,13 +52,13 @@ jobs:
             extra-platforms = aarch64-linux
       # 4. Ubuntu native構成を実ビルド
       - name: Build Ubuntu Desktop Home Manager configuration
-        run: nix build path:.#checks.x86_64-linux.ubuntuDesktopMockEval --no-link
+        run: nix build path:.#checks.x86_64-linux.ubuntu-desktop --no-link
       # 5. WSL構成をLinuxソフトウェアレベルで実ビルド
       - name: Build Ubuntu WSL Home Manager configuration
-        run: nix build path:.#checks.x86_64-linux.ubuntuWslMockEval --no-link
+        run: nix build path:.#checks.x86_64-linux.ubuntu-wsl --no-link
       # 6. Raspberry Pi 5構成をQEMUエミュレーションで実ビルド（実機不要）
       - name: Build Raspberry Pi 5 Home Manager configuration
-        run: nix build path:.#checks.aarch64-linux.raspberryPi5MockEval --no-link
+        run: nix build path:.#checks.aarch64-linux.raspberry-pi-5 --no-link
 
   nix-check:
     needs:

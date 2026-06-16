@@ -48,6 +48,18 @@
       darwinHosts = lib.filterAttrs (_: h: h.meta.platform == "darwin") validatedHostConfigs;
       homeManagerHosts = lib.filterAttrs (_: h: h.meta.platform == "home-manager") validatedHostConfigs;
 
+      # homeManagerHosts を meta.system でグループ化（Linux MockEval 自動展開用）
+      homeManagerHostsBySystem =
+        let
+          systems = lib.unique (
+            map (h: h.meta.system) (builtins.attrValues homeManagerHosts)
+          );
+        in
+        builtins.listToAttrs (map (system: {
+          name = system;
+          value = lib.filterAttrs (_: h: h.meta.system == system) homeManagerHosts;
+        }) systems);
+
       # hostが指定したユーザープロファイルを取得
       loadUserProfile = hostConfig:
         userProfiles.loadUserProfile {
@@ -88,8 +100,7 @@
                     hostConfig.darwin.homebrew.manageInstallation or true;
                   enableRosetta = hostConfig.meta.system == "aarch64-darwin";
                   user = userProfile.username;
-                  autoMigrate = hostConfig.darwin.homebrew.autoMigrate or true;
-                  mutableTaps = hostConfig.darwin.homebrew.mutableTaps or true;
+
                 };
               }
 
@@ -150,6 +161,12 @@
       # host名変更の影響を受けない開発・テスト用system
       checkSystem = "aarch64-darwin";
 
+      # darwin統合テストは一度だけ import して各出力を参照する
+      darwinTests = import ./tests/darwin/integration.nix {
+        inherit lib mkDarwinConfiguration;
+        userProfile = testUserProfile;
+      };
+
       # リポジトリ内テスト専用プロファイル
       testUserProfile = userProfiles.loadUserProfile {
         name = "test";
@@ -186,39 +203,19 @@
             }).appConfigsActivationPackage;
 
           # nix-darwinとHome Managerの有効構成
-          darwinEnabledEval =
-            (import ./tests/darwin/integration.nix {
-              inherit lib mkDarwinConfiguration;
-              userProfile = testUserProfile;
-            }).enabledSystem;
+          darwinEnabledEval = darwinTests.enabledSystem;
 
           # Home Manager全機能の無効構成
-          darwinDisabledEval =
-            (import ./tests/darwin/integration.nix {
-              inherit lib mkDarwinConfiguration;
-              userProfile = testUserProfile;
-            }).disabledSystem;
+          darwinDisabledEval = darwinTests.disabledSystem;
 
           # Git・Zshフラグによるモジュール分流
-          darwinRoutingEval =
-            (import ./tests/darwin/integration.nix {
-              inherit lib mkDarwinConfiguration;
-              userProfile = testUserProfile;
-            }).routingSystem;
+          darwinRoutingEval = darwinTests.routingSystem;
 
           # desktop・laptop・serverによるrole分流
-          darwinRoleRoutingEval =
-            (import ./tests/darwin/integration.nix {
-              inherit lib mkDarwinConfiguration;
-              userProfile = testUserProfile;
-            }).roleRoutingSystem;
+          darwinRoleRoutingEval = darwinTests.roleRoutingSystem;
 
           # Homebrew設定の統合評価
-          darwinHomebrewEval =
-            (import ./tests/darwin/integration.nix {
-              inherit lib mkDarwinConfiguration;
-              userProfile = testUserProfile;
-            }).homebrewSystem;
+          darwinHomebrewEval = darwinTests.homebrewSystem;
 
           # 登録済みmacOS hostのシステム評価 (userProfile はテスト用モックで代替、host追加時に自動展開)
         } // builtins.mapAttrs (hostId: hostConfig:
@@ -242,24 +239,11 @@
             else throw "tests failed: ${builtins.toJSON results}";
         };
 
-        # 登録済みLinux hostの構成評価 (userProfile はテスト用モックで代替)
-        aarch64-linux.raspberryPi5MockEval = (mkHomeConfiguration {
-          hostConfig = validatedHostConfigs."raspberry-pi-5";
-          hostId = "raspberry-pi-5";
-          userProfile = testUserProfile;
-        }).activationPackage;
-
-        x86_64-linux.ubuntuDesktopMockEval = (mkHomeConfiguration {
-          hostConfig = validatedHostConfigs."ubuntu-desktop";
-          hostId = "ubuntu-desktop";
-          userProfile = testUserProfile;
-        }).activationPackage;
-
-        x86_64-linux.ubuntuWslMockEval = (mkHomeConfiguration {
-          hostConfig = validatedHostConfigs."ubuntu-wsl";
-          hostId = "ubuntu-wsl";
-          userProfile = testUserProfile;
-        }).activationPackage;
-      };
+        # 登録済みLinux hostの構成評価 (userProfile はテスト用モックで代替、host追加時に自動展開)
+      } // builtins.mapAttrs (system: hosts:
+        builtins.mapAttrs (hostId: hostConfig:
+          (mkHomeConfiguration { inherit hostConfig hostId; userProfile = testUserProfile; }).activationPackage
+        ) hosts
+      ) homeManagerHostsBySystem;
     };
 }

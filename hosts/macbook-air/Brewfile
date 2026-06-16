@@ -1,0 +1,5 @@
+# macbook-air 固有 Brewfile（ホスト差分のみ）
+# 共通アプリは hosts/common/Brewfile で管理する。
+#
+# 適用: brew bundle --file hosts/common/Brewfile
+#       brew bundle --file hosts/macbook-air/Brewfile  # 現在は差分なし

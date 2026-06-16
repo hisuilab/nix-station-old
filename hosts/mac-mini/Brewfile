@@ -1,0 +1,16 @@
+# mac-mini 固有 Brewfile（ホスト差分のみ）
+# 共通アプリは hosts/common/Brewfile で管理する。
+#
+# 適用: brew bundle --file hosts/common/Brewfile
+#       brew bundle --file hosts/mac-mini/Brewfile
+
+# AI・メディア制作（デスクトップ専用）
+cask "ollama-app"
+cask "blender"
+cask "obs"
+cask "elgato-stream-deck"
+# davinci-resolve は公式サイトから手動インストール（Homebrew cask 非対応）
+
+# App Store アプリ（mac-mini 固有）
+mas "Xcode", id: 497799835
+mas "GarageBand", id: 682658836

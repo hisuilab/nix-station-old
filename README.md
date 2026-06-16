@@ -86,7 +86,14 @@ nix run github:nix-community/home-manager/release-25.05 -- \
 
 2回目以降も同じコマンドで更新します。Linux系hostではシステム全体ではなく、Home Managerが管理するユーザー環境だけを適用します。
 
-macOSでは初回適用時にHomebrew本体も自動導入されます。既存のHomebrewがある場合はnix-homebrewが管理下へ移行し、適用後は`brew`コマンドを利用できます。
+macOSでは初回適用時にHomebrew本体も自動導入されます。GUIアプリ・App StoreアプリはBrewfileで管理するため、`darwin-rebuild switch`後に続けて適用します:
+
+```bash
+brew bundle --file hosts/common/Brewfile
+brew bundle --file hosts/<host-id>/Brewfile
+```
+
+CLIツールはHome Manager (nix) が管理します。Brewfileには含めません。
 
 ## Hosts
 

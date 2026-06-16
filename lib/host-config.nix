@@ -97,12 +97,6 @@ let
     else if (config.darwin.homebrew or { }) ? manageInstallation
       && !builtins.isBool config.darwin.homebrew.manageInstallation then
       throw "host '${hostId}': darwin.homebrew.manageInstallation must be a boolean"
-    else if (config.darwin.homebrew or { }) ? autoMigrate
-      && !builtins.isBool config.darwin.homebrew.autoMigrate then
-      throw "host '${hostId}': darwin.homebrew.autoMigrate must be a boolean"
-    else if (config.darwin.homebrew or { }) ? mutableTaps
-      && !builtins.isBool config.darwin.homebrew.mutableTaps then
-      throw "host '${hostId}': darwin.homebrew.mutableTaps must be a boolean"
     else
       let
         rawHomeManager = config.homeManager or { };

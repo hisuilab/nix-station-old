@@ -8,7 +8,8 @@ let
   hostConfigLib = import ../../lib/host-config.nix { };
   system = "aarch64-darwin";
 
-  makeHostConfig = hostId: role: homeManager:
+  # extraConfig を validation 前にマージすることで darwin.homebrew などを検証に通す
+  makeHostConfigWith = hostId: role: homeManager: extraConfig:
     hostConfigLib.validateHostConfig {
       inherit hostId;
       config = {
@@ -22,8 +23,11 @@ let
         };
         userProfile.name = "test";
         inherit homeManager;
-      };
+      } // extraConfig;
     };
+
+  makeHostConfig = hostId: role: homeManager:
+    makeHostConfigWith hostId role homeManager { };
 
   enabled = mkDarwinConfiguration {
     hostId = "darwin-enabled-test";
@@ -81,29 +85,22 @@ let
 
   homebrewEnabled = mkDarwinConfiguration {
     hostId = "darwin-homebrew-test";
-    hostConfig = (makeHostConfig "macos-homebrew-test" "desktop" {
+    hostConfig = makeHostConfigWith "macos-homebrew-test" "desktop" {
       git = false;
       zsh = false;
-    }) // {
-      darwin.homebrew = {
-        enable = true;
-        brews = [ "wget" ];
-        casks = [ "slack" ];
-      };
+    } {
+      darwin.homebrew = { enable = true; };
     };
     inherit userProfile;
   };
 
   existingHomebrew = mkDarwinConfiguration {
     hostId = "darwin-existing-homebrew-test";
-    hostConfig = (makeHostConfig "macos-existing-homebrew-test" "laptop" {
+    hostConfig = makeHostConfigWith "macos-existing-homebrew-test" "laptop" {
       git = false;
       zsh = false;
-    }) // {
-      darwin.homebrew = {
-        enable = true;
-        manageInstallation = false;
-      };
+    } {
+      darwin.homebrew = { enable = true; manageInstallation = false; };
     };
     inherit userProfile;
   };
@@ -175,12 +172,7 @@ in
     let
       _ = assertAll "homebrewSystem" {
         testHbEnabled    = { expr = homebrewEnabled.config.nix-homebrew.enable;                                                       expected = true; };
-        testHbMigrate    = { expr = homebrewEnabled.config.nix-homebrew.autoMigrate;                                                  expected = true; };
         testHbUser       = { expr = homebrewEnabled.config.nix-homebrew.user;                                                         expected = userProfile.username; };
-        testHbFormulas   = { expr = homebrewEnabled.config.homebrew.enable;                                                           expected = true; };
-        testHbBrews      = { expr = map (b: b.name) homebrewEnabled.config.homebrew.brews;                                            expected = [ "wget" ]; };
-        testHbCasks      = { expr = map (c: c.name) homebrewEnabled.config.homebrew.casks;                                            expected = [ "slack" ]; };
-        testHbCleanup    = { expr = homebrewEnabled.config.homebrew.onActivation.cleanup;                                             expected = "none"; };
         testHbPath       = { expr = builtins.match "^/opt/homebrew/bin:/opt/homebrew/sbin:.*" homebrewEnabled.config.environment.systemPath != null; expected = true; };
         testExistingOff  = { expr = existingHomebrew.config.nix-homebrew.enable;                                                      expected = false; };
         testExistingPath = { expr = builtins.match "^/opt/homebrew/bin:/opt/homebrew/sbin:.*" existingHomebrew.config.environment.systemPath != null; expected = true; };

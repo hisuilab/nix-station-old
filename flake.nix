@@ -161,6 +161,12 @@
       # host名変更の影響を受けない開発・テスト用system
       checkSystem = "aarch64-darwin";
 
+      # darwin統合テストは一度だけ import して各出力を参照する
+      darwinTests = import ./tests/darwin/integration.nix {
+        inherit lib mkDarwinConfiguration;
+        userProfile = testUserProfile;
+      };
+
       # リポジトリ内テスト専用プロファイル
       testUserProfile = userProfiles.loadUserProfile {
         name = "test";
@@ -197,39 +203,19 @@
             }).appConfigsActivationPackage;
 
           # nix-darwinとHome Managerの有効構成
-          darwinEnabledEval =
-            (import ./tests/darwin/integration.nix {
-              inherit lib mkDarwinConfiguration;
-              userProfile = testUserProfile;
-            }).enabledSystem;
+          darwinEnabledEval = darwinTests.enabledSystem;
 
           # Home Manager全機能の無効構成
-          darwinDisabledEval =
-            (import ./tests/darwin/integration.nix {
-              inherit lib mkDarwinConfiguration;
-              userProfile = testUserProfile;
-            }).disabledSystem;
+          darwinDisabledEval = darwinTests.disabledSystem;
 
           # Git・Zshフラグによるモジュール分流
-          darwinRoutingEval =
-            (import ./tests/darwin/integration.nix {
-              inherit lib mkDarwinConfiguration;
-              userProfile = testUserProfile;
-            }).routingSystem;
+          darwinRoutingEval = darwinTests.routingSystem;
 
           # desktop・laptop・serverによるrole分流
-          darwinRoleRoutingEval =
-            (import ./tests/darwin/integration.nix {
-              inherit lib mkDarwinConfiguration;
-              userProfile = testUserProfile;
-            }).roleRoutingSystem;
+          darwinRoleRoutingEval = darwinTests.roleRoutingSystem;
 
           # Homebrew設定の統合評価
-          darwinHomebrewEval =
-            (import ./tests/darwin/integration.nix {
-              inherit lib mkDarwinConfiguration;
-              userProfile = testUserProfile;
-            }).homebrewSystem;
+          darwinHomebrewEval = darwinTests.homebrewSystem;
 
           # 登録済みmacOS hostのシステム評価 (userProfile はテスト用モックで代替、host追加時に自動展開)
         } // builtins.mapAttrs (hostId: hostConfig:

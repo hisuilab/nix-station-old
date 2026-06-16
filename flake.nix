@@ -212,17 +212,13 @@
               userProfile = testUserProfile;
             }).homebrewSystem;
 
-          # 登録済みmacOS hostのシステム評価 (userProfile はテスト用モックで代替)
-          macMiniMockEval = (mkDarwinConfiguration {
-            hostConfig = validatedHostConfigs."mac-mini";
-            hostId = "mac-mini";
+          # 登録済みmacOS hostのシステム評価 (userProfile はテスト用モックで代替、host追加時に自動展開)
+        } // builtins.mapAttrs (hostId: hostConfig:
+          (mkDarwinConfiguration {
+            inherit hostConfig hostId;
             userProfile = testUserProfile;
-          }).system;
-          macbookAirMockEval = (mkDarwinConfiguration {
-            hostConfig = validatedHostConfigs."macbook-air";
-            hostId = "macbook-air";
-            userProfile = testUserProfile;
-          }).system;
+          }).system
+        ) darwinHosts // {
 
           # host schema、Home Manager、user-profileの単体テスト
           tests =

@@ -88,8 +88,8 @@
                     hostConfig.darwin.homebrew.manageInstallation or true;
                   enableRosetta = hostConfig.meta.system == "aarch64-darwin";
                   user = userProfile.username;
-                  autoMigrate = true;
-                  mutableTaps = true;
+                  autoMigrate = hostConfig.darwin.homebrew.autoMigrate or true;
+                  mutableTaps = hostConfig.darwin.homebrew.mutableTaps or true;
                 };
               }
 

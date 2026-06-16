@@ -47,4 +47,4 @@
 - **#7** 廃止 API 使用: 実装前 `grep` 確認で検出可能
 
 
-> 意思決定の記録 → `docs/decisions/2026-06-16-agent-environment-setup.md`
+> 意思決定の記録 → `docs/decisions/2026-06-16-issue-26-agent-environment-setup.md`

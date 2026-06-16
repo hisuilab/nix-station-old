@@ -1,7 +1,7 @@
 # 意思決定の記録: agent-environment-setup
 
 > 記録日: 2026-06-16
-> レビュー → `docs/reviews/2026-06-16-agent-environment-setup.md`
+> レビュー → `docs/reviews/2026-06-16-issue-26-agent-environment-setup.md`
 
 ---
 

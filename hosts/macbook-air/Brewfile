@@ -1,48 +1,5 @@
-# macbook-air Brewfile
-# GUI アプリと App Store アプリを管理する。
-# CLI ツールは Home Manager (nix) で管理するため、ここには含めない。
+# macbook-air 固有 Brewfile（ホスト差分のみ）
+# 共通アプリは hosts/common/Brewfile で管理する。
 #
-# 適用: brew bundle --file hosts/macbook-air/Brewfile
-# App Store アプリは mas CLI が必要（brew install mas）
-
-brew "mas"
-
-# ブラウザ・クラウド
-cask "google-chrome"
-cask "google-drive"
-
-# ネットワーク・リモートアクセス
-cask "tailscale-app"
-cask "windows-app"
-
-# 開発エディタ・ターミナル
-cask "ghostty"
-cask "zed"
-cask "visual-studio-code"
-cask "codex-app"
-
-# コンテナ
-cask "docker-desktop"
-
-# 入力デバイス
-cask "karabiner-elements"
-cask "logi-options+"
-
-# コミュニケーション
-cask "slack"
-cask "discord"
-cask "linear"
-cask "zoom"
-
-# クリエイティブ
-cask "affinity"
-
-# ユーティリティ
-cask "raycast"
-cask "keycastr"
-
-# フォント
-cask "font-meslo-lg-nerd-font"
-
-# App Store アプリ
-mas "RunCat", id: 1429033973
+# 適用: brew bundle --file hosts/common/Brewfile
+#       brew bundle --file hosts/macbook-air/Brewfile  # 現在は差分なし

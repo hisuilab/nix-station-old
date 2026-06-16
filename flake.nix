@@ -42,21 +42,11 @@
           })
         hostConfigs;
 
-      # platformに対応するhostのみ抽出
-      filterHosts = platform:
-        builtins.listToAttrs (
-          map
-            (hostId: {
-              name = hostId;
-              value = validatedHostConfigs.${hostId};
-            })
-            (builtins.filter
-              (hostId: validatedHostConfigs.${hostId}.meta.platform == platform)
-              (builtins.attrNames validatedHostConfigs))
-        );
+      lib = nixpkgs.lib;
 
-      darwinHosts = filterHosts "darwin";
-      homeManagerHosts = filterHosts "home-manager";
+      # platformに対応するhostのみ抽出
+      darwinHosts = lib.filterAttrs (_: h: h.meta.platform == "darwin") validatedHostConfigs;
+      homeManagerHosts = lib.filterAttrs (_: h: h.meta.platform == "home-manager") validatedHostConfigs;
 
       # hostが指定したユーザープロファイルを取得
       loadUserProfile = hostConfig:

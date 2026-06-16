@@ -7,8 +7,8 @@
 local theme_file="${p10k_conf_dir}/theme/${P10K_THEME}.zsh"
 
 if [[ ! -f $theme_file ]]; then
-  print -P "%F{red}[p10k] Unknown theme: ${P10K_THEME}%f" >&2
-  print -P "%F{red}       Available: ${(j: :)${p10k_conf_dir}/theme/*.zsh(N:t:r)}%f" >&2
+  print -P "%F{1}[p10k] Unknown theme: ${P10K_THEME}%f" >&2
+  print -P "%F{1}       Available: ${(j: :)${p10k_conf_dir}/theme/*.zsh(N:t:r)}%f" >&2
   return 1
 fi
 

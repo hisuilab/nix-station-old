@@ -69,6 +69,14 @@ typeset -g C_VCS_CONFLICTED_FG=...  # コンフリクトありの文字色
 
 ## Nix 適用
 
+macOS:
+
 ```zsh
 darwin-rebuild switch --flake .
+```
+
+Linux (Ubuntu / Raspberry Pi OS):
+
+```zsh
+home-manager switch --flake .#<host-id>
 ```

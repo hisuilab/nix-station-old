@@ -72,7 +72,4 @@ let
 in
 {
   inherit loadUserProfile validateProfileName validateUserProfile;
-
-  importUserProfile = name:
-    loadUserProfile { inherit name; };
 }

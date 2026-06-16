@@ -16,7 +16,7 @@
 typeset -g P10K_CONF_DIR="${HOME}/.p10k.d"
 local _p10k_state="${XDG_DATA_HOME:-${HOME}/.local/share}/p10k/theme"
 # state ファイルがあれば最優先。なければ環境変数、それもなければデフォルト。
-if [[ -f "$_p10k_state" ]]; then
+if [[ -s "$_p10k_state" ]]; then
   typeset -g P10K_THEME="$(<"$_p10k_state")"
 else
   typeset -g P10K_THEME="${P10K_THEME:-tokyo-night}"

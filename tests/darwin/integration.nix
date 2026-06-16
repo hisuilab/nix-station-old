@@ -1,23 +1,29 @@
 { mkDarwinConfiguration
 , userProfile
+, lib
 ,
 }:
 
 let
+  hostConfigLib = import ../../lib/host-config.nix { };
   system = "aarch64-darwin";
 
-  makeHostConfig = hostId: role: homeManager: {
-    meta = {
-      hostname = hostId;
-      inherit system;
-      platform = "darwin";
-      os = "darwin";
-      environment = "native";
-      inherit role;
+  makeHostConfig = hostId: role: homeManager:
+    hostConfigLib.validateHostConfig {
+      inherit hostId;
+      config = {
+        meta = {
+          hostname = hostId;
+          inherit system;
+          platform = "darwin";
+          os = "darwin";
+          environment = "native";
+          inherit role;
+        };
+        userProfile.name = "test";
+        inherit homeManager;
+      };
     };
-    userProfile.name = "test";
-    inherit homeManager;
-  };
 
   enabled = mkDarwinConfiguration {
     hostId = "darwin-enabled-test";
@@ -106,91 +112,78 @@ let
   enabledHome = enabled.config.home-manager.users.${username};
   gitOnlyHome = gitOnly.config.home-manager.users.${username};
   zshOnlyHome = zshOnly.config.home-manager.users.${username};
+
+  # 失敗したテストがあれば名前付きエラーで throw する
+  assertAll = suiteName: tests:
+    let results = lib.runTests tests;
+    in if results == []
+       then true
+       else throw "${suiteName}: ${builtins.toJSON (map (t: t.name) results)}";
 in
 {
   enabledSystem =
-    if
-      builtins.hasAttr username enabled.config.home-manager.users
-      && enabled.config.programs.zsh.enable
-      && enabled.config.users.users.${username}.home == "/Users/${username}"
-      && enabled.config.users.users.${username}.shell != null
-      && enabledHome.programs.git.enable
-      && enabledHome.programs.git.userName == userProfile.git.userName
-      && enabledHome.programs.git.userEmail == userProfile.git.userEmail
-      && enabledHome.programs.zsh.enable
-    then
-      enabled.system
-    else
-      throw "macOS integration test failed: enabled Home Manager user or Zsh shell missing";
+    let
+      _ = assertAll "enabledSystem" {
+        testHasUser     = { expr = builtins.hasAttr username enabled.config.home-manager.users; expected = true; };
+        testSystemZsh   = { expr = enabled.config.programs.zsh.enable;                         expected = true; };
+        testHomeDir     = { expr = enabled.config.users.users.${username}.home;                 expected = "/Users/${username}"; };
+        testShellSet    = { expr = enabled.config.users.users.${username}.shell != null;        expected = true; };
+        testGitEnabled  = { expr = enabledHome.programs.git.enable;                            expected = true; };
+        testGitUserName = { expr = enabledHome.programs.git.userName;                          expected = userProfile.git.userName; };
+        testGitEmail    = { expr = enabledHome.programs.git.userEmail;                         expected = userProfile.git.userEmail; };
+        testZshEnabled  = { expr = enabledHome.programs.zsh.enable;                            expected = true; };
+      };
+    in enabled.system;
 
   disabledSystem =
     let
       disabledHome = disabled.config.home-manager.users.${username};
-    in
-    if
-      builtins.hasAttr username disabled.config.home-manager.users
-      && disabledHome.nixStation.homeRole == "server"
-      && !disabledHome.programs.git.enable
-      && !disabledHome.programs.zsh.enable
-      && disabled.config.programs.zsh.enable
-      && disabled.config.users.users.${username}.shell == null
-    then
-      disabled.system
-    else
-      throw "macOS integration test failed: base Home Manager user was not generated";
+      _ = assertAll "disabledSystem" {
+        testHasUser    = { expr = builtins.hasAttr username disabled.config.home-manager.users; expected = true; };
+        testRole       = { expr = disabledHome.nixStation.homeRole;                            expected = "server"; };
+        testGitOff     = { expr = disabledHome.programs.git.enable;                            expected = false; };
+        testZshOff     = { expr = disabledHome.programs.zsh.enable;                            expected = false; };
+        testSystemZsh  = { expr = disabled.config.programs.zsh.enable;                         expected = true; };
+        testShellNull  = { expr = disabled.config.users.users.${username}.shell == null;        expected = true; };
+      };
+    in disabled.system;
 
   routingSystem =
-    if
-      gitOnlyHome.programs.git.enable
-      && !gitOnlyHome.programs.zsh.enable
-      && gitOnly.config.programs.zsh.enable
-      && gitOnly.config.users.users.${username}.shell == null
-      && !zshOnlyHome.programs.git.enable
-      && zshOnlyHome.programs.zsh.enable
-      && zshOnly.config.programs.zsh.enable
-      && zshOnly.config.users.users.${username}.shell != null
-    then
-      gitOnly.system
-    else
-      throw "macOS integration test failed: Home Manager flags selected incorrect modules";
+    let
+      _ = assertAll "routingSystem" {
+        testGitOnlyGit    = { expr = gitOnlyHome.programs.git.enable;                          expected = true; };
+        testGitOnlyZshOff = { expr = gitOnlyHome.programs.zsh.enable;                          expected = false; };
+        testGitOnlySysZsh = { expr = gitOnly.config.programs.zsh.enable;                       expected = true; };
+        testGitOnlyShell  = { expr = gitOnly.config.users.users.${username}.shell == null;      expected = true; };
+        testZshOnlyGitOff = { expr = zshOnlyHome.programs.git.enable;                          expected = false; };
+        testZshOnlyZsh    = { expr = zshOnlyHome.programs.zsh.enable;                          expected = true; };
+        testZshOnlySysZsh = { expr = zshOnly.config.programs.zsh.enable;                       expected = true; };
+        testZshOnlyShell  = { expr = zshOnly.config.users.users.${username}.shell != null;      expected = true; };
+      };
+    in gitOnly.system;
 
   roleRoutingSystem =
-    if
-      enabled.config.nixStation.hostRole == "server"
-      && laptop.config.nixStation.hostRole == "laptop"
-      && desktop.config.nixStation.hostRole == "desktop"
-    then
-      desktop.system
-    else
-      throw "nix-darwin integration test failed: host role selected incorrect module";
+    let
+      _ = assertAll "roleRoutingSystem" {
+        testServerRole  = { expr = enabled.config.nixStation.hostRole; expected = "server"; };
+        testLaptopRole  = { expr = laptop.config.nixStation.hostRole;  expected = "laptop"; };
+        testDesktopRole = { expr = desktop.config.nixStation.hostRole; expected = "desktop"; };
+      };
+    in desktop.system;
 
   homebrewSystem =
-    if
-      homebrewEnabled.config.nix-homebrew.enable
-      && homebrewEnabled.config.nix-homebrew.autoMigrate
-      && homebrewEnabled.config.nix-homebrew.user == userProfile.username
-      && homebrewEnabled.config.homebrew.enable
-      && map (brew: brew.name) homebrewEnabled.config.homebrew.brews == [ "wget" ]
-      && map (cask: cask.name) homebrewEnabled.config.homebrew.casks == [ "slack" ]
-      && homebrewEnabled.config.homebrew.onActivation.cleanup == "none"
-      && builtins.match
-        "^/opt/homebrew/bin:/opt/homebrew/sbin:.*"
-        homebrewEnabled.config.environment.systemPath
-        != null
-      && !existingHomebrew.config.nix-homebrew.enable
-      && builtins.match
-        "^/opt/homebrew/bin:/opt/homebrew/sbin:.*"
-        existingHomebrew.config.environment.systemPath
-        != null
-    then
-      homebrewEnabled.system
-    else
-      throw "nix-darwin integration test failed: Homebrew settings were not applied: ${
-        builtins.toJSON {
-          enable = homebrewEnabled.config.homebrew.enable;
-          brews = homebrewEnabled.config.homebrew.brews;
-          casks = homebrewEnabled.config.homebrew.casks;
-          cleanup = homebrewEnabled.config.homebrew.onActivation.cleanup;
-        }
-      }";
+    let
+      _ = assertAll "homebrewSystem" {
+        testHbEnabled    = { expr = homebrewEnabled.config.nix-homebrew.enable;                                                       expected = true; };
+        testHbMigrate    = { expr = homebrewEnabled.config.nix-homebrew.autoMigrate;                                                  expected = true; };
+        testHbUser       = { expr = homebrewEnabled.config.nix-homebrew.user;                                                         expected = userProfile.username; };
+        testHbFormulas   = { expr = homebrewEnabled.config.homebrew.enable;                                                           expected = true; };
+        testHbBrews      = { expr = map (b: b.name) homebrewEnabled.config.homebrew.brews;                                            expected = [ "wget" ]; };
+        testHbCasks      = { expr = map (c: c.name) homebrewEnabled.config.homebrew.casks;                                            expected = [ "slack" ]; };
+        testHbCleanup    = { expr = homebrewEnabled.config.homebrew.onActivation.cleanup;                                             expected = "none"; };
+        testHbPath       = { expr = builtins.match "^/opt/homebrew/bin:/opt/homebrew/sbin:.*" homebrewEnabled.config.environment.systemPath != null; expected = true; };
+        testExistingOff  = { expr = existingHomebrew.config.nix-homebrew.enable;                                                      expected = false; };
+        testExistingPath = { expr = builtins.match "^/opt/homebrew/bin:/opt/homebrew/sbin:.*" existingHomebrew.config.environment.systemPath != null; expected = true; };
+      };
+    in homebrewEnabled.system;
 }

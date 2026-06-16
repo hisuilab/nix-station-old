@@ -30,8 +30,9 @@ for file in $staged_files; do
   fi
 
   # バイナリファイル
-  if file "$file" | grep -qv text 2>/dev/null; then
-    echo "⚠️  バイナリファイル: $file"
+  mime=$(file --mime-type -b "$file" 2>/dev/null || echo "application/octet-stream")
+  if [[ "$mime" != text/* ]]; then
+    echo "⚠️  バイナリファイル: $file ($mime)"
     found=1
   fi
 done

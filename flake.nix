@@ -169,13 +169,21 @@
       # nix flake checkで評価するplatform別テスト
       checks = {
         ${checkSystem} = {
-          # Home Managerモジュール単体の統合評価
+          # Home Managerモジュール単体の統合評価（基本ツール）
           homeModulesEval =
             (import ./tests/home/integration.nix {
               inherit home-manager nixpkgs;
               nixpkgsUnstable = nixpkgs-unstable;
               system = checkSystem;
             }).activationPackage;
+
+          # Home Managerモジュール統合評価（managed tools: ghostty / p10k / zed）
+          homeAppConfigsEval =
+            (import ./tests/home/integration.nix {
+              inherit home-manager nixpkgs;
+              nixpkgsUnstable = nixpkgs-unstable;
+              system = checkSystem;
+            }).appConfigsActivationPackage;
 
           # nix-darwinとHome Managerの有効構成
           darwinEnabledEval =

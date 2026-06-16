@@ -5,31 +5,54 @@ let
   userProfile = userProfiles.loadUserProfile {
     name = "test";
   };
-  homeManager = {
+  baseHomeManager = {
     cliTools = true;
     git = true;
     zsh = true;
+  };
+  appConfigHomeManager = {
+    zsh = true;
+    ghostty = {
+      enable = true;
+      configFile = ../../modules/home/ghostty/config;
+    };
+    p10k = {
+      enable = true;
+      configFile = ../../modules/home/p10k/p10k.zsh;
+    };
+    zed = {
+      enable = true;
+      configFile = ../../modules/home/zed/settings.json;
+    };
   };
   hostConfig.meta = {
     os = "darwin";
     environment = "native";
     role = "desktop";
   };
-in
-home-manager.lib.homeManagerConfiguration {
-  pkgs = nixpkgs.legacyPackages.${system};
 
-  extraSpecialArgs = {
-    inherit homeManager hostConfig nixpkgsUnstable userProfile;
+  mkConfig = homeManager: home-manager.lib.homeManagerConfiguration {
+    pkgs = nixpkgs.legacyPackages.${system};
+
+    extraSpecialArgs = {
+      inherit homeManager hostConfig nixpkgsUnstable userProfile;
+    };
+
+    modules = [
+      ../../modules/home/default.nix
+      {
+        home = {
+          username = userProfile.username;
+          homeDirectory = "/Users/${userProfile.username}";
+        };
+      }
+    ];
   };
+in
+{
+  # 基本ツール（cliTools / git / zsh）の統合評価
+  activationPackage = (mkConfig baseHomeManager).activationPackage;
 
-  modules = [
-    ../../modules/home/default.nix
-    {
-      home = {
-        username = userProfile.username;
-        homeDirectory = "/Users/${userProfile.username}";
-      };
-    }
-  ];
+  # managed tools（ghostty / p10k / zed）の統合評価
+  appConfigsActivationPackage = (mkConfig appConfigHomeManager).activationPackage;
 }

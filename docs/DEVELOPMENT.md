@@ -305,6 +305,8 @@ modules/home/
 
 ツール追加時は`modules/home/<tool>/default.nix`を作成し、`modules/home/default.nix`の`toolModules`へ登録します。host validatorは`homeManager`配下の任意のbooleanフラグを受け付けるため、既存host configの更新は不要です。未登録のツール名はHome Manager評価時にエラーになります。
 
+`enable`と`configFile`を持つmanaged tool（ghostty・p10k・zedと同等）を追加する場合は、`lib/host-registry.nix`の`managedTools`リストにもツール名を追加します。booleanフラグのみのツールは`toolModules`への登録だけで完結します。
+
 OS固有設定は次の責任で管理します。
 
 - `platforms/darwin/`: macOSユーザー固有設定
@@ -378,23 +380,33 @@ darwin.features = {
 
 Finderサイドバーの初期化や`killall`を伴うactivation scriptなど、既存ユーザー環境へ影響する処理は通常のFinder defaultsと分離し、明示的に有効化する独立featureとして追加します。
 
-Homebrew本体はnix-homebrewで導入し、formula・cask・Mac App Storeアプリはnix-darwinの`homebrew`設定で管理します。macOS hostでは初期状態から有効です。
+Homebrew本体の導入はnix-homebrewが担当します。GUIアプリ・App StoreアプリはBrewfileで管理し、`darwin-rebuild switch`後に手動で適用します。CLIツールはHome Managerで管理するためBrewfileには含めません。
 
 ```nix
+# hosts/<host-id>/config.nix
 darwin.homebrew = {
   enable = true;
-  brews = [ "wget" ];
-  casks = [ "ghostty" ];
-  taps = [ ];
-  masApps = { };
+  # manageInstallation = false;  # 既存Homebrewを使う場合
 };
 ```
 
-新規環境ではHomebrewを標準prefixへ導入します。既存Homebrewは`autoMigrate = true`で管理下へ移行します。Apple SiliconではRosetta用Homebrewも有効化し、`brew`ランチャーがアーキテクチャに応じたprefixを選択します。
+Homebrewパッケージは`hosts/common/Brewfile`（全ホスト共通）と`hosts/<host-id>/Brewfile`（ホスト固有差分）に分けて管理します。
+
+```bash
+# 適用（darwin-rebuild switch の後に実行）
+brew bundle --file hosts/common/Brewfile
+brew bundle --file hosts/<host-id>/Brewfile
+
+# Brewfileから削除したアプリをアンインストール
+brew bundle cleanup --file hosts/common/Brewfile
+brew bundle cleanup --file hosts/<host-id>/Brewfile
+```
+
+App StoreアプリはBrewfileの`mas`行で管理します（`mas`コマンドが必要）。`darwin-rebuild switch`実行後のactivationメッセージに適用コマンドが表示されます。
+
+Apple SiliconではRosetta用Homebrewも有効化し、`brew`ランチャーがアーキテクチャに応じたprefixを選択します。
 
 現在のnix-homebrewはnix-darwin 25.05と互換性のあるrevisionへ固定しています。nix-darwinを更新する際はnix-homebrewの固定revisionも更新し、`nix flake check path:.`でHomebrew本体のbuildまで確認します。
-
-`enable = true`の場合、未指定のactivation方針は`autoUpdate = true`、`upgrade = true`、`cleanup = "none"`です。宣言外パッケージを削除する場合だけ、host側で`cleanup = "uninstall"`または`"zap"`を明示します。
 
 Raspberry Pi OSのブート、ディスク、ネットワーク、システムサービスは今回のNix管理対象外です。
 

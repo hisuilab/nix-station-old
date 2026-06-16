@@ -15,7 +15,7 @@
    ```
 5. `docs/decisions/template.md` の構成に沿って記入する（全指摘番号を行として記載）
 6. issue 本文を `gh issue edit N --body "..."` で更新する（レビューの内容を反映）
-7. コミットする: `docs(decisions): record decisions for issue-N topic`
+7. コミットは `/stage` で行う（自動コミット禁止）
 
 ## 質問の構成
 

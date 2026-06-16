@@ -14,7 +14,7 @@ in
       "/opt/homebrew/sbin"
     ];
 
-    system.activationScripts.postUserActivation.text = lib.mkAfter ''
+    system.activationScripts.postActivation.text = lib.mkAfter ''
       echo ""
       echo "============================================================"
       echo " nix-station の管理対象:"

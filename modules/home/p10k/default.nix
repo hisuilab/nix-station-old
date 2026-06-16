@@ -8,9 +8,10 @@ in
     packages = [ pkgs.zsh-powerlevel10k ];
   } // lib.optionalAttrs (p10k.configFile != null) {
     file.".p10k.zsh".source = p10k.configFile;
+    file.".p10k.d".source = ./conf.d;
   };
 
-  programs.zsh.initExtra = ''
+  programs.zsh.initContent = ''
     source "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
   '' + lib.optionalString (p10k.configFile != null) ''
     source "${config.home.homeDirectory}/.p10k.zsh"

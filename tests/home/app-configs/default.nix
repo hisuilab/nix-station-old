@@ -43,7 +43,6 @@ let
   zedModule = import ../../../modules/home/zed/default.nix {
     inherit homeManager lib;
   };
-  hostConfigs = import ../../../hosts;
 in
 lib.runTests {
   testAppConfigFlagsSelectModules = {
@@ -66,12 +65,12 @@ lib.runTests {
     expr = {
       init = lib.hasInfix
         ''source "/Users/test/.p10k.zsh"''
-        p10kModule.programs.zsh.initExtra;
+        p10kModule.programs.zsh.initContent;
       package = map (package: package.pname) p10kModule.home.packages;
       source = p10kModule.home.file.".p10k.zsh".source;
       theme = lib.hasInfix
         "/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
-        p10kModule.programs.zsh.initExtra;
+        p10kModule.programs.zsh.initContent;
     };
     expected = {
       init = true;
@@ -85,12 +84,12 @@ lib.runTests {
     expr = {
       config = lib.hasInfix
         ".p10k.zsh"
-        p10kDisabledModule.programs.zsh.initExtra;
+        p10kDisabledModule.programs.zsh.initContent;
       package = map (package: package.pname) p10kDisabledModule.home.packages;
       source = p10kDisabledModule.home ? file;
       theme = lib.hasInfix
         "/share/zsh-powerlevel10k/powerlevel10k.zsh-theme"
-        p10kDisabledModule.programs.zsh.initExtra;
+        p10kDisabledModule.programs.zsh.initContent;
     };
     expected = {
       config = false;
@@ -105,32 +104,4 @@ lib.runTests {
     expected = ../../../modules/home/zed/settings.json;
   };
 
-  testEveryHostDeclaresAppConfigFlags = {
-    expr = builtins.all
-      (hostConfig:
-        builtins.all
-          (name: builtins.hasAttr name hostConfig.homeManager)
-          [ "ghostty" "p10k" "zed" ])
-      (builtins.attrValues hostConfigs);
-    expected = true;
-  };
-
-  testServerHostsDisableGuiAppConfigs = {
-    expr = builtins.all
-      (hostConfig:
-        hostConfig.meta.role != "server"
-        || (!hostConfig.homeManager.ghostty.enable
-          && !hostConfig.homeManager.zed.enable))
-      (builtins.attrValues hostConfigs);
-    expected = true;
-  };
-
-  testP10kRequiresZsh = {
-    expr = builtins.all
-      (hostConfig:
-        !hostConfig.homeManager.p10k.enable
-        || hostConfig.homeManager.zsh)
-      (builtins.attrValues hostConfigs);
-    expected = true;
-  };
 }

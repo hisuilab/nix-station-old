@@ -71,5 +71,5 @@ let
       validateUserProfile profileName (import profilePath);
 in
 {
-  inherit loadUserProfile validateProfileName validateUserProfile;
+  inherit loadUserProfile;
 }

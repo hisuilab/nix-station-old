@@ -15,6 +15,31 @@ macOSはnix-darwin、Ubuntu、Ubuntu on WSL、Raspberry Pi OSはstandalone Home 
 - 任意: direnv / nix-direnv
 - 任意: pre-commit
 
+Nixがインストールされていない場合は[Determinate Nix Installer](https://github.com/DeterminateSystems/nix-installer)の使用を推奨します。インストール後、`~/.config/nix/nix.conf`に`experimental-features = nix-command flakes`を追加してFlakesを有効化してください。
+
+## Setup
+
+1. リポジトリをクローンします。
+
+```bash
+git clone https://github.com/hisuilab/nix-station.git
+cd nix-station
+```
+
+2. 自分のユーザープロファイルを作成します。`user-profiles/guest.nix`を参考に`user-profiles/<your-name>.nix`を作成してください。このファイルはGitのコミット対象外です。
+
+```bash
+cp user-profiles/guest.nix user-profiles/<your-name>.nix
+# username / git.userName / git.userEmail を編集
+```
+
+3. 使用するhostの`userProfile.name`を設定したプロファイル名に変更します。
+
+```nix
+# hosts/<host-id>/config.nix
+userProfile.name = "<your-name>";
+```
+
 ## Quick Start
 
 ```bash

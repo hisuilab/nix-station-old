@@ -23,6 +23,7 @@
 | 4 | `docs/DEVELOPMENT.md` Homebrew セクション | `autoMigrate = true` を常時有効として記載しているが、PR #23 の #7 でホスト設定から上書き可能になった（デフォルト `true`）。`mutableTaps` も同様 | デフォルト値であること・ホスト設定で上書き可能であることを明記 |
 | 5 | `flake.nix` L189–221 | `tests/darwin/integration.nix` を同じ引数で5回 `import` している（`darwinEnabledEval` / `darwinDisabledEval` / `darwinRoutingEval` / `darwinRoleRoutingEval` / `darwinHomebrewEval`）。Nix のキャッシュで実害はないが冗長 | `let darwinTests = import ./tests/darwin/integration.nix { ... }; in` で1度だけ bind し各フィールドを参照 |
 | 6 | `user-profiles/default.nix` | `validateProfileName` と `validateUserProfile` がエクスポートされているが外部から使われていない。PR #23 の #12（`importUserProfile` 除去）と合わせて整理できる | 未使用エクスポートを削除し `loadUserProfile` に一本化 |
+| 7 | `modules/system/darwin/` Homebrew activation 順序 | nix-darwin の activation-scripts は DAG ではなくハードコードされたテンプレート順（`homebrew.text` → `postUserActivation.text` 固定）。`brew bundle` はインストール・アップデート量が多い場合に長時間かかるため、後続の `postUserActivation`（Home Manager・Dock・Finder 設定）がブロックされる。順序の変更はテンプレートが固定のためできない | `system.activationScripts.homebrew.text = lib.mkForce ""` で自動実行を無効化し、`postUserActivation` の末尾へ移設するか、Brewfile を別ファイルで管理して `darwin-rebuild switch` 後に手動で `brew bundle` を実行する構成へ変更する |
 
 ---
 
@@ -37,6 +38,10 @@
 - **#2** Linux MockEvals の自動展開（darwin と非対称）
 - **#3** DEVELOPMENT.md: managed tool 追加手順に `host-registry.nix` 更新が未記載
 - **#4** DEVELOPMENT.md: `autoMigrate` / `mutableTaps` が設定可能になった旨が未記載
+
+### 中（設計・運用上の問題）
+
+- **#7** darwin Homebrew activation 順序: `brew bundle` が `postUserActivation` をブロック
 
 ### 低（コードの整理）
 

@@ -42,9 +42,9 @@ userProfile.name = "<your-name>";
 
 ## Quick Start
 
+Flake出力と全テストを評価します（ビルドは行いません）:
+
 ```bash
-git clone https://github.com/hisuilab/nix-station.git
-cd nix-station
 nix flake check path:. --no-build --all-systems
 ```
 
@@ -55,8 +55,6 @@ nix build path:.#darwinConfigurations.mac-mini.system --no-link
 ```
 
 ## Apply Configuration
-
-適用前に、対象hostの`userProfile.name`を実際に利用するプロファイル名へ変更します。`guest`は評価・試用向けです。
 
 macOS:
 
@@ -173,7 +171,12 @@ tests/
 ├── home/
 │   ├── default.nix
 │   ├── integration.nix
+│   ├── app-configs/
+│   ├── cli-tools/
+│   ├── environments/
+│   ├── gh/
 │   ├── git/
+│   ├── platforms/
 │   ├── roles/
 │   └── zsh/
 ├── darwin/

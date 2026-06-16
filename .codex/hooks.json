@@ -1,0 +1,6 @@
+{
+  "pre-commit": {
+    "command": "python3 .codex/hooks/policy-gate.py",
+    "description": "Run risk-check and secret-scan before commit"
+  }
+}

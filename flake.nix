@@ -180,35 +180,35 @@
           # nix-darwinとHome Managerの有効構成
           darwinEnabledEval =
             (import ./tests/darwin/integration.nix {
-              inherit mkDarwinConfiguration;
+              inherit lib mkDarwinConfiguration;
               userProfile = testUserProfile;
             }).enabledSystem;
 
           # Home Manager全機能の無効構成
           darwinDisabledEval =
             (import ./tests/darwin/integration.nix {
-              inherit mkDarwinConfiguration;
+              inherit lib mkDarwinConfiguration;
               userProfile = testUserProfile;
             }).disabledSystem;
 
           # Git・Zshフラグによるモジュール分流
           darwinRoutingEval =
             (import ./tests/darwin/integration.nix {
-              inherit mkDarwinConfiguration;
+              inherit lib mkDarwinConfiguration;
               userProfile = testUserProfile;
             }).routingSystem;
 
           # desktop・laptop・serverによるrole分流
           darwinRoleRoutingEval =
             (import ./tests/darwin/integration.nix {
-              inherit mkDarwinConfiguration;
+              inherit lib mkDarwinConfiguration;
               userProfile = testUserProfile;
             }).roleRoutingSystem;
 
           # Homebrew設定の統合評価
           darwinHomebrewEval =
             (import ./tests/darwin/integration.nix {
-              inherit mkDarwinConfiguration;
+              inherit lib mkDarwinConfiguration;
               userProfile = testUserProfile;
             }).homebrewSystem;
 

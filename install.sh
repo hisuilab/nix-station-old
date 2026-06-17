@@ -8,6 +8,7 @@ set -euo pipefail
 
 HOST_ID="${1:-}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROFILE_EMAIL=""
 
 # --- ヘルパー ---------------------------------------------------------------
 
@@ -54,6 +55,7 @@ setup_user_profile() {
     local profile_file="${REPO_DIR}/user-profiles/${profile_name}.nix"
     if [[ -f "$profile_file" ]]; then
       info "ユーザープロファイル '${profile_name}' を確認しました。"
+      PROFILE_EMAIL=$(awk -F'"' '/userEmail/{print $2}' "$profile_file")
       return
     fi
     warn "user-profiles/${profile_name}.nix が見つかりません。新規作成します。"
@@ -79,6 +81,7 @@ setup_user_profile() {
   while [[ -z "$git_email" ]]; do
     read -rp "Git メールアドレス: " git_email
   done
+  PROFILE_EMAIL="$git_email"
 
   # プロファイルファイル生成
   local profile_file="${REPO_DIR}/user-profiles/${username}.nix"
@@ -97,6 +100,26 @@ EOF
   sed -i '' "s/userProfile\.name = \".*\"/userProfile.name = \"${username}\"/" "$host_config"
   info "hosts/${HOST_ID}/config.nix の userProfile.name を '${username}' に更新しました。"
   echo ""
+}
+
+confirm_setup() {
+  local host_config="${REPO_DIR}/hosts/${HOST_ID}/config.nix"
+  local profile_name
+  profile_name=$(awk -F'"' '/userProfile[.]name/{print $2}' "$host_config")
+
+  echo ""
+  echo "============================================================"
+  echo " 適用内容の確認"
+  echo "   host    : ${HOST_ID}"
+  echo "   user    : ${profile_name}"
+  echo "   email   : ${PROFILE_EMAIL}"
+  echo "============================================================"
+  echo ""
+  read -rp "この内容で続行しますか？ [y/N]: " answer
+  case "$answer" in
+    [yY]|[yY][eE][sS]) echo "" ;;
+    *) echo "中止しました。"; exit 0 ;;
+  esac
 }
 
 darwin_prereqs() {
@@ -131,6 +154,7 @@ setup_darwin() {
   info "=== macOS セットアップ開始 (host: $HOST_ID) ==="
 
   setup_user_profile
+  confirm_setup
   darwin_prereqs
 
   # 1回目: Homebrew セットアップ + nix 設定適用
@@ -148,7 +172,7 @@ setup_darwin() {
   echo "次のステップ:"
   echo "  1. App Store にサインインして brew bundle を再実行（mas アプリ）"
   echo "  2. SSH キーを設定:"
-  echo "       ssh-keygen -t ed25519 -C \"your_email@example.com\" -f ~/.ssh/github_ed25519"
+  echo "       ssh-keygen -t ed25519 -C \"${PROFILE_EMAIL}\" -f ~/.ssh/github_ed25519"
   echo "  3. GitHub 認証: gh auth login"
 }
 
@@ -158,6 +182,7 @@ setup_linux() {
   info "=== Linux セットアップ開始 (host: $HOST_ID) ==="
 
   setup_user_profile
+  confirm_setup
   info "home-manager switch を実行します..."
   nix run github:nix-community/home-manager/release-25.05 -- \
     switch --flake "path:${REPO_DIR}#${HOST_ID}"
@@ -166,7 +191,7 @@ setup_linux() {
   echo ""
   echo "次のステップ:"
   echo "  1. SSH キーを設定:"
-  echo "       ssh-keygen -t ed25519 -C \"your_email@example.com\" -f ~/.ssh/github_ed25519"
+  echo "       ssh-keygen -t ed25519 -C \"${PROFILE_EMAIL}\" -f ~/.ssh/github_ed25519"
   echo "  2. GitHub 認証: gh auth login"
 }
 

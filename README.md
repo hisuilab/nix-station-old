@@ -6,7 +6,7 @@
 
 Nixとnix-darwinを使い、ホスト・ユーザー・パッケージの設定を再現可能な形で管理するためのワークステーション構成です。
 
-macOSはnix-darwin、Ubuntu、Ubuntu on WSL、Raspberry Pi OSはstandalone Home Managerで管理します。
+macOSはnix-darwin、Ubuntu、Ubuntu on WSL、Raspberry Pi OSはstandalone Home Managerで管理します。Windowsはwinget + PowerShellスクリプトで管理します。
 
 ## Requirements
 
@@ -140,6 +140,38 @@ chmod 644 ~/.ssh/id_ed25519.pub
 
 ```bash
 gh auth login
+```
+
+## Windows セットアップ
+
+Nix を使わず winget でパッケージを一括インストールします。Git 未インストールの新規 PC でも実行できます。
+
+1. このリポジトリを GitHub から ZIP でダウンロードして展開します。
+2. PowerShell を開き、展開したフォルダへ移動して実行します。
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File scripts\windows\setup.ps1
+```
+
+カテゴリを絞ってインストールする場合:
+
+```powershell
+PowerShell -ExecutionPolicy Bypass -File scripts\windows\setup.ps1 -Categories gaming,hardware
+```
+
+パッケージはカテゴリ別に管理しています:
+
+| カテゴリ | ファイル | 内容 |
+|---|---|---|
+| ゲーム | [`hosts/windows-desktop/packages/gaming.json`](hosts/windows-desktop/packages/gaming.json) | Steam, Epic Games, OBS 等 |
+| 開発環境 | [`hosts/windows-desktop/packages/dev.json`](hosts/windows-desktop/packages/dev.json) | WSL, Docker, VSCode, Tailscale 等 |
+| ハードウェア | [`hosts/windows-desktop/packages/hardware.json`](hosts/windows-desktop/packages/hardware.json) | Logitech, Yamaha, Nvidia 等 |
+| ブラウザ | [`hosts/windows-desktop/packages/browser.json`](hosts/windows-desktop/packages/browser.json) | Chrome, Brave |
+
+セットアップ完了後、WSL を開いて Linux 環境を構築します:
+
+```bash
+bash install.sh ubuntu-wsl
 ```
 
 ## Hosts

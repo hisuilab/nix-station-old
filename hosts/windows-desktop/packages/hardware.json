@@ -1,0 +1,19 @@
+{
+	"$schema": "https://aka.ms/winget-packages.schema.2.0.json",
+	"Sources": [
+		{
+			"Packages": [
+				{ "PackageIdentifier": "Logitech.OptionsPlus" },
+				{ "PackageIdentifier": "MSI.GamingIntelligence" },
+				{ "PackageIdentifier": "Nvidia.PhysX" },
+				{ "PackageIdentifier": "Yamaha.SteinbergUSBDriver" }
+			],
+			"SourceDetails": {
+				"Argument": "https://cdn.winget.microsoft.com/cache",
+				"Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
+				"Name": "winget",
+				"Type": "Microsoft.PreIndexed.Package"
+			}
+		}
+	]
+}

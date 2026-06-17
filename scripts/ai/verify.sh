@@ -9,6 +9,10 @@ cd "$repo"
 # Nix 評価時に失敗するが、これは設計上の想定動作。
 # CI で担保すべき検証は checks.* で行う。
 # 詳細: docs/decisions/2026-06-16-issue-28-mac-mini-m4-fresh-setup.md
+#
+# Windows ホスト（hosts/windows-desktop/）は Nix 評価対象外。
+# このスクリプトへの追加・hosts/default.nix への追加は行わない。
+# 詳細: docs/decisions/2026-06-17-issue-31-windows-management.md
 
 eval_check() {
   local attr="path:.#${1}"

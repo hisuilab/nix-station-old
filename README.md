@@ -40,6 +40,12 @@ cp user-profiles/guest.nix user-profiles/<your-name>.nix
 userProfile.name = "<your-name>";
 ```
 
+4. direnvを使用する場合は以下を実行してください。
+
+```bash
+direnv allow
+```
+
 ## Quick Start
 
 Flake出力と全テストを評価します（ビルドは行いません）:
@@ -57,6 +63,11 @@ nix build path:.#darwinConfigurations.mac-mini.system --no-link
 ## Apply Configuration
 
 macOS:
+
+> **初回セットアップ（Determinate Nix 使用時）**: Determinate インストーラーが作成した `/etc/zshenv` が nix-darwin と競合します。以下を先に実行してください:
+> ```bash
+> sudo mv /etc/zshenv /etc/zshenv.before-nix-darwin
+> ```
 
 ```bash
 sudo nix run github:LnL7/nix-darwin/nix-darwin-25.05#darwin-rebuild -- \
@@ -93,7 +104,43 @@ brew bundle --file hosts/common/Brewfile
 brew bundle --file hosts/<host-id>/Brewfile
 ```
 
+> **App Store アプリ（mas）**: `mas` による App Store アプリのインストールには事前に App Store へのサインインが必要です。
+
+> **Dock の完全適用**: `darwin-rebuild switch` 実行時点では brew アプリが未インストールのため、Dock へのアプリ追加がスキップされます。`brew bundle` 完了後に再度 `darwin-rebuild switch` を実行してください:
+> ```bash
+> sudo nix run github:LnL7/nix-darwin/nix-darwin-25.05#darwin-rebuild -- \
+>   switch --flake path:.#<host-id>
+> ```
+
 CLIツールはHome Manager (nix) が管理します。Brewfileには含めません。
+
+## Post-Setup（初回適用後）
+
+### SSH キーの設定
+
+`darwin-rebuild switch` 完了後、GitHub やサーバーへの SSH 接続を設定します。
+
+```bash
+# 新規鍵を生成する場合
+ssh-keygen -t ed25519 -C "your@email.com" -f ~/.ssh/github_ed25519
+
+# 公開鍵を GitHub に登録
+gh auth login          # GitHub CLI 経由でブラウザ認証
+gh ssh-key add ~/.ssh/github_ed25519.pub --title "$(hostname)"
+```
+
+既存の鍵を使う場合は `~/.ssh/` にコピーしてから権限を設定します:
+
+```bash
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+```
+
+### GitHub CLI 認証
+
+```bash
+gh auth login
+```
 
 ## Hosts
 

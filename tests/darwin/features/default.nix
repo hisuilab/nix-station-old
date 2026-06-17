@@ -21,6 +21,12 @@ let
     userProfile.username = "test";
   };
   inputModule = import ../../../modules/system/darwin/features/input/default.nix { };
+  desktopPowerModule = import ../../../modules/system/darwin/features/power/default.nix {
+    hostConfig.meta.role = "desktop";
+  };
+  laptopPowerModule = import ../../../modules/system/darwin/features/power/default.nix {
+    hostConfig.meta.role = "laptop";
+  };
 
   selectedModules = features:
     (import ../../../modules/system/darwin/features/default.nix {
@@ -189,6 +195,35 @@ lib.runTests {
       };
       trackpadSpeed = 3.0;
     };
+  };
+
+  testInputDisablesLiveConversion = {
+    expr = inputModule.system.defaults.CustomUserPreferences.NSGlobalDomain."NSAutomaticTextCompletionEnabled";
+    expected = false;
+  };
+
+  testPowerFeatureSelectsPowerModule = {
+    expr = builtins.elem
+      ../../../modules/system/darwin/features/power/default.nix
+      (selectedModules { power = true; });
+    expected = true;
+  };
+
+  testDesktopSleepIsSuppressed = {
+    expr = desktopPowerModule.power.sleep.computer;
+    expected = "never";
+  };
+
+  testLaptopSleepIsAllowed = {
+    expr = laptopPowerModule.power.sleep.computer;
+    expected = 10;
+  };
+
+  testFinderInstallsRosettaBeforeSidebarSetup = {
+    expr = lib.hasInfix
+      "pgrep -q oahd"
+      finderModule.system.activationScripts.postActivation.text;
+    expected = true;
   };
 
   testUnknownFeatureIsRejected = {

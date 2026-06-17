@@ -1,0 +1,23 @@
+# 意思決定の記録: issue-28-mac-mini-m4-fresh-setup
+
+> 記録日: 2026-06-16
+> ファイル名: `docs/decisions/2026-06-16-issue-28-mac-mini-m4-fresh-setup.md`
+
+---
+
+| # | 優先度 | 判断 | 理由・備考 |
+|---|---|---|---|
+| 1 | 中 | このissueに含める: darwin-rebuild 前に userProfile.name と username を表示・確認ステップを追加 | 設定漏れを起こしにくくしたい |
+| 2 | 高 | このissueに含める: `nix.enable = false` を `core/default.nix` に追加する | Determinate 環境では必須。公式ドキュメント ([Use Determinate with nix-darwin](https://docs.determinate.systems/guides/nix-darwin/)) が明示的に推奨。より統合された方法として `determinateNix.enable = true`（Determinate の nix-darwin モジュールを使う）もあるが、現状は `nix.enable = false` の最小対応で十分。`nix.*` オプションが使えなくなる制約は Determinate の `customSettings` で代替可能。 |
+| 3 | 高 | このissueに含める: README の Apply 手順に `/etc/zshenv` 移動ステップを追記 | Determinate 環境では必須の前処理 |
+| 4 | 高 | このissueに含める: activation script に Rosetta 2 冪等インストールを追加し mysides をそのまま使う | sfltool は macOS 10.13 以降 add-item 削除済みで使用不可。nixpkgs の mysides は x86_64 バイナリのまま（aarch64 宣言は実態と乖離）。nix-darwin でのサイドバー宣言管理は未実装（issue #1663）。`oahd` プロセス有無で Rosetta インストール済みを冪等判定するコミュニティ標準パターンを採用する |
+| 5 | 高 | このissueに含める: `enableRosetta = false` に変更 | M chip 前提、Intel Homebrew prefix 不要。brew bundle の失敗原因を解消する |
+| 6 | 中 | このissueに含める: `install.sh` を Linux + Mac 同時対応で実装 | OS 検出 → Nix インストール確認 → 前処理（`/etc/zshenv` 退避等）→ darwin-rebuild / home-manager → brew bundle → darwin-rebuild（2回目、#11）の順に実行 |
+| 7 | 中 | このissueに含める: `input/default.nix` に日本語ライブ変換オフの設定を追加 | デフォルト ON のため初回適用後も手動でオフにする必要があり不便 |
+| 8 | 中 | このissueに含める: README または `docs/` に SSH セットアップガイドを追記 | darwin-rebuild switch 後の次の手順として案内する |
+| 9 | 中 | このissueに含める: Mac mini 向け電源管理設定モジュールを追加（ディスプレイオフ時スリープ抑止） | デスクトップ用途でディスプレイを切っても処理継続できる必要がある |
+| 10 | 低 | このissueに含める: README の Setup セクションに `direnv allow` 実行ステップを追記 | install.sh にも組み込む |
+| 11 | 高 | このissueに含める: `darwin-rebuild switch → brew bundle → darwin-rebuild switch` の2回パスを正式手順とする。README に明記し、install.sh（#6）で自動化する | nix-homebrew が Homebrew 自体をインストールするため brew を先行実行できない。2回パスが唯一の現実的解。README には「brew bundle 後に再度 darwin-rebuild switch が必要な理由（Dock アプリの存在チェック）」を補足として記載する |
+| 12 | 中 | このissueに含める: ① `preActivation` で "guest" 検出時に早期 exit + 修正コマンドを明示する ② `install.sh` の darwin-rebuild 前に対話ウィザードを追加し username・git 情報入力 → プロファイル自動生成する | darwin-rebuild 実行中はビルド済み設定の変更不可。preActivation での早期検出（①）と install.sh での事前解消（②）の2段構えが必要 |
+| 13 | 高 | このissueに含める: `tests/darwin/features/default.nix` と `tests/user-profile/default.nix` にテストを追加する（input ライブ変換・power モジュール・finder Rosetta・ウィザード案内文） | throw メッセージは `builtins.tryEval` で内容取得不可のため `builtins.readFile` によるソース文字列検証で代替する |
+| 14 | 高 | このissueに含める: `scripts/ai/verify.sh` を `nix flake check --all-systems` から `nix eval path:.#checks.SYSTEM.CHECK.drvPath` による明示的チェックに変更する。`darwinConfigurations.*` は `nix flake check` 対象から実質除外する | `darwinConfigurations.mac-mini` 等は `hosts/*/config.nix` の `userProfile.name = "guest"`（未設定ホスト）のため Nix 評価時に assertions が発火して失敗するが、これは設計上の想定動作。guest → test へのデフォルト変更も検討したが「未設定ホストのシグナル」という意味が失われ assertions が無意味化するため採用しない。`checks.*` は `testUserProfile` を直接注入しており CI 検証として十分。PR テスト計画も `checks.*` 個別評価に変更する |

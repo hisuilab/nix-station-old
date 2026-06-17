@@ -40,6 +40,12 @@ cp user-profiles/guest.nix user-profiles/<your-name>.nix
 userProfile.name = "<your-name>";
 ```
 
+4. direnvを使用する場合は以下を実行してください。
+
+```bash
+direnv allow
+```
+
 ## Quick Start
 
 Flake出力と全テストを評価します（ビルドは行いません）:
@@ -107,6 +113,34 @@ brew bundle --file hosts/<host-id>/Brewfile
 > ```
 
 CLIツールはHome Manager (nix) が管理します。Brewfileには含めません。
+
+## Post-Setup（初回適用後）
+
+### SSH キーの設定
+
+`darwin-rebuild switch` 完了後、GitHub やサーバーへの SSH 接続を設定します。
+
+```bash
+# 新規鍵を生成する場合
+ssh-keygen -t ed25519 -C "your@email.com"
+
+# 公開鍵を GitHub に登録
+gh auth login          # GitHub CLI 経由でブラウザ認証
+gh ssh-key add ~/.ssh/id_ed25519.pub --title "$(hostname)"
+```
+
+既存の鍵を使う場合は `~/.ssh/` にコピーしてから権限を設定します:
+
+```bash
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+```
+
+### GitHub CLI 認証
+
+```bash
+gh auth login
+```
 
 ## Hosts
 

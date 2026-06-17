@@ -35,6 +35,7 @@ Mac mini M4 を初期化して実際に `darwin-rebuild switch` → `brew bundle
 | 11 | [`README.md`](../../README.md) / [`modules/system/darwin/features/dock/default.nix` L39](../../modules/system/darwin/features/dock/default.nix#L39) | `darwin-rebuild switch` → `brew bundle` の順で実行すると、Dock への追加対象アプリ（Chrome・Slack・VSCode 等）が brew インストール前のため `if [ -e "$app" ]` チェックに引っかかりスキップされる。`brew bundle` 完了後に再度 `darwin-rebuild switch` を実行しないと Dock が正しく構成されない | README の手順に「`brew bundle` 後に再度 `darwin-rebuild switch` を実行する」ステップを追記する。`install.sh` 実装時（#6）にはこの2回実行を自動化する。根本対策として Dock 設定を brew 後に実行する独立スクリプトに分離する案も検討 |
 
 | 12 | [`modules/system/darwin/core/default.nix`](../../modules/system/darwin/core/default.nix) / [`install.sh`](../../install.sh) | `userProfile.name = "guest"` のまま `darwin-rebuild switch` を実行すると、preActivation でホスト・ユーザーは表示されるが nix-darwin の cryptic なエラーで終了する。ユーザーは何を直せばいいか分かりにくい。また `user-profiles/<name>.nix` が存在しない場合は Nix 評価エラーで止まる | ① `preActivation` で username が "guest" の場合に早期 exit し、修正コマンドを明示する。② `install.sh` の darwin-rebuild 前に対話ウィザードを追加し、"guest" 検出時に username・git 情報を入力させてプロファイルファイルを自動生成する（darwin-rebuild 中はビルド済み設定の変更不可のため install.sh での対応が必須） |
+| 13 | [`tests/darwin/features/default.nix`](../../tests/darwin/features/default.nix) / [`tests/user-profile/default.nix`](../../tests/user-profile/default.nix) | 今回追加・変更したモジュールに対するテストが不足している。未カバー: `input` のライブ変換オフ設定・`power` モジュール全体（feature 登録・desktop sleep 抑止・laptop sleep 許可）・`finder` の Rosetta 自動インストール・`user-profiles/default.nix` のセットアップウィザード案内文 | 各モジュールに対応するユニットテストを `tests/darwin/features/default.nix` と `tests/user-profile/default.nix` に追加する。throw メッセージのテストは `builtins.tryEval` では内容取得不可のため、ソースコードに文字列が含まれることを `builtins.readFile` で検証する |
 
 ---
 
@@ -60,6 +61,7 @@ Mac mini M4 を初期化して実際に `darwin-rebuild switch` → `brew bundle
 
 - **#1** `hosts/mac-mini/config.nix`: `userProfile.name` 変更漏れを起こしにくい仕組みの検討
 - **#12** `core/default.nix` / `install.sh`: "guest" 検出時の早期エラー表示と対話セットアップウィザード
+- **#13** `tests/`: input・power・finder Rosetta・ウィザード案内のテスト追加
 
 ---
 

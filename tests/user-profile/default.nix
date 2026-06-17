@@ -49,6 +49,15 @@ lib.runTests {
     expected = false;
   };
 
+  # throw メッセージは builtins.tryEval で内容取得不可のため
+  # ソースに案内文が含まれることを readFile で検証する
+  testMissingProfileGuidesToInstallScript = {
+    expr = lib.hasInfix
+      "install.sh"
+      (builtins.readFile ../../user-profiles/default.nix);
+    expected = true;
+  };
+
   testEmptyUsernameIsRejected = {
     expr = canLoad "empty-username";
     expected = false;

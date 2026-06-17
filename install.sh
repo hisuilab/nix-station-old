@@ -4,6 +4,7 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # nix-station セットアップスクリプト
 # 対応: macOS (nix-darwin) / Linux (Home Manager standalone)
+# Windows: scripts/windows/setup.ps1 を使用してください
 # ---------------------------------------------------------------------------
 
 HOST_ID="${1:-}"

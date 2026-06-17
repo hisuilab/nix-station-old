@@ -3,6 +3,7 @@
 	"Sources": [
 		{
 			"Packages": [
+				{ "PackageIdentifier": "Discord.Discord" },
 				{ "PackageIdentifier": "PlayStation.PlayStationAccessories" },
 				{ "PackageIdentifier": "Valve.Steam" }
 			],

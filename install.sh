@@ -46,9 +46,9 @@ check_nix() {
 setup_user_profile() {
   local host_config="${REPO_DIR}/hosts/${HOST_ID}/config.nix"
 
-  # userProfile.name を取得
+  # userProfile.name を取得（BSD sed は \s 非対応のため awk で抽出）
   local profile_name
-  profile_name=$(grep 'userProfile\.name' "$host_config" | sed 's/.*=\s*"\(.*\)".*/\1/' | tr -d '[:space:]')
+  profile_name=$(awk -F'"' '/userProfile[.]name/{print $2}' "$host_config")
 
   if [[ "$profile_name" != "guest" ]]; then
     local profile_file="${REPO_DIR}/user-profiles/${profile_name}.nix"
@@ -70,7 +70,7 @@ setup_user_profile() {
     read -rp "username: " username
   done
 
-  read -rp "Git 表示名（例: Hisui Lab）: " git_name
+  read -rp "Git 表示名（例: hisuilab）: " git_name
   while [[ -z "$git_name" ]]; do
     read -rp "Git 表示名: " git_name
   done
@@ -147,7 +147,8 @@ setup_darwin() {
   echo ""
   echo "次のステップ:"
   echo "  1. App Store にサインインして brew bundle を再実行（mas アプリ）"
-  echo "  2. SSH キーを設定: ssh-keygen -t ed25519"
+  echo "  2. SSH キーを設定:"
+  echo "       ssh-keygen -t ed25519 -C \"your_email@example.com\" -f ~/.ssh/github_ed25519"
   echo "  3. GitHub 認証: gh auth login"
 }
 
@@ -164,7 +165,8 @@ setup_linux() {
   info "=== Linux セットアップ完了 ==="
   echo ""
   echo "次のステップ:"
-  echo "  1. SSH キーを設定: ssh-keygen -t ed25519"
+  echo "  1. SSH キーを設定:"
+  echo "       ssh-keygen -t ed25519 -C \"your_email@example.com\" -f ~/.ssh/github_ed25519"
   echo "  2. GitHub 認証: gh auth login"
 }
 

@@ -43,6 +43,62 @@ check_nix() {
 
 # --- macOS ------------------------------------------------------------------
 
+setup_user_profile() {
+  local host_config="${REPO_DIR}/hosts/${HOST_ID}/config.nix"
+
+  # userProfile.name を取得
+  local profile_name
+  profile_name=$(grep 'userProfile\.name' "$host_config" | sed 's/.*=\s*"\(.*\)".*/\1/' | tr -d '[:space:]')
+
+  if [[ "$profile_name" != "guest" ]]; then
+    local profile_file="${REPO_DIR}/user-profiles/${profile_name}.nix"
+    if [[ -f "$profile_file" ]]; then
+      info "ユーザープロファイル '${profile_name}' を確認しました。"
+      return
+    fi
+    warn "user-profiles/${profile_name}.nix が見つかりません。新規作成します。"
+  else
+    echo ""
+    echo "userProfile.name が 'guest' のままです。セットアップウィザードを開始します。"
+    echo ""
+  fi
+
+  # 対話入力
+  read -rp "username（macOS のログインユーザー名）: " username
+  while [[ -z "$username" || "$username" == "guest" ]]; do
+    echo "  有効な username を入力してください（'guest' は使用できません）"
+    read -rp "username: " username
+  done
+
+  read -rp "Git 表示名（例: Hisui Lab）: " git_name
+  while [[ -z "$git_name" ]]; do
+    read -rp "Git 表示名: " git_name
+  done
+
+  read -rp "Git メールアドレス: " git_email
+  while [[ -z "$git_email" ]]; do
+    read -rp "Git メールアドレス: " git_email
+  done
+
+  # プロファイルファイル生成
+  local profile_file="${REPO_DIR}/user-profiles/${username}.nix"
+  cat > "$profile_file" <<EOF
+{
+  username = "${username}";
+  git = {
+    userName = "${git_name}";
+    userEmail = "${git_email}";
+  };
+}
+EOF
+  info "user-profiles/${username}.nix を作成しました。"
+
+  # hosts/<host-id>/config.nix の userProfile.name を更新
+  sed -i '' "s/userProfile\.name = \".*\"/userProfile.name = \"${username}\"/" "$host_config"
+  info "hosts/${HOST_ID}/config.nix の userProfile.name を '${username}' に更新しました。"
+  echo ""
+}
+
 darwin_prereqs() {
   # /etc/zshenv 競合解消（Determinate インストーラーが作成するファイル）
   if [[ -f /etc/zshenv && ! -f /etc/zshenv.before-nix-darwin ]]; then
@@ -74,6 +130,7 @@ brew_bundle() {
 setup_darwin() {
   info "=== macOS セットアップ開始 (host: $HOST_ID) ==="
 
+  setup_user_profile
   darwin_prereqs
 
   # 1回目: Homebrew セットアップ + nix 設定適用
@@ -99,6 +156,7 @@ setup_darwin() {
 setup_linux() {
   info "=== Linux セットアップ開始 (host: $HOST_ID) ==="
 
+  setup_user_profile
   info "home-manager switch を実行します..."
   nix run github:nix-community/home-manager/release-25.05 -- \
     switch --flake "path:${REPO_DIR}#${HOST_ID}"

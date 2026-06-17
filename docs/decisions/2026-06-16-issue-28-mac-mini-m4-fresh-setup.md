@@ -18,3 +18,4 @@
 | 9 | 中 | このissueに含める: Mac mini 向け電源管理設定モジュールを追加（ディスプレイオフ時スリープ抑止） | デスクトップ用途でディスプレイを切っても処理継続できる必要がある |
 | 10 | 低 | このissueに含める: README の Setup セクションに `direnv allow` 実行ステップを追記 | install.sh にも組み込む |
 | 11 | 高 | このissueに含める: `darwin-rebuild switch → brew bundle → darwin-rebuild switch` の2回パスを正式手順とする。README に明記し、install.sh（#6）で自動化する | nix-homebrew が Homebrew 自体をインストールするため brew を先行実行できない。2回パスが唯一の現実的解。README には「brew bundle 後に再度 darwin-rebuild switch が必要な理由（Dock アプリの存在チェック）」を補足として記載する |
+| 12 | 中 | このissueに含める: ① `preActivation` で "guest" 検出時に早期 exit + 修正コマンドを明示する ② `install.sh` の darwin-rebuild 前に対話ウィザードを追加し username・git 情報入力 → プロファイル自動生成する | darwin-rebuild 実行中はビルド済み設定の変更不可。preActivation での早期検出（①）と install.sh での事前解消（②）の2段構えが必要 |

@@ -8,7 +8,7 @@
     })
   ];
 
-  # activation 開始時に適用対象を表示して設定漏れを早期検出する
+  # activation 開始時に適用対象を表示し、guest のまま実行した場合は早期終了する
   system.activationScripts.preActivation.text = ''
     echo ""
     echo "============================================================"
@@ -17,6 +17,23 @@
     echo "   user    : ${userProfile.username}"
     echo "============================================================"
     echo ""
+
+    if [ "${userProfile.username}" = "guest" ]; then
+      echo "ERROR: userProfile.name が 'guest' のままです。適用を中止します。"
+      echo ""
+      echo "修正手順:"
+      echo "  1. ユーザープロファイルを作成する"
+      echo "     cp user-profiles/guest.nix user-profiles/<your-name>.nix"
+      echo "     # username / git.userName / git.userEmail を編集"
+      echo ""
+      echo "  2. hosts/${hostConfig.meta.hostname}/config.nix を更新する"
+      echo "     userProfile.name = \"<your-name>\";"
+      echo ""
+      echo "  または install.sh を使うと対話形式でセットアップできます:"
+      echo "     bash install.sh ${hostConfig.meta.hostname}"
+      echo ""
+      exit 1
+    fi
   '';
 
   # Determinate Systems インストーラーと競合するため nix-darwin の Nix 管理を無効化する

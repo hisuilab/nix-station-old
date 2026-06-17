@@ -8,11 +8,8 @@
     })
   ];
 
-  # nix-darwin共通のNixコア設定
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-    warn-dirty = false;
-  };
+  # Determinate Systems インストーラーと競合するため nix-darwin の Nix 管理を無効化する
+  nix.enable = false;
 
   time.timeZone = "Asia/Tokyo";
 

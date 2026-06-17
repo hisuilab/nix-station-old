@@ -14,6 +14,11 @@ in
   };
 
   system.activationScripts.postActivation.text = ''
+    # mysides は x86_64 バイナリのため Rosetta 2 が必要。未インストール時は冪等に導入する
+    if ! /usr/bin/pgrep -q oahd; then
+      softwareupdate --install-rosetta --agree-to-license 2>/dev/null || true
+    fi
+
     user_id="$(id -u ${username})"
 
     as_user() {

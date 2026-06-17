@@ -10,7 +10,7 @@
 | 1 | 中 | このissueに含める: darwin-rebuild 前に userProfile.name と username を表示・確認ステップを追加 | 設定漏れを起こしにくくしたい |
 | 2 | 高 | このissueに含める: `nix.enable = false` を `core/default.nix` に追加する | Determinate 環境では必須。公式ドキュメント ([Use Determinate with nix-darwin](https://docs.determinate.systems/guides/nix-darwin/)) が明示的に推奨。より統合された方法として `determinateNix.enable = true`（Determinate の nix-darwin モジュールを使う）もあるが、現状は `nix.enable = false` の最小対応で十分。`nix.*` オプションが使えなくなる制約は Determinate の `customSettings` で代替可能。 |
 | 3 | 高 | このissueに含める: README の Apply 手順に `/etc/zshenv` 移動ステップを追記 | Determinate 環境では必須の前処理 |
-| 4 | 高 | このissueに含める: `mysides` を macOS 組み込みの `sfltool` に差し替える | Rosetta 不要・ARM ネイティブ動作。nixpkgs の mysides 依存を削除する |
+| 4 | 高 | このissueに含める: activation script に Rosetta 2 冪等インストールを追加し mysides をそのまま使う | sfltool は macOS 10.13 以降 add-item 削除済みで使用不可。nixpkgs の mysides は x86_64 バイナリのまま（aarch64 宣言は実態と乖離）。nix-darwin でのサイドバー宣言管理は未実装（issue #1663）。`oahd` プロセス有無で Rosetta インストール済みを冪等判定するコミュニティ標準パターンを採用する |
 | 5 | 高 | このissueに含める: `enableRosetta = false` に変更 | M chip 前提、Intel Homebrew prefix 不要。brew bundle の失敗原因を解消する |
 | 6 | 中 | このissueに含める: `install.sh` を Linux + Mac 同時対応で実装 | OS 検出 → Nix インストール確認 → 前処理（`/etc/zshenv` 退避等）→ darwin-rebuild / home-manager → brew bundle → darwin-rebuild（2回目、#11）の順に実行 |
 | 7 | 中 | このissueに含める: `input/default.nix` に日本語ライブ変換オフの設定を追加 | デフォルト ON のため初回適用後も手動でオフにする必要があり不便 |

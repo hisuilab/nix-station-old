@@ -7,6 +7,7 @@ let
     dock = ./dock/default.nix;
     finder = ./finder/default.nix;
     input = ./input/default.nix;
+    power = ./power/default.nix;
   };
 
   enabledFeatures = hostConfig.darwin.features or { };

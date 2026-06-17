@@ -34,6 +34,7 @@
     dock = true;
     finder = true;
     input = true;
+    power = true;
   };
 
   # GUI アプリ・App Store アプリは hosts/mac-mini/Brewfile で管理する。

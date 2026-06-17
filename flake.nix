@@ -98,7 +98,7 @@
                 nix-homebrew = {
                   enable =
                     hostConfig.darwin.homebrew.manageInstallation or true;
-                  enableRosetta = hostConfig.meta.system == "aarch64-darwin";
+                  enableRosetta = false;
                   user = userProfile.username;
 
                 };

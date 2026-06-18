@@ -171,10 +171,11 @@ setup_darwin() {
   info "=== macOS セットアップ完了 ==="
   echo ""
   echo "次のステップ:"
-  echo "  1. App Store にサインインして brew bundle を再実行（mas アプリ）"
-  echo "  2. SSH キーを設定:"
-  echo "       ssh-keygen -t ed25519 -C \"${PROFILE_EMAIL}\" -f ~/.ssh/github_ed25519"
-  echo "  3. GitHub 認証: gh auth login"
+  echo "  1. App Store にサインインして brew bundle を再実行（mas アプリ）:"
+  echo "       brew bundle --file hosts/common/Brewfile"
+  echo "       brew bundle --file hosts/${HOST_ID}/Brewfile"
+  echo ""
+  echo "  SSH / GitHub 認証の設定: docs/github-ssh.md を参照してください。"
 }
 
 # --- Linux ------------------------------------------------------------------
@@ -191,9 +192,7 @@ setup_linux() {
   info "=== Linux セットアップ完了 ==="
   echo ""
   echo "次のステップ:"
-  echo "  1. SSH キーを設定:"
-  echo "       ssh-keygen -t ed25519 -C \"${PROFILE_EMAIL}\" -f ~/.ssh/github_ed25519"
-  echo "  2. GitHub 認証: gh auth login"
+  echo "  SSH / GitHub 認証の設定: docs/github-ssh.md を参照してください。"
 }
 
 # --- メイン -----------------------------------------------------------------

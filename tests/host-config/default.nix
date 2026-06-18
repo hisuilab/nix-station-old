@@ -136,9 +136,16 @@ lib.runTests {
     expected = false;
   };
 
-  testDarwinHomebrewInstallationManagementMustBeBoolean = {
+  testDarwinHomebrewInstallMustBeBoolean = {
     expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
-      darwin.homebrew.manageInstallation = "yes";
+      darwin.homebrew.install = "yes";
+    });
+    expected = false;
+  };
+
+  testDarwinHomebrewBrewBundleMustBeBoolean = {
+    expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
+      darwin.homebrew.brewBundle = "yes";
     });
     expected = false;
   };

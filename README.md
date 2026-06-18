@@ -17,36 +17,42 @@ macOSはnix-darwin、Ubuntu、Ubuntu on WSL、Raspberry Pi OSはstandalone Home 
 
 Nixがインストールされていない場合は[Determinate Nix Installer](https://github.com/DeterminateSystems/nix-installer)の使用を推奨します。インストール後、`~/.config/nix/nix.conf`に`experimental-features = nix-command flakes`を追加してFlakesを有効化してください。
 
-## Setup
+## Setup（macOS）
 
-1. リポジトリをクローンします。
+1. [Determinate Nix Installer](https://github.com/DeterminateSystems/nix-installer) で Nix をインストールします。
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+```
+
+2. ターミナルを再起動して `nix` コマンドが使えることを確認します。
+
+3. このリポジトリを取得します。
 
 ```bash
 git clone https://github.com/hisuilab/nix-station.git
 cd nix-station
 ```
 
-2. 自分のユーザープロファイルを作成します。`user-profiles/guest.nix`を参考に`user-profiles/<your-name>.nix`を作成してください。このファイルはGitのコミット対象外です。
+4. セットアップスクリプトを実行します。ユーザープロファイルの入力・`darwin-rebuild switch`・`brew bundle` まで自動で行います。
 
 ```bash
-cp user-profiles/guest.nix user-profiles/<your-name>.nix
-# username / git.userName / git.userEmail を編集
+bash install.sh <host-id>
 ```
 
-3. 使用するhostの`userProfile.name`を設定したプロファイル名に変更します。
+登録済みの `<host-id>` は `hosts/` ディレクトリ以下のフォルダ名です（`macbook-air`、`mac-mini` など）。
 
-```nix
-# hosts/<host-id>/config.nix
-userProfile.name = "<your-name>";
-```
+> Homebrew バイナリの自動インストール有無は `hosts/<host-id>/config.nix` の `darwin.homebrew.install` で制御します（デフォルト: `true`）。
 
-4. direnvを使用する場合は以下を実行してください。
+## Setup（Linux）
 
 ```bash
-direnv allow
+bash install.sh <host-id>
 ```
 
-## Quick Start
+Ubuntu / Ubuntu on WSL / Raspberry Pi OS で standalone Home Manager を適用します。
+
+## Quick Start（開発・検証）
 
 Flake出力と全テストを評価します（ビルドは行いません）:
 
@@ -60,57 +66,35 @@ nix flake check path:. --no-build --all-systems
 nix build path:.#darwinConfigurations.mac-mini.system --no-link
 ```
 
-## Apply Configuration
+<details>
+<summary>手動適用コマンド（上級者向け）</summary>
 
 macOS:
 
-> **初回セットアップ（Determinate Nix 使用時）**: Determinate インストーラーが作成した `/etc/zshenv` が nix-darwin と競合します。以下を先に実行してください:
-> ```bash
-> sudo mv /etc/zshenv /etc/zshenv.before-nix-darwin
-> ```
-
 ```bash
+# 初回のみ: Determinate インストーラーが作成した /etc/zshenv を退避
+sudo mv /etc/zshenv /etc/zshenv.before-nix-darwin
+
 sudo nix run github:LnL7/nix-darwin/nix-darwin-25.05#darwin-rebuild -- \
-  switch --flake path:.#mac-mini
-```
+  switch --flake path:.#<host-id>
 
-Ubuntu:
-
-```bash
-nix run github:nix-community/home-manager/release-25.05 -- \
-  switch --flake path:.#ubuntu-desktop
-```
-
-Ubuntu on WSL:
-
-```bash
-nix run github:nix-community/home-manager/release-25.05 -- \
-  switch --flake path:.#ubuntu-wsl
-```
-
-Raspberry Pi OS:
-
-```bash
-nix run github:nix-community/home-manager/release-25.05 -- \
-  switch --flake path:.#raspberry-pi-5
-```
-
-2回目以降も同じコマンドで更新します。Linux系hostではシステム全体ではなく、Home Managerが管理するユーザー環境だけを適用します。
-
-macOSでは初回適用時にHomebrew本体も自動導入されます。GUIアプリ・App StoreアプリはBrewfileで管理するため、`darwin-rebuild switch`後に続けて適用します:
-
-```bash
+# brew アプリを適用
 brew bundle --file hosts/common/Brewfile
 brew bundle --file hosts/<host-id>/Brewfile
+
+# Dock を完全適用するため再度 rebuild
+sudo nix run github:LnL7/nix-darwin/nix-darwin-25.05#darwin-rebuild -- \
+  switch --flake path:.#<host-id>
 ```
 
-> **App Store アプリ（mas）**: `mas` による App Store アプリのインストールには事前に App Store へのサインインが必要です。
+Ubuntu / Ubuntu on WSL / Raspberry Pi OS:
 
-> **Dock の完全適用**: `darwin-rebuild switch` 実行時点では brew アプリが未インストールのため、Dock へのアプリ追加がスキップされます。`brew bundle` 完了後に再度 `darwin-rebuild switch` を実行してください:
-> ```bash
-> sudo nix run github:LnL7/nix-darwin/nix-darwin-25.05#darwin-rebuild -- \
->   switch --flake path:.#<host-id>
-> ```
+```bash
+nix run github:nix-community/home-manager/release-25.05 -- \
+  switch --flake path:.#<host-id>
+```
+
+</details>
 
 CLIツールはHome Manager (nix) が管理します。Brewfileには含めません。
 

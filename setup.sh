@@ -9,6 +9,8 @@ set -euo pipefail
 
 HOST_ID="${1:-}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROFILE_USERNAME=""
+GIT_NAME=""
 PROFILE_EMAIL=""
 
 # --- ヘルパー ---------------------------------------------------------------
@@ -81,6 +83,8 @@ setup_user_profile() {
     local profile_file="${REPO_DIR}/user-profiles/${profile_name}.nix"
     if [[ -f "$profile_file" ]]; then
       info "ユーザープロファイル '${profile_name}' を確認しました。"
+      PROFILE_USERNAME="$profile_name"
+      GIT_NAME=$(awk -F'"' '/userName/{print $2}' "$profile_file")
       PROFILE_EMAIL=$(awk -F'"' '/userEmail/{print $2}' "$profile_file")
       return
     fi
@@ -107,6 +111,8 @@ setup_user_profile() {
   while [[ -z "$git_email" ]]; do
     read -rp "Git メールアドレス: " git_email
   done
+  PROFILE_USERNAME="$username"
+  GIT_NAME="$git_name"
   PROFILE_EMAIL="$git_email"
 
   # プロファイルファイル生成
@@ -129,16 +135,13 @@ EOF
 }
 
 confirm_setup() {
-  local host_config="${REPO_DIR}/hosts/${HOST_ID}/config.nix"
-  local profile_name
-  profile_name=$(awk -F'"' '/userProfile[.]name/{print $2}' "$host_config")
-
   echo ""
   echo "============================================================"
   echo " 適用内容の確認"
-  echo "   host    : ${HOST_ID}"
-  echo "   user    : ${profile_name}"
-  echo "   email   : ${PROFILE_EMAIL}"
+  echo "   host          : ${HOST_ID}"
+  echo "   username      : ${PROFILE_USERNAME}"
+  echo "   git.userName  : ${GIT_NAME}"
+  echo "   git.userEmail : ${PROFILE_EMAIL}"
   echo "============================================================"
   echo ""
   read -rp "この内容で続行しますか？ [y/N]: " answer

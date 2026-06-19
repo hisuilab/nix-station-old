@@ -74,8 +74,8 @@ let
              cp user-profiles/guest.nix user-profiles/${profileName}.nix
              # username / git.userName / git.userEmail を編集
 
-          または install.sh を使うと対話形式でセットアップできます:
-             bash install.sh <host-id>
+          または setup.sh を使うと対話形式でセットアップできます:
+             bash setup.sh <host-id>
       ''
     else
       validateUserProfile profileName (import profilePath);

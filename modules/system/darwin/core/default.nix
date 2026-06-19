@@ -23,8 +23,8 @@
         2. hosts/<host-id>/config.nix を更新する
            userProfile.name = "<your-name>";
 
-        または install.sh を使うと対話形式でセットアップできます:
-           bash install.sh <host-id>
+        または setup.sh を使うと対話形式でセットアップできます:
+           bash setup.sh <host-id>
     '';
   };
 

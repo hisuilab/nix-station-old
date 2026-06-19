@@ -32,7 +32,9 @@ select_host_id() {
 
   local hosts=()
   while IFS= read -r dir; do
-    hosts+=("$(basename "$dir")")
+    local platform
+    platform=$(grep -m1 'platform\s*=' "$dir/config.nix" 2>/dev/null | grep -o '"[^"]*"' | tr -d '"')
+    [[ -n "$platform" ]] && hosts+=("$(basename "$dir")")
   done < <(find "$REPO_DIR/hosts" -mindepth 1 -maxdepth 1 -type d | sort)
 
   if [[ ${#hosts[@]} -eq 0 ]]; then

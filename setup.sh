@@ -33,7 +33,7 @@ select_host_id() {
   local hosts=()
   while IFS= read -r dir; do
     local platform
-    platform=$(grep -m1 'platform\s*=' "$dir/config.nix" 2>/dev/null | grep -o '"[^"]*"' | tr -d '"')
+    platform=$(grep -m1 'platform\s*=' "$dir/config.nix" 2>/dev/null | grep -o '"[^"]*"' | tr -d '"') || true
     [[ -n "$platform" ]] && hosts+=("$(basename "$dir")")
   done < <(find "$REPO_DIR/hosts" -mindepth 1 -maxdepth 1 -type d | sort)
 

@@ -123,11 +123,7 @@ EOF
   info "user-profiles/${username}.nix を作成しました。"
 
   # hosts/<host-id>/config.nix の userProfile.name を更新
-  if [[ "$(detect_os)" == "darwin" ]]; then
-    sed -i '' "s/userProfile\.name = \".*\"/userProfile.name = \"${username}\"/" "$host_config"
-  else
-    sed -i "s/userProfile\.name = \".*\"/userProfile.name = \"${username}\"/" "$host_config"
-  fi
+  perl -pi -e "s/userProfile\\.name = \".*\"/userProfile.name = \"${username}\"/" "$host_config"
   info "hosts/${HOST_ID}/config.nix の userProfile.name を '${username}' に更新しました。"
   echo ""
 }

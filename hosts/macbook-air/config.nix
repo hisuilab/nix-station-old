@@ -38,7 +38,7 @@
 
   # GUI アプリ・App Store アプリは hosts/macbook-air/Brewfile で管理する。
   # install = false: Homebrew バイナリは既存インストールを使用する
-  # brewBundle = true: install.sh が brew bundle を実行してアプリを一括導入する
+  # brewBundle = true: setup.sh が brew bundle を実行してアプリを一括導入する
   darwin.homebrew = {
     enable = true;
     install = false;

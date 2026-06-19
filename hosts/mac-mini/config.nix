@@ -39,7 +39,7 @@
 
   # GUI アプリ・App Store アプリは hosts/mac-mini/Brewfile で管理する。
   # install = true: nix-homebrew が Homebrew バイナリを自動インストールする
-  # brewBundle = true: install.sh が brew bundle を実行してアプリを一括導入する
+  # brewBundle = true: setup.sh が brew bundle を実行してアプリを一括導入する
   darwin.homebrew = {
     enable = true;
     install = true;

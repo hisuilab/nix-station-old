@@ -97,7 +97,7 @@
               {
                 nix-homebrew = {
                   enable =
-                    hostConfig.darwin.homebrew.manageInstallation or true;
+                    hostConfig.darwin.homebrew.install or true;
                   enableRosetta = false;
                   user = userProfile.username;
 

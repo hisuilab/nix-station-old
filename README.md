@@ -4,302 +4,80 @@
 [![CI](https://github.com/hisuilab/nix-station/actions/workflows/ci.yml/badge.svg)](https://github.com/hisuilab/nix-station/actions/workflows/ci.yml)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Nixとnix-darwinを使い、ホスト・ユーザー・パッケージの設定を再現可能な形で管理するためのワークステーション構成です。
 
-macOSはnix-darwin、Ubuntu、Ubuntu on WSL、Raspberry Pi OSはstandalone Home Managerで管理します。Windowsはwinget + PowerShellスクリプトで管理します。
+## 概要
 
-## Requirements
+Nix と nix-darwin を使い、ホスト・ユーザー・パッケージの設定を再現可能な形で管理するワークステーションです。
+複数の PC・サーバーの設定をコードとして一元管理し、新しいマシンへ同じ環境を再現できます。
 
-- Nix（Flakesを有効化）
-- macOS、Ubuntu、Ubuntu on WSL、またはRaspberry Pi OS
-- 任意: direnv / nix-direnv
-- 任意: pre-commit
+| OS | 管理方法 |
+|---|---|
+| macOS | nix-darwin + Home Manager |
+| Linux（Ubuntu・WSL・Raspberry Pi OS・NixOS を含む） | standalone Home Manager |
+| Windows | winget + PowerShell スクリプト |
 
-Nixがインストールされていない場合は[Determinate Nix Installer](https://github.com/DeterminateSystems/nix-installer)の使用を推奨します。インストール後、`~/.config/nix/nix.conf`に`experimental-features = nix-command flakes`を追加してFlakesを有効化してください。
 
-## Setup
 
-1. リポジトリをクローンします。
+## クイックセットアップ
 
-```bash
-git clone https://github.com/hisuilab/nix-station.git
-cd nix-station
-```
-
-2. 自分のユーザープロファイルを作成します。`user-profiles/guest.nix`を参考に`user-profiles/<your-name>.nix`を作成してください。このファイルはGitのコミット対象外です。
+Nix をインストールしてリポジトリを取得後、実行します（macOS・Linux）。
 
 ```bash
-cp user-profiles/guest.nix user-profiles/<your-name>.nix
-# username / git.userName / git.userEmail を編集
+bash setup.sh
 ```
 
-3. 使用するhostの`userProfile.name`を設定したプロファイル名に変更します。
+起動するとホスト一覧が表示されるので番号で選択します。ユーザープロファイル入力・`darwin-rebuild switch` / `home-manager switch`・`brew bundle` まで自動で実行します。
 
-```nix
-# hosts/<host-id>/config.nix
-userProfile.name = "<your-name>";
-```
+> [!TIP]
+> 引数でホスト ID を直接指定することもできます: `bash setup.sh <host-id>`
 
-4. direnvを使用する場合は以下を実行してください。
+詳細な手順・初回適用の注意事項は [OS ごとのガイドライン](#os-ごとのガイドライン) を参照してください。
+
+## OS ごとのガイドライン
+
+詳細な手順・初回適用の注意事項・Post-Setup は各ガイドを参照してください。
+
+| OS | ガイド |
+|---|---|
+| macOS | [docs/mac/setup.md](docs/mac/setup.md) |
+| Linux（Ubuntu・WSL・Raspberry Pi OS・NixOS を含む） | [docs/linux/setup.md](docs/linux/setup.md) |
+| Windows | [docs/windows/setup.md](docs/windows/setup.md) |
+
+> [!NOTE]
+> Windows は `winget` による`WSL`を含む開発環境構築やアプリケーション一括インストールに対応しています。
+
+## nix-station の使い方
+
+### 設定の適用
+
+`flake.nix` やモジュールを変更した後に設定を反映します。`<host-id>` は `hosts/` 以下のフォルダ名です。
+
+**macOS:**
 
 ```bash
-direnv allow
+darwin-rebuild switch --flake path:.#<host-id>
 ```
 
-## Quick Start
-
-Flake出力と全テストを評価します（ビルドは行いません）:
-
-```bash
-nix flake check path:. --no-build --all-systems
-```
-
-システム構成をビルドだけ行い、現在のmacOSへ適用しない場合:
-
-```bash
-nix build path:.#darwinConfigurations.mac-mini.system --no-link
-```
-
-## Apply Configuration
-
-macOS:
-
-> **初回セットアップ（Determinate Nix 使用時）**: Determinate インストーラーが作成した `/etc/zshenv` が nix-darwin と競合します。以下を先に実行してください:
-> ```bash
-> sudo mv /etc/zshenv /etc/zshenv.before-nix-darwin
-> ```
-
-```bash
-sudo nix run github:LnL7/nix-darwin/nix-darwin-25.05#darwin-rebuild -- \
-  switch --flake path:.#mac-mini
-```
-
-Ubuntu:
-
-```bash
-nix run github:nix-community/home-manager/release-25.05 -- \
-  switch --flake path:.#ubuntu-desktop
-```
-
-Ubuntu on WSL:
-
-```bash
-nix run github:nix-community/home-manager/release-25.05 -- \
-  switch --flake path:.#ubuntu-wsl
-```
-
-Raspberry Pi OS:
-
-```bash
-nix run github:nix-community/home-manager/release-25.05 -- \
-  switch --flake path:.#raspberry-pi-5
-```
-
-2回目以降も同じコマンドで更新します。Linux系hostではシステム全体ではなく、Home Managerが管理するユーザー環境だけを適用します。
-
-macOSでは初回適用時にHomebrew本体も自動導入されます。GUIアプリ・App StoreアプリはBrewfileで管理するため、`darwin-rebuild switch`後に続けて適用します:
+Homebrew アプリ（Brewfile）を適用・更新する場合:
 
 ```bash
 brew bundle --file hosts/common/Brewfile
 brew bundle --file hosts/<host-id>/Brewfile
 ```
 
-> **App Store アプリ（mas）**: `mas` による App Store アプリのインストールには事前に App Store へのサインインが必要です。
-
-> **Dock の完全適用**: `darwin-rebuild switch` 実行時点では brew アプリが未インストールのため、Dock へのアプリ追加がスキップされます。`brew bundle` 完了後に再度 `darwin-rebuild switch` を実行してください:
-> ```bash
-> sudo nix run github:LnL7/nix-darwin/nix-darwin-25.05#darwin-rebuild -- \
->   switch --flake path:.#<host-id>
-> ```
-
-CLIツールはHome Manager (nix) が管理します。Brewfileには含めません。
-
-## Post-Setup（初回適用後）
-
-### SSH キーの設定
-
-`darwin-rebuild switch` 完了後、GitHub やサーバーへの SSH 接続を設定します。
+**Linux（Ubuntu・WSL・Raspberry Pi OS・NixOS を含む）:**
 
 ```bash
-# 新規鍵を生成する場合
-ssh-keygen -t ed25519 -C "your@email.com" -f ~/.ssh/github_ed25519
-
-# 公開鍵を GitHub に登録
-gh auth login          # GitHub CLI 経由でブラウザ認証
-gh ssh-key add ~/.ssh/github_ed25519.pub --title "$(hostname)"
+nix run github:nix-community/home-manager/release-25.05 -- \
+  switch --flake path:.#<host-id>
 ```
 
-既存の鍵を使う場合は `~/.ssh/` にコピーしてから権限を設定します:
+### ドキュメント
 
-```bash
-chmod 600 ~/.ssh/id_ed25519
-chmod 644 ~/.ssh/id_ed25519.pub
-```
-
-### GitHub CLI 認証
-
-```bash
-gh auth login
-```
-
-## Windows セットアップ
-
-Nix を使わず winget でパッケージを一括インストールします。Git 未インストールの新規 PC でも実行できます。
-
-1. このリポジトリを GitHub から ZIP でダウンロードして展開します。
-2. PowerShell を開き、展開したフォルダへ移動して実行します。
-
-```powershell
-PowerShell -ExecutionPolicy Bypass -File scripts\windows\setup.ps1
-```
-
-カテゴリを絞ってインストールする場合:
-
-```powershell
-PowerShell -ExecutionPolicy Bypass -File scripts\windows\setup.ps1 -Categories gaming,hardware
-```
-
-パッケージはカテゴリ別に管理しています:
-
-| カテゴリ | ファイル | 内容 |
-|---|---|---|
-| ゲーム | [`hosts/windows-desktop/packages/gaming.json`](hosts/windows-desktop/packages/gaming.json) | Steam, Epic Games, OBS 等 |
-| 開発環境 | [`hosts/windows-desktop/packages/dev.json`](hosts/windows-desktop/packages/dev.json) | WSL, Docker, VSCode, Tailscale 等 |
-| ハードウェア | [`hosts/windows-desktop/packages/hardware.json`](hosts/windows-desktop/packages/hardware.json) | Logitech, Yamaha, Nvidia 等 |
-| ブラウザ | [`hosts/windows-desktop/packages/browser.json`](hosts/windows-desktop/packages/browser.json) | Chrome, Brave |
-
-セットアップ完了後、WSL を開いて Linux 環境を構築します:
-
-```bash
-bash install.sh ubuntu-wsl
-```
-
-## Hosts
-
-管理対象hostは[`hosts/default.nix`](hosts/default.nix)へ登録します。
-
-```text
-hosts/
-├── default.nix
-├── mac-mini/config.nix
-├── macbook-air/config.nix
-├── raspberry-pi-5/config.nix
-├── ubuntu-desktop/config.nix
-└── ubuntu-wsl/config.nix
-```
-
-小文字kebab-caseのディレクトリ名をflake出力のhost IDとして使用します。`meta.hostname`はOS・ネットワーク上の端末名で、省略時はhost IDを使用します。
-
-- `platform = "darwin"`: nix-darwinとHome Managerを生成
-- `platform = "home-manager"`: Ubuntu・Raspberry Pi OS向けstandalone Home Managerを生成
-- `os`: `darwin`、`ubuntu`、`raspberry-pi-os`からHome ManagerのOS固有設定を選択
-- `environment`: `native`または`wsl`から実行環境固有の設定を選択
-- `role`: `desktop`、`laptop`、`server`から用途別モジュールを選択
-
-`platform = "darwin"`では`meta.hostname`をmacOSへ反映します。standalone Home ManagerはOSのhostnameを変更しないため、Linux hostの`meta.hostname`は識別用メタデータです。
-
-Home Managerは有効なツールがない場合も常に生成されます。ツールフラグは省略可能で、未指定値は`false`として扱います。未登録のツール名を指定した場合は評価エラーになります。
-
-OS固有のユーザー設定は`modules/home/platforms/<os>/`、WSLなど実行環境固有の設定は`modules/home/environments/<environment>/`、共通ツール設定は`modules/home/<tool>/`で管理します。
-
-`role`は端末名ではなく用途を表します。例えば、デスクトップPCでも常時稼働サービスを中心に管理する場合は`server`を選択できます。
-
-標準hostではGitHub CLI、Devbox、Claude Codeなどの汎用CLIツールをHome Managerで有効化します。macOS hostではDocker DesktopをHomebrew経由で導入し、Linux hostではDocker CLIをHome Managerで導入します。GitHub認証は適用後に`gh auth login`で行います。
-
-## User Profiles
-
-ホストが使用するプロファイルは各`hosts/<host-id>/config.nix`で選択します。
-
-```nix
-userProfile = {
-  name = "guest";
-};
-```
-
-この例では[`user-profiles/guest.nix`](user-profiles/guest.nix)が読み込まれます。別のプロファイルを使用する場合は、同名のファイルを`user-profiles/`へ追加します。
-
-```text
-userProfile.name = "test"
-        ↓
-user-profiles/test.nix
-```
-
-`guest.nix`とリポジトリテスト用の`test.nix`を除き、`user-profiles/*.nix`はデフォルトでGitのコミット対象外です。個人情報を含むプロファイルはローカルで作成し、各hostの`userProfile.name`を任意の名前へ変更してください。
-
-チームで共有するプロファイルやCIで評価するプロファイルは、`.gitignore`へ例外を追加してGitで追跡します。Flake評価に含まれるファイルは入力方式とGitの追跡状態に影響されるため、共有・CI用途では追跡を必須とします。
-
-プロファイルの形式:
-
-```nix
-{
-  username = "example";
-  description = "Optional description";
-  git = {
-    userName = "example";
-    userEmail = "example@example.com";
-  };
-}
-```
-
-必須項目は`username`、`git.userName`、`git.userEmail`です。未定義、空文字、型不正、または指定ファイルが存在しない場合は評価エラーになります。`description`は省略できます。
-
-Flakeは通常、Gitで追跡されているファイルを入力として評価します。純粋な`nix flake check`やCIで使用するプロファイルはGitへ追加してください。`.gitignore`対象のローカルプロファイルはCIには含まれません。必要に応じて追加してください。
-
-## Tests
-
-テストは機能単位で管理し、[`tests/default.nix`](tests/default.nix)から集約します。
-
-```text
-tests/
-├── default.nix
-├── host-config/
-│   └── default.nix
-├── home/
-│   ├── default.nix
-│   ├── integration.nix
-│   ├── app-configs/
-│   ├── cli-tools/
-│   ├── environments/
-│   ├── gh/
-│   ├── git/
-│   ├── platforms/
-│   ├── roles/
-│   └── zsh/
-├── darwin/
-│   ├── features/
-│   └── integration.nix
-└── user-profile/
-    ├── default.nix
-    └── fixtures/
-```
-
-全チェック:
-
-```bash
-nix flake check path:. --no-build --all-systems
-```
-
-user-profileを含むテストderivationを実際にビルドする場合:
-
-```bash
-nix build path:.#checks.aarch64-darwin.tests --no-link
-```
-
-## Directory Structure
-
-```text
-.
-├── .github/workflows/  # GitHub Actions
-├── docs/               # 開発ドキュメント
-├── hosts/              # ホスト別設定
-├── modules/            # OS・Home Manager・共通モジュール
-├── tests/              # 機能単位の評価テスト
-├── user-profiles/      # 選択可能なユーザープロファイル
-├── flake.lock
-└── flake.nix
-```
-
-開発手順と規約は[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)を参照してください。
+- [ホスト設定](docs/nix/hosts.md) — platform・os・role ごとに適用内容を設定
+- [ユーザープロファイル](docs/nix/user-profiles.md) — ユーザー名・Git 設定を管理（デフォルトで Git 追跡対象外）
+- [direnv](docs/nix/direnv.md) — `direnv allow` による Nix flake 環境の自動読み込み
+- [開発・検証](docs/DEVELOPMENT.md) — テスト・CI・コントリビューション
 
 ## License
 

@@ -37,10 +37,11 @@
   };
 
   # GUI アプリ・App Store アプリは hosts/macbook-air/Brewfile で管理する。
-  # パッケージ適用: darwin-rebuild switch 後に brew bundle --file hosts/macbook-air/Brewfile
-  # manageInstallation = false: Homebrew は既存インストールを使用する
+  # install = false: Homebrew バイナリは既存インストールを使用する
+  # brewBundle = true: setup.sh が brew bundle を実行してアプリを一括導入する
   darwin.homebrew = {
     enable = true;
-    manageInstallation = false;
+    install = false;
+    brewBundle = true;
   };
 }

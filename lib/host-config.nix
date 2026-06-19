@@ -94,9 +94,12 @@ let
     else if (config.darwin.homebrew or { }) ? enable
       && !builtins.isBool config.darwin.homebrew.enable then
       throw "host '${hostId}': darwin.homebrew.enable must be a boolean"
-    else if (config.darwin.homebrew or { }) ? manageInstallation
-      && !builtins.isBool config.darwin.homebrew.manageInstallation then
-      throw "host '${hostId}': darwin.homebrew.manageInstallation must be a boolean"
+    else if (config.darwin.homebrew or { }) ? install
+      && !builtins.isBool config.darwin.homebrew.install then
+      throw "host '${hostId}': darwin.homebrew.install must be a boolean"
+    else if (config.darwin.homebrew or { }) ? brewBundle
+      && !builtins.isBool config.darwin.homebrew.brewBundle then
+      throw "host '${hostId}': darwin.homebrew.brewBundle must be a boolean"
     else
       let
         rawHomeManager = config.homeManager or { };

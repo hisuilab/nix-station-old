@@ -100,7 +100,7 @@ let
       git = false;
       zsh = false;
     } {
-      darwin.homebrew = { enable = true; manageInstallation = false; };
+      darwin.homebrew = { enable = true; install = false; brewBundle = true; };
     };
     inherit userProfile;
   };

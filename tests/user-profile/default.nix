@@ -53,7 +53,7 @@ lib.runTests {
   # ソースに案内文が含まれることを readFile で検証する
   testMissingProfileGuidesToInstallScript = {
     expr = lib.hasInfix
-      "install.sh"
+      "setup.sh"
       (builtins.readFile ../../user-profiles/default.nix);
     expected = true;
   };

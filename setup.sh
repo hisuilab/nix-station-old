@@ -9,6 +9,8 @@ set -euo pipefail
 
 HOST_ID="${1:-}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROFILE_USERNAME=""
+GIT_NAME=""
 PROFILE_EMAIL=""
 
 # --- ヘルパー ---------------------------------------------------------------
@@ -25,14 +27,39 @@ detect_os() {
   esac
 }
 
-require_host_id() {
-  if [[ -z "$HOST_ID" ]]; then
-    echo "使用方法: $0 <host-id>"
-    echo ""
-    echo "登録済みホスト:"
-    ls "$REPO_DIR/hosts/" | grep -v default.nix | sed 's|/||'
-    exit 1
+select_host_id() {
+  if [[ -n "$HOST_ID" ]]; then
+    return
   fi
+
+  local hosts=()
+  while IFS= read -r dir; do
+    local platform
+    platform=$(grep -m1 'platform\s*=' "$dir/config.nix" 2>/dev/null | grep -o '"[^"]*"' | tr -d '"') || true
+    [[ -n "$platform" ]] && hosts+=("$(basename "$dir")")
+  done < <(find "$REPO_DIR/hosts" -mindepth 1 -maxdepth 1 -type d | sort)
+
+  if [[ ${#hosts[@]} -eq 0 ]]; then
+    error "hosts/ にホストが登録されていません。"
+  fi
+
+  echo "登録済みホスト:"
+  for i in "${!hosts[@]}"; do
+    echo "  $((i+1)). ${hosts[$i]}"
+  done
+  echo ""
+
+  local selection
+  while true; do
+    read -rp "ホストを番号で選択してください [1-${#hosts[@]}]: " selection
+    if [[ "$selection" =~ ^[0-9]+$ ]] && (( selection >= 1 && selection <= ${#hosts[@]} )); then
+      HOST_ID="${hosts[$((selection-1))]}"
+      info "ホスト '${HOST_ID}' を選択しました。"
+      echo ""
+      break
+    fi
+    echo "  無効な選択です。1〜${#hosts[@]} の番号を入力してください。"
+  done
 }
 
 check_nix() {
@@ -56,6 +83,8 @@ setup_user_profile() {
     local profile_file="${REPO_DIR}/user-profiles/${profile_name}.nix"
     if [[ -f "$profile_file" ]]; then
       info "ユーザープロファイル '${profile_name}' を確認しました。"
+      PROFILE_USERNAME="$profile_name"
+      GIT_NAME=$(awk -F'"' '/userName/{print $2}' "$profile_file")
       PROFILE_EMAIL=$(awk -F'"' '/userEmail/{print $2}' "$profile_file")
       return
     fi
@@ -82,6 +111,8 @@ setup_user_profile() {
   while [[ -z "$git_email" ]]; do
     read -rp "Git メールアドレス: " git_email
   done
+  PROFILE_USERNAME="$username"
+  GIT_NAME="$git_name"
   PROFILE_EMAIL="$git_email"
 
   # プロファイルファイル生成
@@ -98,22 +129,19 @@ EOF
   info "user-profiles/${username}.nix を作成しました。"
 
   # hosts/<host-id>/config.nix の userProfile.name を更新
-  sed -i '' "s/userProfile\.name = \".*\"/userProfile.name = \"${username}\"/" "$host_config"
+  perl -pi -e "s/userProfile\\.name = \".*\"/userProfile.name = \"${username}\"/" "$host_config"
   info "hosts/${HOST_ID}/config.nix の userProfile.name を '${username}' に更新しました。"
   echo ""
 }
 
 confirm_setup() {
-  local host_config="${REPO_DIR}/hosts/${HOST_ID}/config.nix"
-  local profile_name
-  profile_name=$(awk -F'"' '/userProfile[.]name/{print $2}' "$host_config")
-
   echo ""
   echo "============================================================"
   echo " 適用内容の確認"
-  echo "   host    : ${HOST_ID}"
-  echo "   user    : ${profile_name}"
-  echo "   email   : ${PROFILE_EMAIL}"
+  echo "   host          : ${HOST_ID}"
+  echo "   username      : ${PROFILE_USERNAME}"
+  echo "   git.userName  : ${GIT_NAME}"
+  echo "   git.userEmail : ${PROFILE_EMAIL}"
   echo "============================================================"
   echo ""
   read -rp "この内容で続行しますか？ [y/N]: " answer
@@ -138,16 +166,23 @@ darwin_rebuild() {
 }
 
 brew_bundle() {
+  if ! command -v brew &>/dev/null; then
+    warn "brew コマンドが見つかりません。Homebrew をインストールしてから brew bundle を手動で実行してください:"
+    warn "  brew bundle --file hosts/common/Brewfile"
+    warn "  brew bundle --file hosts/${HOST_ID}/Brewfile"
+    return
+  fi
+
   info "brew bundle を実行します..."
 
   local common_brewfile="${REPO_DIR}/hosts/common/Brewfile"
   local host_brewfile="${REPO_DIR}/hosts/${HOST_ID}/Brewfile"
 
   if [[ -f "$common_brewfile" ]]; then
-    /opt/homebrew/bin/brew bundle --file "$common_brewfile" || warn "common Brewfile の一部が失敗しました（mas 認証切れの可能性）"
+    brew bundle --file "$common_brewfile" || warn "common Brewfile の一部が失敗しました（mas 認証切れの可能性）"
   fi
   if [[ -f "$host_brewfile" ]]; then
-    /opt/homebrew/bin/brew bundle --file "$host_brewfile" || warn "${HOST_ID} Brewfile の一部が失敗しました"
+    brew bundle --file "$host_brewfile" || warn "${HOST_ID} Brewfile の一部が失敗しました"
   fi
 }
 
@@ -161,8 +196,15 @@ setup_darwin() {
   # 1回目: Homebrew セットアップ + nix 設定適用
   darwin_rebuild
 
-  # brew アプリのインストール
-  brew_bundle
+  # brew アプリのインストール（brewBundle = false の場合はスキップ）
+  local host_config="${REPO_DIR}/hosts/${HOST_ID}/config.nix"
+  local brew_bundle_flag
+  brew_bundle_flag=$(grep -m1 'brewBundle\s*=' "$host_config" | grep -o 'true\|false' || echo "true")
+  if [[ "$brew_bundle_flag" == "true" ]]; then
+    brew_bundle
+  else
+    info "brewBundle = false のため brew bundle をスキップします"
+  fi
 
   # 2回目: brew アプリが揃った状態で Dock 等を完全適用
   info "Dock 設定を完全適用するため darwin-rebuild を再実行します..."
@@ -171,10 +213,9 @@ setup_darwin() {
   info "=== macOS セットアップ完了 ==="
   echo ""
   echo "次のステップ:"
-  echo "  1. App Store にサインインして brew bundle を再実行（mas アプリ）"
-  echo "  2. SSH キーを設定:"
-  echo "       ssh-keygen -t ed25519 -C \"${PROFILE_EMAIL}\" -f ~/.ssh/github_ed25519"
-  echo "  3. GitHub 認証: gh auth login"
+  echo "  App Store にサインイン後、mas アプリを適用するために brew bundle を再実行してください:"
+  echo "    brew bundle --file hosts/common/Brewfile"
+  echo "    brew bundle --file hosts/${HOST_ID}/Brewfile"
 }
 
 # --- Linux ------------------------------------------------------------------
@@ -189,17 +230,12 @@ setup_linux() {
     switch --flake "path:${REPO_DIR}#${HOST_ID}"
 
   info "=== Linux セットアップ完了 ==="
-  echo ""
-  echo "次のステップ:"
-  echo "  1. SSH キーを設定:"
-  echo "       ssh-keygen -t ed25519 -C \"${PROFILE_EMAIL}\" -f ~/.ssh/github_ed25519"
-  echo "  2. GitHub 認証: gh auth login"
 }
 
 # --- メイン -----------------------------------------------------------------
 
 main() {
-  require_host_id
+  select_host_id
   check_nix
 
   case "$(detect_os)" in

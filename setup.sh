@@ -195,8 +195,15 @@ setup_darwin() {
   # 1回目: Homebrew セットアップ + nix 設定適用
   darwin_rebuild
 
-  # brew アプリのインストール
-  brew_bundle
+  # brew アプリのインストール（brewBundle = false の場合はスキップ）
+  local host_config="${REPO_DIR}/hosts/${HOST_ID}/config.nix"
+  local brew_bundle_flag
+  brew_bundle_flag=$(grep -m1 'brewBundle\s*=' "$host_config" | grep -o 'true\|false' || echo "true")
+  if [[ "$brew_bundle_flag" == "true" ]]; then
+    brew_bundle
+  else
+    info "brewBundle = false のため brew bundle をスキップします"
+  fi
 
   # 2回目: brew アプリが揃った状態で Dock 等を完全適用
   info "Dock 設定を完全適用するため darwin-rebuild を再実行します..."

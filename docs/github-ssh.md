@@ -1,6 +1,6 @@
 # GitHub SSH 設定
 
-`install.sh` でシステム構成を適用したあと、GitHub との SSH 接続を設定します。
+`setup.sh` でシステム構成を適用したあと、GitHub との SSH 接続を設定します。
 
 ## 新規鍵を作成する場合
 

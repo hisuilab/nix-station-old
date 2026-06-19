@@ -25,14 +25,37 @@ detect_os() {
   esac
 }
 
-require_host_id() {
-  if [[ -z "$HOST_ID" ]]; then
-    echo "使用方法: $0 <host-id>"
-    echo ""
-    echo "登録済みホスト:"
-    ls "$REPO_DIR/hosts/" | grep -v default.nix | sed 's|/||'
-    exit 1
+select_host_id() {
+  if [[ -n "$HOST_ID" ]]; then
+    return
   fi
+
+  local hosts=()
+  while IFS= read -r dir; do
+    hosts+=("$(basename "$dir")")
+  done < <(find "$REPO_DIR/hosts" -mindepth 1 -maxdepth 1 -type d | sort)
+
+  if [[ ${#hosts[@]} -eq 0 ]]; then
+    error "hosts/ にホストが登録されていません。"
+  fi
+
+  echo "登録済みホスト:"
+  for i in "${!hosts[@]}"; do
+    echo "  $((i+1)). ${hosts[$i]}"
+  done
+  echo ""
+
+  local selection
+  while true; do
+    read -rp "ホストを番号で選択してください [1-${#hosts[@]}]: " selection
+    if [[ "$selection" =~ ^[0-9]+$ ]] && (( selection >= 1 && selection <= ${#hosts[@]} )); then
+      HOST_ID="${hosts[$((selection-1))]}"
+      info "ホスト '${HOST_ID}' を選択しました。"
+      echo ""
+      break
+    fi
+    echo "  無効な選択です。1〜${#hosts[@]} の番号を入力してください。"
+  done
 }
 
 check_nix() {
@@ -138,16 +161,23 @@ darwin_rebuild() {
 }
 
 brew_bundle() {
+  if ! command -v brew &>/dev/null; then
+    warn "brew コマンドが見つかりません。Homebrew をインストールしてから brew bundle を手動で実行してください:"
+    warn "  brew bundle --file hosts/common/Brewfile"
+    warn "  brew bundle --file hosts/${HOST_ID}/Brewfile"
+    return
+  fi
+
   info "brew bundle を実行します..."
 
   local common_brewfile="${REPO_DIR}/hosts/common/Brewfile"
   local host_brewfile="${REPO_DIR}/hosts/${HOST_ID}/Brewfile"
 
   if [[ -f "$common_brewfile" ]]; then
-    /opt/homebrew/bin/brew bundle --file "$common_brewfile" || warn "common Brewfile の一部が失敗しました（mas 認証切れの可能性）"
+    brew bundle --file "$common_brewfile" || warn "common Brewfile の一部が失敗しました（mas 認証切れの可能性）"
   fi
   if [[ -f "$host_brewfile" ]]; then
-    /opt/homebrew/bin/brew bundle --file "$host_brewfile" || warn "${HOST_ID} Brewfile の一部が失敗しました"
+    brew bundle --file "$host_brewfile" || warn "${HOST_ID} Brewfile の一部が失敗しました"
   fi
 }
 
@@ -171,11 +201,9 @@ setup_darwin() {
   info "=== macOS セットアップ完了 ==="
   echo ""
   echo "次のステップ:"
-  echo "  1. App Store にサインインして brew bundle を再実行（mas アプリ）:"
-  echo "       brew bundle --file hosts/common/Brewfile"
-  echo "       brew bundle --file hosts/${HOST_ID}/Brewfile"
-  echo ""
-  echo "  SSH / GitHub 認証の設定: docs/github-ssh.md を参照してください。"
+  echo "  App Store にサインイン後、mas アプリを適用するために brew bundle を再実行してください:"
+  echo "    brew bundle --file hosts/common/Brewfile"
+  echo "    brew bundle --file hosts/${HOST_ID}/Brewfile"
 }
 
 # --- Linux ------------------------------------------------------------------
@@ -190,15 +218,12 @@ setup_linux() {
     switch --flake "path:${REPO_DIR}#${HOST_ID}"
 
   info "=== Linux セットアップ完了 ==="
-  echo ""
-  echo "次のステップ:"
-  echo "  SSH / GitHub 認証の設定: docs/github-ssh.md を参照してください。"
 }
 
 # --- メイン -----------------------------------------------------------------
 
 main() {
-  require_host_id
+  select_host_id
   check_nix
 
   case "$(detect_os)" in

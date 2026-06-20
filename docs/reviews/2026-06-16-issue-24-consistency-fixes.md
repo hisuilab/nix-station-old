@@ -47,5 +47,4 @@
 - **#5** `flake.nix`: darwin integration test の重複 import
 - **#6** `user-profiles/default.nix`: 未使用エクスポート
 
-
 > 意思決定の記録 → `docs/decisions/2026-06-16-issue-24-consistency-fixes.md`

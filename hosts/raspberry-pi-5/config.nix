@@ -2,7 +2,7 @@
   meta = {
     hostname = "HisuiLab-Raspberry-Pi-5";
     system = "aarch64-linux";
-    platform = "home-manager";
+    builder = "home-manager";
     os = "raspberry-pi-os";
     environment = "native";
     role = "server";

@@ -60,9 +60,9 @@ let
       throw "host '${hostId}': meta.hostname must be a non-empty string when defined"
     else if !(config.meta ? system) || !isNonEmptyString config.meta.system then
       throw "host '${hostId}': meta.system must be a non-empty string"
-    else if !(config.meta ? platform)
-      || !(builtins.elem config.meta.platform registry.platforms) then
-      throw "host '${hostId}': unsupported meta.platform '${config.meta.platform or "<missing>"}'"
+    else if !(config.meta ? builder)
+      || !(builtins.elem config.meta.builder registry.builders) then
+      throw "host '${hostId}': unsupported meta.builder '${config.meta.builder or "<missing>"}'"
     else if !(config.meta ? os)
       || !(builtins.hasAttr config.meta.os registry.operatingSystems) then
       throw "host '${hostId}': unsupported meta.os '${config.meta.os or "<missing>"}'"
@@ -72,8 +72,8 @@ let
     else if !(config.meta ? role)
       || !(builtins.hasAttr config.meta.role registry.roles) then
       throw "host '${hostId}': unsupported meta.role '${config.meta.role or "<missing>"}'"
-    else if registry.operatingSystems.${config.meta.os}.platform != config.meta.platform then
-      throw "host '${hostId}': meta.os '${config.meta.os}' requires meta.platform = '${registry.operatingSystems.${config.meta.os}.platform}'"
+    else if registry.operatingSystems.${config.meta.os}.builder != config.meta.builder then
+      throw "host '${hostId}': meta.os '${config.meta.os}' requires meta.builder = '${registry.operatingSystems.${config.meta.os}.builder}'"
     else if !(builtins.elem config.meta.system registry.operatingSystems.${config.meta.os}.systems) then
       throw "host '${hostId}': meta.system '${config.meta.system}' is not supported by meta.os '${config.meta.os}'"
     else if !(builtins.elem config.meta.environment registry.operatingSystems.${config.meta.os}.environments) then
@@ -84,10 +84,10 @@ let
       throw "host '${hostId}': userProfile.name must be a non-empty string"
     else if config ? darwin && !builtins.isAttrs config.darwin then
       throw "host '${hostId}': darwin must be an attribute set"
-    else if config.meta.platform != "darwin"
+    else if config.meta.builder != "nix-darwin"
       && config ? darwin
       && hasDarwinSettings config then
-      throw "host '${hostId}': darwin settings are only valid for meta.platform = 'darwin'"
+      throw "host '${hostId}': darwin settings are only valid for meta.builder = 'nix-darwin'"
     else if (config.darwin or { }) ? homebrew
       && !builtins.isAttrs config.darwin.homebrew then
       throw "host '${hostId}': darwin.homebrew must be an attribute set"

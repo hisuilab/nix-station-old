@@ -2,7 +2,7 @@
   meta = {
     hostname = "ubuntu-wsl";
     system = "x86_64-linux";
-    platform = "home-manager";
+    builder = "home-manager";
     os = "ubuntu";
     environment = "wsl";
     role = "desktop";

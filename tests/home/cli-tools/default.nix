@@ -10,7 +10,7 @@ let
     zsh = true;
   };
   hostConfig.meta = {
-    os = "darwin";
+    os = "macos";
     environment = "native";
     role = "desktop";
   };

@@ -10,7 +10,7 @@ let
   selectedModules = role:
     (import ../../../modules/home/default.nix {
       hostConfig.meta = {
-        os = "darwin";
+        os = "macos";
         environment = "native";
         inherit role;
       };

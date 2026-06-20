@@ -16,8 +16,8 @@ let
         meta = {
           hostname = hostId;
           inherit system;
-          platform = "darwin";
-          os = "darwin";
+          builder = "nix-darwin";
+          os = "macos";
           environment = "native";
           inherit role;
         };

@@ -44,9 +44,9 @@
 
       lib = nixpkgs.lib;
 
-      # platformに対応するhostのみ抽出
-      darwinHosts = lib.filterAttrs (_: h: h.meta.platform == "darwin") validatedHostConfigs;
-      homeManagerHosts = lib.filterAttrs (_: h: h.meta.platform == "home-manager") validatedHostConfigs;
+      # builderに対応するhostのみ抽出
+      darwinHosts = lib.filterAttrs (_: h: h.meta.builder == "nix-darwin") validatedHostConfigs;
+      homeManagerHosts = lib.filterAttrs (_: h: h.meta.builder == "home-manager") validatedHostConfigs;
 
       # homeManagerHosts を meta.system でグループ化（Linux MockEval 自動展開用）
       homeManagerHostsBySystem =
@@ -76,8 +76,8 @@
         , userProfile
         ,
         }:
-        if hostConfig.meta.platform != "darwin" then
-          throw "host '${hostId}': darwin configuration requires meta.platform = 'darwin'"
+        if hostConfig.meta.builder != "nix-darwin" then
+          throw "host '${hostId}': darwin configuration requires meta.builder = 'nix-darwin'"
         else
           nix-darwin.lib.darwinSystem {
             system = hostConfig.meta.system;
@@ -121,8 +121,8 @@
         , userProfile
         ,
         }:
-        if hostConfig.meta.platform != "home-manager" then
-          throw "host '${hostId}': Home Manager configuration requires meta.platform = 'home-manager'"
+        if hostConfig.meta.builder != "home-manager" then
+          throw "host '${hostId}': Home Manager configuration requires meta.builder = 'home-manager'"
         else
           home-manager.lib.homeManagerConfiguration {
             pkgs = nixpkgs.legacyPackages.${hostConfig.meta.system};
@@ -146,14 +146,14 @@
             ];
           };
 
-      # darwin platformのhostをnix-darwin構成へ変換
+      # nix-darwin builderのhostをnix-darwin構成へ変換
       mkDarwinHost = hostId: hostConfig:
         mkDarwinConfiguration {
           inherit hostConfig hostId;
           userProfile = loadUserProfile hostConfig;
         };
 
-      # home-manager platformのhostをstandalone構成へ変換
+      # home-manager builderのhostをstandalone構成へ変換
       mkHomeHost = hostId: hostConfig:
         mkHomeConfiguration {
           inherit hostConfig hostId;
@@ -186,11 +186,11 @@
           '';
         };
 
-      # platformごとのflake出力
+      # builderごとのflake出力
       darwinConfigurations = builtins.mapAttrs mkDarwinHost darwinHosts;
       homeConfigurations = builtins.mapAttrs mkHomeHost homeManagerHosts;
 
-      # nix flake checkで評価するplatform別テスト
+      # nix flake checkで評価するbuilder別テスト
       checks = {
         ${checkSystem} = {
           # Home Managerモジュール単体の統合評価（基本ツール）

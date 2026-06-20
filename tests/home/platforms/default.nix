@@ -15,10 +15,10 @@ let
     }).imports;
 in
 lib.runTests {
-  testDarwinSelectsDarwinModule = {
+  testMacosSelectsDarwinModule = {
     expr = builtins.elem
       ../../../modules/home/platforms/darwin/default.nix
-      (selectedModules "darwin");
+      (selectedModules "macos");
     expected = true;
   };
 

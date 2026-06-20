@@ -2,7 +2,7 @@
   meta = {
     hostname = "HisuiLab-Ubuntu-desktop";
     system = "x86_64-linux";
-    platform = "home-manager";
+    builder = "home-manager";
     os = "ubuntu";
     environment = "native";
     role = "server";

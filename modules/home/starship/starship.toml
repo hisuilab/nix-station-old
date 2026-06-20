@@ -1,0 +1,244 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](os_bg)\
+$os\
+[](fg:os_bg bg:dir_bg)\
+$directory\
+[](fg:dir_bg bg:git_bg)\
+$git_branch\
+$git_status\
+[](fg:git_bg bg:lang_bg)\
+$c\
+$cpp\
+$rust\
+$golang\
+$nodejs\
+$bun\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+[](fg:lang_bg bg:env_bg)\
+$docker_context\
+$conda\
+$pixi\
+[](fg:env_bg bg:time_bg)\
+$time\
+[ ](fg:time_bg)\
+$line_break$character"""
+
+palette = 'nord'
+
+# os_bg  : OS/username segment background
+# dir_bg  : directory segment background
+# git_bg  : git segment background
+# lang_bg : programming language segment background
+# env_bg  : environment (docker/conda) segment background
+# time_bg : time segment background
+# fg      : text color on all segments
+# ok      : success / vim-normal symbol
+# err     : error symbol
+# warn    : vim-replace symbol
+# info    : vim-visual symbol
+
+[palettes.gruvbox_dark]
+os_bg   = '#4c453f'
+dir_bg  = '#d65d0e'
+git_bg  = '#d79921'
+lang_bg = '#689d6a'
+env_bg  = '#458588'
+time_bg = '#665c54'
+fg      = '#fbf1c7'
+ok      = '#98971a'
+err     = '#cc241d'
+warn    = '#d79921'
+info    = '#83a598'
+
+[palettes.tokyo_night]
+os_bg   = '#313e59'
+dir_bg  = '#6f93df'
+git_bg  = '#565f89'
+lang_bg = '#414868'
+env_bg  = '#394b70'
+time_bg = '#24283b'
+fg      = '#c0caf5'
+ok      = '#9ece6a'
+err     = '#f7768e'
+warn    = '#e0af68'
+info    = '#7dcfff'
+
+[palettes.nord]
+os_bg   = '#323842'
+dir_bg  = '#88c0d0'
+git_bg  = '#81a1c1'
+lang_bg = '#5e81ac'
+env_bg  = '#4c566a'
+time_bg = '#434c5e'
+fg      = '#eceff4'
+ok      = '#a3be8c'
+err     = '#bf616a'
+warn    = '#ebcb8b'
+info    = '#88c0d0'
+
+[palettes.dracula]
+os_bg   = '#454e6b'
+dir_bg  = '#ff79c6'
+git_bg  = '#bd93f9'
+lang_bg = '#8be9fd'
+env_bg  = '#6272a4'
+time_bg = '#44475a'
+fg      = '#f8f8f2'
+ok      = '#50fa7b'
+err     = '#ff5555'
+warn    = '#f1fa8c'
+info    = '#8be9fd'
+
+[palettes.cyberpunk]
+os_bg   = '#303030'
+dir_bg  = '#8700ff'
+git_bg  = '#5f00ff'
+lang_bg = '#00ffc8'
+env_bg  = '#3be914'
+time_bg = '#393939'
+fg      = '#d7fff7'
+ok      = '#00ff66'
+err     = '#ff2a6d'
+warn    = '#ffe66d'
+info    = '#00e5ff'
+
+[os]
+disabled = false
+style = "bg:os_bg fg:fg"
+format = "[ $symbol ]($style)"
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+Arch = "󰣇"
+Artix = "󰣇"
+EndeavourOS = ""
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+Pop = ""
+
+[directory]
+style = "fg:fg bg:dir_bg"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+[git_branch]
+symbol = ""
+style = "bg:git_bg"
+format = '[[ $symbol $branch ](fg:fg bg:git_bg)]($style)'
+
+[git_status]
+style = "bg:git_bg"
+format = '[[($all_status$ahead_behind )](fg:fg bg:git_bg)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[bun]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[c]
+symbol = " "
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[cpp]
+symbol = " "
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[php]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[java]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[python]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[docker_context]
+symbol = ""
+style = "bg:env_bg"
+format = '[[ $symbol( $context) ](fg:fg bg:env_bg)]($style)'
+
+[conda]
+style = "bg:env_bg"
+format = '[[ $symbol( $environment) ](fg:fg bg:env_bg)]($style)'
+
+[pixi]
+style = "bg:env_bg"
+format = '[[ $symbol( $version)( $environment) ](fg:fg bg:env_bg)]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:time_bg"
+format = '[[  $time ](fg:fg bg:time_bg)]($style)'
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[❯](bold fg:ok)'
+error_symbol = '[❯](bold fg:err)'
+vimcmd_symbol = '[❮](bold fg:ok)'
+vimcmd_replace_one_symbol = '[❮](bold fg:warn)'
+vimcmd_replace_symbol = '[❮](bold fg:warn)'
+vimcmd_visual_symbol = '[❮](bold fg:info)'

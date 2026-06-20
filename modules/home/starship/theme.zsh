@@ -1,6 +1,7 @@
 # Starship theme switching
 # State : ~/.local/share/starship/theme  (local only, not in repo)
 # Config: ~/.config/starship/current.toml (generated on apply)
+# Themes: $STARSHIP_THEME_DIR/*.toml     (set by default.nix via Nix store)
 
 function _starship_theme_apply() {
   local _state="${XDG_DATA_HOME:-${HOME}/.local/share}/starship/theme"
@@ -11,12 +12,13 @@ function _starship_theme_apply() {
 
   mkdir -p "${_out:h}"
   sed "s|^palette = '.*'|palette = '${_theme}'|" "${_src}" > "${_out}"
+  [[ -f "${STARSHIP_THEME_DIR}/${_theme}.toml" ]] && \
+    cat "${STARSHIP_THEME_DIR}/${_theme}.toml" >> "${_out}"
   export STARSHIP_CONFIG="${_out}"
 }
 
 function theme() {
   local _state="${XDG_DATA_HOME:-${HOME}/.local/share}/starship/theme"
-  local _src="${XDG_CONFIG_HOME:-${HOME}/.config}/starship.toml"
   local _current
   _current="$(cat "${_state}" 2>/dev/null)" || _current="gruvbox_dark"
   local _active=$(( ${precmd_functions[(I)prompt_starship_precmd]} > 0 ))
@@ -24,7 +26,8 @@ function theme() {
   case ${1:-} in
     list)
       print -P '%B available themes:%b'
-      grep '^\[palettes\.' "${_src}" | sed "s/\[palettes\.\(.*\)\]/\1/" | while read -r _t; do
+      local -a _themes=( ${STARSHIP_THEME_DIR}/*.toml(N:t:r) )
+      for _t in "${_themes[@]}"; do
         if (( _active )) && [[ $_t == $_current ]]; then
           print -P "  %F{10}${_t}%f %F{8}← current%f"
         else
@@ -60,7 +63,7 @@ function theme() {
       ;;
 
     *)
-      if ! grep -q "^\[palettes\.${1}\]" "${_src}" 2>/dev/null; then
+      if [[ ! -f "${STARSHIP_THEME_DIR}/${1}.toml" ]]; then
         print -P "%F{1}unknown theme: %f${1}" >&2
         print -P "%F{8}run: theme list%f" >&2
         return 1
@@ -76,7 +79,7 @@ function theme() {
 
 function _theme_complete() {
   local -a _themes
-  _themes=( list plain $(grep '^\[palettes\.' "${XDG_CONFIG_HOME:-${HOME}/.config}/starship.toml" 2>/dev/null | sed 's/\[palettes\.\(.*\)\]/\1/') )
+  _themes=( list plain ${STARSHIP_THEME_DIR}/*.toml(N:t:r) )
   _arguments "1:theme:(${_themes[*]})"
 }
 compdef _theme_complete theme

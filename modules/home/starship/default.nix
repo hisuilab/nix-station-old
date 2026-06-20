@@ -8,6 +8,7 @@
   };
 
   programs.zsh.initContent = ''
+    export STARSHIP_THEME_DIR="${./theme}"
     source "${./theme.zsh}"
   '';
 }

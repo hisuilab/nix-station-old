@@ -1,0 +1,12 @@
+[palettes.nord]
+os_bg   = '#323842'
+dir_bg  = '#88c0d0'
+git_bg  = '#81a1c1'
+lang_bg = '#5e81ac'
+env_bg  = '#4c566a'
+time_bg = '#434c5e'
+fg      = '#eceff4'
+ok      = '#a3be8c'
+err     = '#bf616a'
+warn    = '#ebcb8b'
+info    = '#88c0d0'

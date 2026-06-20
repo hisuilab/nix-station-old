@@ -1,0 +1,12 @@
+[palettes.dracula]
+os_bg   = '#454e6b'
+dir_bg  = '#ff79c6'
+git_bg  = '#bd93f9'
+lang_bg = '#8be9fd'
+env_bg  = '#6272a4'
+time_bg = '#44475a'
+fg      = '#f8f8f2'
+ok      = '#50fa7b'
+err     = '#ff5555'
+warn    = '#f1fa8c'
+info    = '#8be9fd'

@@ -42,20 +42,6 @@ palette = 'nord'
 # err     : error symbol
 # warn    : vim-replace symbol
 # info    : vim-visual symbol
-
-[palettes.gruvbox_dark]
-os_bg   = '#4c453f'
-dir_bg  = '#d65d0e'
-git_bg  = '#d79921'
-lang_bg = '#689d6a'
-env_bg  = '#458588'
-time_bg = '#665c54'
-fg      = '#fbf1c7'
-ok      = '#98971a'
-err     = '#cc241d'
-warn    = '#d79921'
-info    = '#83a598'
-
 [palettes.tokyo_night]
 os_bg   = '#313e59'
 dir_bg  = '#6f93df'
@@ -68,20 +54,6 @@ ok      = '#9ece6a'
 err     = '#f7768e'
 warn    = '#e0af68'
 info    = '#7dcfff'
-
-[palettes.nord]
-os_bg   = '#323842'
-dir_bg  = '#88c0d0'
-git_bg  = '#81a1c1'
-lang_bg = '#5e81ac'
-env_bg  = '#4c566a'
-time_bg = '#434c5e'
-fg      = '#eceff4'
-ok      = '#a3be8c'
-err     = '#bf616a'
-warn    = '#ebcb8b'
-info    = '#88c0d0'
-
 [palettes.dracula]
 os_bg   = '#454e6b'
 dir_bg  = '#ff79c6'
@@ -94,20 +66,6 @@ ok      = '#50fa7b'
 err     = '#ff5555'
 warn    = '#f1fa8c'
 info    = '#8be9fd'
-
-[palettes.cyberpunk]
-os_bg   = '#303030'
-dir_bg  = '#8700ff'
-git_bg  = '#5f00ff'
-lang_bg = '#00ffc8'
-env_bg  = '#3be914'
-time_bg = '#393939'
-fg      = '#d7fff7'
-ok      = '#00ff66'
-err     = '#ff2a6d'
-warn    = '#ffe66d'
-info    = '#00e5ff'
-
 [os]
 disabled = false
 style = "bg:os_bg fg:fg"

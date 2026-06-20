@@ -10,6 +10,7 @@ let
     ghostty = ./ghostty/default.nix;
     git = ./git/default.nix;
     p10k = ./p10k/default.nix;
+    tmux = ./tmux/default.nix;
     zed = ./zed/default.nix;
     zsh = ./zsh/default.nix;
   };

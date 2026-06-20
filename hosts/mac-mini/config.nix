@@ -23,6 +23,10 @@
       enable = true;
       configFile = ../../modules/home/ghostty/config;
     };
+    tmux = {
+      enable = true;
+      configFile = ../../modules/home/tmux/tmux.conf;
+    };
     zed = {
       enable = true;
       configFile = ../../modules/home/zed/settings.json;

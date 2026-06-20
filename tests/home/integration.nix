@@ -20,6 +20,10 @@ let
       enable = true;
       configFile = ../../modules/home/p10k/p10k.zsh;
     };
+    tmux = {
+      enable = true;
+      configFile = ../../modules/home/tmux/tmux.conf;
+    };
     zed = {
       enable = true;
       configFile = ../../modules/home/zed/settings.json;

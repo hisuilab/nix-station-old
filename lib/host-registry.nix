@@ -1,6 +1,6 @@
 {
   # attrset 形式の設定を持つツール（boolean ツールとは別に検証が必要）
-  managedTools = [ "ghostty" "p10k" "zed" ];
+  managedTools = [ "ghostty" "p10k" "tmux" "zed" ];
 
   platforms = [
     "darwin"

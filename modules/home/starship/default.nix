@@ -6,4 +6,8 @@
   xdg.configFile = lib.optionalAttrs (homeManager.starship.configFile != null) {
     "starship.toml".source = homeManager.starship.configFile;
   };
+
+  programs.zsh.initContent = ''
+    source "${./theme.zsh}"
+  '';
 }

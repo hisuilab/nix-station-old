@@ -1,0 +1,202 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](os_bg)\
+$os\
+[](fg:os_bg bg:dir_bg)\
+$directory\
+[](fg:dir_bg bg:git_bg)\
+$git_branch\
+$git_status\
+[](fg:git_bg bg:lang_bg)\
+$c\
+$cpp\
+$rust\
+$golang\
+$nodejs\
+$bun\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+[](fg:lang_bg bg:env_bg)\
+$docker_context\
+$conda\
+$pixi\
+[](fg:env_bg bg:time_bg)\
+$time\
+[ ](fg:time_bg)\
+$line_break$character"""
+
+palette = 'nord'
+
+# os_bg  : OS/username segment background
+# dir_bg  : directory segment background
+# git_bg  : git segment background
+# lang_bg : programming language segment background
+# env_bg  : environment (docker/conda) segment background
+# time_bg : time segment background
+# fg      : text color on all segments
+# ok      : success / vim-normal symbol
+# err     : error symbol
+# warn    : vim-replace symbol
+# info    : vim-visual symbol
+[palettes.tokyo_night]
+os_bg   = '#313e59'
+dir_bg  = '#6f93df'
+git_bg  = '#565f89'
+lang_bg = '#414868'
+env_bg  = '#394b70'
+time_bg = '#24283b'
+fg      = '#c0caf5'
+ok      = '#9ece6a'
+err     = '#f7768e'
+warn    = '#e0af68'
+info    = '#7dcfff'
+[palettes.dracula]
+os_bg   = '#454e6b'
+dir_bg  = '#ff79c6'
+git_bg  = '#bd93f9'
+lang_bg = '#8be9fd'
+env_bg  = '#6272a4'
+time_bg = '#44475a'
+fg      = '#f8f8f2'
+ok      = '#50fa7b'
+err     = '#ff5555'
+warn    = '#f1fa8c'
+info    = '#8be9fd'
+[os]
+disabled = false
+style = "bg:os_bg fg:fg"
+format = "[ $symbol ]($style)"
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+Arch = "󰣇"
+Artix = "󰣇"
+EndeavourOS = ""
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+Pop = ""
+
+[directory]
+style = "fg:fg bg:dir_bg"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+[git_branch]
+symbol = ""
+style = "bg:git_bg"
+format = '[[ $symbol $branch ](fg:fg bg:git_bg)]($style)'
+
+[git_status]
+style = "bg:git_bg"
+format = '[[($all_status$ahead_behind )](fg:fg bg:git_bg)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[bun]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[c]
+symbol = " "
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[cpp]
+symbol = " "
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[php]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[java]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[python]
+symbol = ""
+style = "bg:lang_bg"
+format = '[[ $symbol( $version) ](fg:fg bg:lang_bg)]($style)'
+
+[docker_context]
+symbol = ""
+style = "bg:env_bg"
+format = '[[ $symbol( $context) ](fg:fg bg:env_bg)]($style)'
+
+[conda]
+style = "bg:env_bg"
+format = '[[ $symbol( $environment) ](fg:fg bg:env_bg)]($style)'
+
+[pixi]
+style = "bg:env_bg"
+format = '[[ $symbol( $version)( $environment) ](fg:fg bg:env_bg)]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:time_bg"
+format = '[[  $time ](fg:fg bg:time_bg)]($style)'
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[❯](bold fg:ok)'
+error_symbol = '[❯](bold fg:err)'
+vimcmd_symbol = '[❮](bold fg:ok)'
+vimcmd_replace_one_symbol = '[❮](bold fg:warn)'
+vimcmd_replace_symbol = '[❮](bold fg:warn)'
+vimcmd_visual_symbol = '[❮](bold fg:info)'

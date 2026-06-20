@@ -1,0 +1,12 @@
+[palettes.tokyo_night]
+os_bg   = '#313e59'
+dir_bg  = '#6f93df'
+git_bg  = '#565f89'
+lang_bg = '#414868'
+env_bg  = '#394b70'
+time_bg = '#24283b'
+fg      = '#c0caf5'
+ok      = '#9ece6a'
+err     = '#f7768e'
+warn    = '#e0af68'
+info    = '#7dcfff'

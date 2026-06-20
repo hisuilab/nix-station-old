@@ -1,0 +1,12 @@
+[palettes.cyberpunk]
+os_bg   = '#303030'
+dir_bg  = '#8700ff'
+git_bg  = '#5f00ff'
+lang_bg = '#00ffc8'
+env_bg  = '#3be914'
+time_bg = '#393939'
+fg      = '#d7fff7'
+ok      = '#00ff66'
+err     = '#ff2a6d'
+warn    = '#ffe66d'
+info    = '#00e5ff'

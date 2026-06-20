@@ -16,12 +16,20 @@
     gh = true;
     git = true;
     p10k = {
-      enable = true;
+      enable = false;
       configFile = ../../modules/home/p10k/p10k.zsh;
+    };
+    starship = {
+      enable = true;
+      configFile = ../../modules/home/starship/starship.toml;
     };
     ghostty = {
       enable = true;
       configFile = ../../modules/home/ghostty/config;
+    };
+    tmux = {
+      enable = true;
+      configFile = ../../modules/home/tmux/tmux.conf;
     };
     zed = {
       enable = true;

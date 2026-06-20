@@ -1,0 +1,12 @@
+[palettes.gruvbox_dark]
+os_bg   = '#4c453f'
+dir_bg  = '#d65d0e'
+git_bg  = '#d79921'
+lang_bg = '#689d6a'
+env_bg  = '#458588'
+time_bg = '#665c54'
+fg      = '#fbf1c7'
+ok      = '#98971a'
+err     = '#cc241d'
+warn    = '#d79921'
+info    = '#83a598'

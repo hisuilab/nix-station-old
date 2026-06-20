@@ -20,6 +20,14 @@ let
       enable = true;
       configFile = ../../modules/home/p10k/p10k.zsh;
     };
+    starship = {
+      enable = true;
+      configFile = ../../modules/home/starship/starship.toml;
+    };
+    tmux = {
+      enable = true;
+      configFile = ../../modules/home/tmux/tmux.conf;
+    };
     zed = {
       enable = true;
       configFile = ../../modules/home/zed/settings.json;

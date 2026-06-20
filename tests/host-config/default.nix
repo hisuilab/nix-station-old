@@ -7,8 +7,8 @@ let
   validConfig = {
     meta = {
       system = "aarch64-darwin";
-      platform = "darwin";
-      os = "darwin";
+      builder = "nix-darwin";
+      os = "macos";
       environment = "native";
       role = "desktop";
     };
@@ -154,7 +154,7 @@ lib.runTests {
     expr = canValidate "ubuntu-desktop" (lib.recursiveUpdate validConfig {
       meta = {
         system = "x86_64-linux";
-        platform = "home-manager";
+        builder = "home-manager";
         os = "ubuntu";
         environment = "native";
         role = "server";
@@ -190,9 +190,9 @@ lib.runTests {
     expected = false;
   };
 
-  testInvalidPlatformIsRejected = {
+  testInvalidBuilderIsRejected = {
     expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
-      meta.platform = "nixos";
+      meta.builder = "nixos";
     });
     expected = false;
   };
@@ -208,7 +208,7 @@ lib.runTests {
 
   testInvalidOperatingSystemIsRejected = {
     expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
-      meta.os = "macos";
+      meta.os = "windows";
     });
     expected = false;
   };
@@ -252,7 +252,7 @@ lib.runTests {
 
   testHomeManagerPlatformRequiresLinux = {
     expr = canValidate "ubuntu-desktop" (lib.recursiveUpdate validConfig {
-      meta.platform = "home-manager";
+      meta.builder = "home-manager";
     });
     expected = false;
   };
@@ -261,7 +261,7 @@ lib.runTests {
     expr = canValidate "ubuntu-desktop" (lib.recursiveUpdate validConfig {
       meta = {
         system = "x86_64-linux";
-        platform = "home-manager";
+        builder = "home-manager";
         os = "ubuntu";
         environment = "native";
         role = "server";
@@ -274,7 +274,7 @@ lib.runTests {
     expr = canValidate "ubuntu-wsl" (lib.recursiveUpdate validConfig {
       meta = {
         system = "x86_64-linux";
-        platform = "home-manager";
+        builder = "home-manager";
         os = "ubuntu";
         environment = "wsl";
         role = "desktop";
@@ -287,7 +287,7 @@ lib.runTests {
     expr = canValidate "rpi-wsl" (lib.recursiveUpdate validConfig {
       meta = {
         system = "aarch64-linux";
-        platform = "home-manager";
+        builder = "home-manager";
         os = "raspberry-pi-os";
         environment = "wsl";
         role = "server";

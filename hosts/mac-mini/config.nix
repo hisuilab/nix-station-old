@@ -2,8 +2,8 @@
   meta = {
     hostname = "HisuiLab-Mac-mini";
     system = "aarch64-darwin";
-    platform = "darwin";
-    os = "darwin";
+    builder = "nix-darwin";
+    os = "macos";
     environment = "native";
     role = "desktop";
   };

@@ -2,14 +2,14 @@
   # attrset 形式の設定を持つツール（boolean ツールとは別に検証が必要）
   managedTools = [ "ghostty" "p10k" "starship" "tmux" "zed" ];
 
-  platforms = [
-    "darwin"
+  builders = [
+    "nix-darwin"
     "home-manager"
   ];
 
   operatingSystems = {
-    darwin = {
-      platform = "darwin";
+    macos = {
+      builder = "nix-darwin";
       systems = [
         "aarch64-darwin"
         "x86_64-darwin"
@@ -19,7 +19,7 @@
     };
 
     ubuntu = {
-      platform = "home-manager";
+      builder = "home-manager";
       systems = [
         "aarch64-linux"
         "x86_64-linux"
@@ -32,7 +32,7 @@
     };
 
     raspberry-pi-os = {
-      platform = "home-manager";
+      builder = "home-manager";
       systems = [ "aarch64-linux" ];
       environments = [ "native" ];
       homeModule = ../modules/home/platforms/raspberry-pi-os/default.nix;

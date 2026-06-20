@@ -178,7 +178,12 @@
       # リポジトリ開発用shell
       devShells.${checkSystem}.default =
         nixpkgs.legacyPackages.${checkSystem}.mkShell {
-          packages = [ ];
+          packages = [
+            nixpkgs.legacyPackages.${checkSystem}.pre-commit
+          ];
+          shellHook = ''
+            pre-commit install --install-hooks
+          '';
         };
 
       # platformごとのflake出力

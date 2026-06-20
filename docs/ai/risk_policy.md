@@ -1,6 +1,6 @@
 # Risky Change 定義 — nix-station
 
-この定義が唯一の基準。`.claude` / `.codex` 側で独自に定義しない。
+この定義が唯一の基準。`.claude` / `.agents` 側で独自に定義しない。
 
 ## リスク分類
 
@@ -18,7 +18,7 @@
 - `hosts/*/config.nix` の変更（ホスト設定の変更）
 - `modules/` 配下の新規モジュール追加
 - `Brewfile` の変更（パッケージ追加・削除）
-- `.claude/settings.json` / `.codex/config.toml` の変更
+- `.claude/settings.json` の変更
 
 ### Low — 通常の実装として進めてよい
 

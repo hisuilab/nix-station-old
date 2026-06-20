@@ -17,7 +17,7 @@ for file in $staged_files; do
 
   # ドットファイル（意図しない隠しファイル）
   basename=$(basename "$file")
-  if [[ "$basename" == .* && "$file" != .claude/* && "$file" != .agents/* && "$file" != .codex/* && "$file" != .github/* && "$file" != .gitignore && "$file" != .envrc ]]; then
+  if [[ "$basename" == .* && "$file" != .claude/* && "$file" != .agents/* && "$file" != .github/* && "$file" != .gitignore && "$file" != .envrc ]]; then
     echo "⚠️  隠しファイル: $file"
     found=1
   fi

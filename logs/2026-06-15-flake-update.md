@@ -18,7 +18,7 @@ evaluation warning: `programs.zsh.initExtra` is deprecated,
 warning: `activate-user` is deprecated and will be removed in 25.11
 ```
 
-現在のピン: nixpkgs / nix-darwin / home-manager すべて `25.05` ブランチ。  
+現在のピン: nixpkgs / nix-darwin / home-manager すべて `25.05` ブランチ。
 2026-06 時点で 25.05 は EOL 相当 (25.11, 26.05 がリリース済み) だが、
 ブランチ内の最新コミットへの追従は未実施だった。
 
@@ -48,7 +48,7 @@ programs.zsh.initContent = ''...''
 nix flake update
 ```
 
-GitHub API が断続的に 504 を返したが、リトライにより完了。  
+GitHub API が断続的に 504 を返したが、リトライにより完了。
 flake.lock の差分なし — 25.05 ブランチ上のピンがすでに最新だった。
 
 ### 3. `nix flake check` 実行 → 失敗
@@ -63,7 +63,7 @@ error: user profile 'hisuilab.nix' does not exist in '...-source/user-profiles'
 
 ### `macMiniEval` / `macbookAirEval` が `nix flake check` で失敗
 
-**原因:**  
+**原因:**
 `flake.nix` の `checks` ブロックに実ホスト評価が含まれていた。
 
 ```nix
@@ -72,23 +72,23 @@ macbookAirEval = self.darwinConfigurations.macbook-air.system;
 ```
 
 これらは `user-profiles/hisuilab.nix` を必要とするが、同ファイルは
-個人情報を含むため `.gitignore` で意図的に除外されている。  
+個人情報を含むため `.gitignore` で意図的に除外されている。
 nix は flake のソースを評価するとき git の追跡対象ファイルのみをストアに
 コピーするため、gitignore されたファイルは参照できない。
 
-**影響範囲:**  
+**影響範囲:**
 - `nix flake check` は常に失敗していた (flake 追加当初から潜在的な問題)
 - `darwin-rebuild switch` は影響なし (ローカル作業ディレクトリを直接参照するため)
 
 ### `activate-user` 警告
 
-**原因:**  
-home-manager の nix-darwin モジュールが旧来の `activate-user` 方式を使用している。  
+**原因:**
+home-manager の nix-darwin モジュールが旧来の `activate-user` 方式を使用している。
 nix-darwin 25.05 でこの方式は deprecated になり、25.11 で削除予定だった。
 
-**現状:**  
+**現状:**
 25.11 / 26.05 はすでにリリース済みだが、当リポジトリは 25.05 にピン留め中のため
-現時点では動作に影響なし。  
+現時点では動作に影響なし。
 26.05 へのメジャーアップグレード時に home-manager 側の対応込みで解消される見込み。
 
 ---
@@ -115,8 +115,8 @@ macbookAirMockEval = (mkDarwinConfiguration {
 }).system;
 ```
 
-**保証できること:** ホスト固有の設定 (darwin.features, darwin.homebrew, homeManager フラグ) の構造的な正当性  
-**保証できないこと:** 実際のユーザー名・メールアドレスなどユーザープロファイル依存の値の正確性  
+**保証できること:** ホスト固有の設定 (darwin.features, darwin.homebrew, homeManager フラグ) の構造的な正当性
+**保証できないこと:** 実際のユーザー名・メールアドレスなどユーザープロファイル依存の値の正確性
 → それは `darwin-rebuild switch` のローカル実行で担保する
 
 ### `activate-user` 警告

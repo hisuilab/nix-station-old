@@ -1,6 +1,6 @@
 # nix-station 設計原則
 
-nix-station は **OSS フレームワーク**として設計する。  
+nix-station は **OSS フレームワーク**として設計する。
 フレームワーク自体の品質とユーザー固有の設定を明確に分離することが基本方針。
 
 ---
@@ -20,7 +20,7 @@ nix-station リポジトリ
     └── user-profiles/<name>.nix  個人プロファイル（gitignore）
 ```
 
-**フレームワーク**が保証するもの: モジュールのスキーマ、ロジック、ルーティングの正しさ  
+**フレームワーク**が保証するもの: モジュールのスキーマ、ロジック、ルーティングの正しさ
 **ユーザー**が責任を持つもの: 自分のプロファイルの作成、ホストへの紐付け、デプロイ
 
 ---
@@ -35,7 +35,7 @@ nix-station リポジトリ
 - ルーティングロジック（role / platform / feature フラグ）が正しいか
 - ホスト設定の構造が正しいか
 
-**実装**: `checks.*` に `testUserProfile` を使ったテストを配置する  
+**実装**: `checks.*` に `testUserProfile` を使ったテストを配置する
 **原則**: ユーザー固有データを一切必要としない。clone 直後から `nix flake check` が通ること
 
 ```
@@ -52,7 +52,7 @@ checks.aarch64-darwin.macbook-air        # ホストスキーマ（testUserProfi
 - `git.userName` が存在・非空か
 - `git.userEmail` が存在・非空か
 
-**実装**: `user-profiles/default.nix` の `validateUserProfile` が担う  
+**実装**: `user-profiles/default.nix` の `validateUserProfile` が担う
 **発火タイミング**: `darwin-rebuild switch` 時（`nix flake check` 時ではない）
 
 ### Layer 3: Deploy Quality — `setup.sh` / `activationScripts`
@@ -100,7 +100,7 @@ nix-darwin の `assertions` は**評価時**に発火する。`nix flake check` 
 
 ## `darwinConfigurations` の扱い
 
-`darwinConfigurations` はデプロイ用成果物であり、CI テストターゲットではない。  
+`darwinConfigurations` はデプロイ用成果物であり、CI テストターゲットではない。
 ユーザープロファイルをリポジトリにコミットしない方針のため、パーソナルホストを `darwinConfigurations` に含めると `nix flake check` が失敗する。
 
 **方針**: パーソナルホストは `darwinConfigurations` から外す。
@@ -126,7 +126,7 @@ checks に含めるもの:
 | `user-profiles/test.nix` | コミット | フレームワークテスト専用モック |
 | `user-profiles/<name>.nix` | **gitignore** | 個人プロファイル（コミットしない） |
 
-個人プロファイルは `setup.sh` が対話形式で生成する。  
+個人プロファイルは `setup.sh` が対話形式で生成する。
 Nix 評価では `--impure` フラグを使いローカルファイルを参照する。
 
 ---

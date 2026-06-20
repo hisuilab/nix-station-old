@@ -61,5 +61,4 @@
 - **#12** `importUserProfile` の整理
 - **#15/#16** テストスタイル統一・統合テスト拡充
 
-
 > 意思決定の記録 → `docs/decisions/2026-06-16-feat-config-improvements.md`

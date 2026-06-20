@@ -6,5 +6,5 @@
 
 Yamaha の音声ミキサーアプリ。winget 非対応のため公式サイトから手動インストールが必要です。
 
-- 公式: https://zg.yamaha.com/ja/
+- 公式: <https://zg.yamaha.com/ja/>
 - Yamaha Steinberg USB Driver のインストール後に導入してください

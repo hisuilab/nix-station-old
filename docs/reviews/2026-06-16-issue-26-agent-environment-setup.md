@@ -46,5 +46,4 @@
 - **#6** CI ハッシュ誤り: 人間レビューで補完可能だが根本的な対策は限定的
 - **#7** 廃止 API 使用: 実装前 `grep` 確認で検出可能
 
-
 > 意思決定の記録 → `docs/decisions/2026-06-16-issue-26-agent-environment-setup.md`

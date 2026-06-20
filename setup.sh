@@ -210,6 +210,9 @@ setup_darwin() {
   info "Dock 設定を完全適用するため darwin-rebuild を再実行します..."
   darwin_rebuild
 
+  # pre-commit フックをインストール（コミット前の自動フォーマット・チェックを有効化）
+  pre-commit install --install-hooks || warn "pre-commit install に失敗しました。手動で実行してください: pre-commit install"
+
   info "=== macOS セットアップ完了 ==="
   echo ""
   echo "次のステップ:"
@@ -228,6 +231,9 @@ setup_linux() {
   info "home-manager switch を実行します..."
   nix run github:nix-community/home-manager/release-25.05 -- \
     switch --flake "path:${REPO_DIR}#${HOST_ID}"
+
+  # pre-commit フックをインストール（コミット前の自動フォーマット・チェックを有効化）
+  pre-commit install --install-hooks || warn "pre-commit install に失敗しました。手動で実行してください: pre-commit install"
 
   info "=== Linux セットアップ完了 ==="
 }

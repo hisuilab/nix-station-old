@@ -49,11 +49,27 @@ jobs:
       - name: Build Raspberry Pi 5 Home Manager configuration
         run: nix build path:.#checks.aarch64-linux.raspberry-pi-5 --no-link
 
+  lint-check:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. コードのチェックアウト
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      # 2. nixpkgs-fmt のために Nix をインストール
+      - name: Install Determinate Nix
+        uses: DeterminateSystems/determinate-nix-action@9adf02b41cfdac2632e1c16f0480ff5bf3b05dd6 # v3.21.1
+      # 3. pre-commit をインストールして全ファイルを検査
+      - name: Install pre-commit
+        run: pip install pre-commit
+      - name: Run pre-commit on all files
+        run: pre-commit run --all-files
+
   nix-check:
     needs:
       - macos-check
       - linux-check
+      - lint-check
     runs-on: ubuntu-latest
     steps:
-      - name: Confirm all Nix checks passed
-        run: echo "All Nix checks passed."
+      - name: Confirm all checks passed
+        run: echo "All checks passed."

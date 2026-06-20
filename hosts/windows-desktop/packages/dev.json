@@ -1,31 +1,29 @@
 {
-	"$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-	"Sources": [
-		{
-			"Packages": [
-				{ "PackageIdentifier": "Canonical.Ubuntu.2604" },
-				{ "PackageIdentifier": "Docker.DockerDesktop" },
-				{ "PackageIdentifier": "Microsoft.WindowsTerminal" },
-				{ "PackageIdentifier": "Microsoft.WSL" },
-				{ "PackageIdentifier": "Tailscale.Tailscale" }
-			],
-			"SourceDetails": {
-				"Argument": "https://cdn.winget.microsoft.com/cache",
-				"Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
-				"Name": "winget",
-				"Type": "Microsoft.PreIndexed.Package"
-			}
-		},
-		{
-			"Packages": [
-				{ "PackageIdentifier": "XP9KHM4BK9FZ7Q" }
-			],
-			"SourceDetails": {
-				"Argument": "https://storeedgefd.dsx.mp.microsoft.com/v9.0",
-				"Identifier": "StoreEdgeFD",
-				"Name": "msstore",
-				"Type": "Microsoft.Rest"
-			}
-		}
-	]
+  "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
+  "Sources": [
+    {
+      "Packages": [
+        { "PackageIdentifier": "Canonical.Ubuntu.2604" },
+        { "PackageIdentifier": "Docker.DockerDesktop" },
+        { "PackageIdentifier": "Microsoft.WindowsTerminal" },
+        { "PackageIdentifier": "Microsoft.WSL" },
+        { "PackageIdentifier": "Tailscale.Tailscale" }
+      ],
+      "SourceDetails": {
+        "Argument": "https://cdn.winget.microsoft.com/cache",
+        "Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
+        "Name": "winget",
+        "Type": "Microsoft.PreIndexed.Package"
+      }
+    },
+    {
+      "Packages": [{ "PackageIdentifier": "XP9KHM4BK9FZ7Q" }],
+      "SourceDetails": {
+        "Argument": "https://storeedgefd.dsx.mp.microsoft.com/v9.0",
+        "Identifier": "StoreEdgeFD",
+        "Name": "msstore",
+        "Type": "Microsoft.Rest"
+      }
+    }
+  ]
 }

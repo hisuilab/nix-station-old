@@ -55,10 +55,12 @@
             map (h: h.meta.system) (builtins.attrValues homeManagerHosts)
           );
         in
-        builtins.listToAttrs (map (system: {
-          name = system;
-          value = lib.filterAttrs (_: h: h.meta.system == system) homeManagerHosts;
-        }) systems);
+        builtins.listToAttrs (map
+          (system: {
+            name = system;
+            value = lib.filterAttrs (_: h: h.meta.system == system) homeManagerHosts;
+          })
+          systems);
 
       # hostが指定したユーザープロファイルを取得
       loadUserProfile = hostConfig:
@@ -176,7 +178,12 @@
       # リポジトリ開発用shell
       devShells.${checkSystem}.default =
         nixpkgs.legacyPackages.${checkSystem}.mkShell {
-          packages = [ ];
+          packages = [
+            nixpkgs.legacyPackages.${checkSystem}.pre-commit
+          ];
+          shellHook = ''
+            pre-commit install --install-hooks
+          '';
         };
 
       # platformごとのflake出力
@@ -218,12 +225,14 @@
           darwinHomebrewEval = darwinTests.homebrewSystem;
 
           # 登録済みmacOS hostのシステム評価 (userProfile はテスト用モックで代替、host追加時に自動展開)
-        } // builtins.mapAttrs (hostId: hostConfig:
-          (mkDarwinConfiguration {
-            inherit hostConfig hostId;
-            userProfile = testUserProfile;
-          }).system
-        ) darwinHosts // {
+        } // builtins.mapAttrs
+          (hostId: hostConfig:
+            (mkDarwinConfiguration {
+              inherit hostConfig hostId;
+              userProfile = testUserProfile;
+            }).system
+          )
+          darwinHosts // {
 
           # host schema、Home Manager、user-profileの単体テスト
           tests =
@@ -240,10 +249,14 @@
         };
 
         # 登録済みLinux hostの構成評価 (userProfile はテスト用モックで代替、host追加時に自動展開)
-      } // builtins.mapAttrs (system: hosts:
-        builtins.mapAttrs (hostId: hostConfig:
-          (mkHomeConfiguration { inherit hostConfig hostId; userProfile = testUserProfile; }).activationPackage
-        ) hosts
-      ) homeManagerHostsBySystem;
+      } // builtins.mapAttrs
+        (system: hosts:
+          builtins.mapAttrs
+            (hostId: hostConfig:
+              (mkHomeConfiguration { inherit hostConfig hostId; userProfile = testUserProfile; }).activationPackage
+            )
+            hosts
+        )
+        homeManagerHostsBySystem;
     };
 }

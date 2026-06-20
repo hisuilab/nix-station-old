@@ -14,7 +14,6 @@ AGENTS.md             ← 汎用エージェント向け薄い入口
 CLAUDE.md             ← Claude Code 向け薄い入口（@AGENTS.md + スラッシュコマンド）
 .claude/              ← Claude adapter（settings / hooks / skills wrapper）
 .agents/              ← Codex / 汎用エージェント adapter
-.codex/               ← Codex 固有設定
 ```
 
 **原則**: ルールを書く場所は `docs/ai/` だけ。`.claude/` や `.agents/` はそこを読む入口にすぎない。
@@ -63,12 +62,12 @@ git log --oneline -10
 
 ### スキル（呼ばれたときだけロード）
 
-| スキル | 呼び方 | 内容 |
-|---|---|---|
-| `plan-first` | `/plan-first` | 実装前に計画を立てる。ファイルは編集しない |
-| `safe-implement` | `/safe-implement` | 計画に基づいて安全に実装する |
-| `risk-check` | `/risk-check` | 変更のリスクを評価し保護パスをチェックする |
-| `pr-review` | `/pr-review` | PR をレビューして問題点を報告する |
+| スキル           | 呼び方            | 内容                                       |
+| ---------------- | ----------------- | ------------------------------------------ |
+| `plan-first`     | `/plan-first`     | 実装前に計画を立てる。ファイルは編集しない |
+| `safe-implement` | `/safe-implement` | 計画に基づいて安全に実装する               |
+| `risk-check`     | `/risk-check`     | 変更のリスクを評価し保護パスをチェックする |
+| `pr-review`      | `/pr-review`      | PR をレビューして問題点を報告する          |
 
 スキルの本体: `docs/ai/skills/<name>.md`
 Claude adapter: `.claude/skills/<name>/SKILL.md`（thin wrapper）
@@ -76,14 +75,14 @@ Codex adapter: `.agents/skills/<name>/SKILL.md`（thin wrapper）
 
 ### ワークフローコマンド（Claude Code 専用）
 
-| コマンド | 役割 |
-|---|---|
-| `/issue` | issue 作成・ブランチ作成 |
-| `/review` | レビューファイル＋意思決定テンプレート作成 |
-| `/decide` | 意思決定収集・記入 |
-| `/implement` | 意思決定に基づく実装 |
-| `/stage` | テーマ別ステージング（git add まで） |
-| `/commit` | ステージ内容確認 → コミット名案提示 → git commit |
+| コマンド     | 役割                                             |
+| ------------ | ------------------------------------------------ |
+| `/issue`     | issue 作成・ブランチ作成                         |
+| `/review`    | レビューファイル＋意思決定テンプレート作成       |
+| `/decide`    | 意思決定収集・記入                               |
+| `/implement` | 意思決定に基づく実装                             |
+| `/stage`     | テーマ別ステージング（git add まで）             |
+| `/commit`    | ステージ内容確認 → コミット名案提示 → git commit |
 
 ---
 
@@ -91,11 +90,11 @@ Codex adapter: `.agents/skills/<name>/SKILL.md`（thin wrapper）
 
 ### リスク分類（`docs/ai/risk_policy.md` が唯一の定義）
 
-| レベル | 対応 | 典型例 |
-|---|---|---|
-| **High** | ユーザーの明示的な承認が必要 | `flake.nix` 変更 / CI ワークフロー変更 / 保護パスへの変更 |
-| **Medium** | 変更内容をユーザーへ提示して確認 | ホスト設定変更 / パッケージ追加 |
-| **Low** | 通常の実装として進めてよい | ドキュメント / テスト / ユーザー環境モジュール |
+| レベル     | 対応                             | 典型例                                                    |
+| ---------- | -------------------------------- | --------------------------------------------------------- |
+| **High**   | ユーザーの明示的な承認が必要     | `flake.nix` 変更 / CI ワークフロー変更 / 保護パスへの変更 |
+| **Medium** | 変更内容をユーザーへ提示して確認 | ホスト設定変更 / パッケージ追加                           |
+| **Low**    | 通常の実装として進めてよい       | ドキュメント / テスト / ユーザー環境モジュール            |
 
 ### 保護パス（`docs/ai/protected_paths.txt` が唯一の定義）
 
@@ -120,7 +119,7 @@ bash scripts/ai/secret-scan.sh      # 秘密情報のパターンを検出
 bash scripts/ai/hidden-content-scan.sh  # 隠しファイル・バイナリを検出
 ```
 
-hooks（`.claude/hooks/policy-gate.sh` / `.codex/hooks/policy-gate.py`）は `risk-check` と `secret-scan` を自動実行する。
+hooks（`.claude/hooks/policy-gate.sh`）は `risk-check` と `secret-scan` を自動実行する。
 
 ---
 
@@ -141,30 +140,30 @@ bash scripts/ai/sync-agent-adapters.sh
 
 ### ポリシー・ルールを変更する
 
-| 変更したい内容 | 編集するファイル |
-|---|---|
-| 開発ワークフロー・git ルール・命名規則 | `docs/ai/policy.md` |
-| リスク分類基準 | `docs/ai/risk_policy.md` |
-| レビュー観点 | `docs/ai/review_checklist.md` |
-| 保護パスの追加・削除 | `docs/ai/protected_paths.txt` |
-| 検証コマンドの変更 | `scripts/ai/verify.sh` |
+| 変更したい内容                         | 編集するファイル              |
+| -------------------------------------- | ----------------------------- |
+| 開発ワークフロー・git ルール・命名規則 | `docs/ai/policy.md`           |
+| リスク分類基準                         | `docs/ai/risk_policy.md`      |
+| レビュー観点                           | `docs/ai/review_checklist.md` |
+| 保護パスの追加・削除                   | `docs/ai/protected_paths.txt` |
+| 検証コマンドの変更                     | `scripts/ai/verify.sh`        |
 
 **`.claude/` や `.agents/` 側は編集しない。** そちらは `docs/ai/` を読む入口にすぎない。
 
 ### 二重管理してよいもの・してはいけないもの
 
-| 二重管理 OK | 理由 |
-|---|---|
-| `.claude/settings.json` / `.codex/config.toml` | 各ツール固有の仕様 |
+| 二重管理 OK                                               | 理由                               |
+| --------------------------------------------------------- | ---------------------------------- |
+| `.claude/settings.json`                                   | Claude Code 固有の仕様             |
 | `.claude/skills/*/SKILL.md` / `.agents/skills/*/SKILL.md` | ツール discovery 用の thin wrapper |
 
-| 二重管理 NG | 理由 |
-|---|---|
-| 保護パスの定義 | ずれると危険 |
-| リスク分類基準 | 承認基準が割れる |
-| レビューチェックリスト | AI と人間の観点がずれる |
-| verification コマンド | 「片方では通った」が発生する |
-| 秘密情報スキャンパターン | 検知漏れが発生する |
+| 二重管理 NG              | 理由                         |
+| ------------------------ | ---------------------------- |
+| 保護パスの定義           | ずれると危険                 |
+| リスク分類基準           | 承認基準が割れる             |
+| レビューチェックリスト   | AI と人間の観点がずれる      |
+| verification コマンド    | 「片方では通った」が発生する |
+| 秘密情報スキャンパターン | 検知漏れが発生する           |
 
 ---
 

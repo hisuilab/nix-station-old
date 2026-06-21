@@ -3,33 +3,33 @@
 let
   lib = pkgs.lib;
 
-  appearanceModule = import ../../../modules/system/darwin/features/appearance/default.nix {
+  appearanceModule = import ../../../../../modules/system/darwin/features/appearance/default.nix {
     userProfile.username = "test";
   };
-  laptopDockModule = import ../../../modules/system/darwin/features/dock/default.nix {
+  laptopDockModule = import ../../../../../modules/system/darwin/features/dock/default.nix {
     hostConfig.darwin.dock = { autohide = true; orientation = "bottom"; };
     inherit lib pkgs;
     userProfile.username = "test";
   };
-  desktopDockModule = import ../../../modules/system/darwin/features/dock/default.nix {
+  desktopDockModule = import ../../../../../modules/system/darwin/features/dock/default.nix {
     hostConfig.darwin.dock = { autohide = false; orientation = "left"; };
     inherit lib pkgs;
     userProfile.username = "test";
   };
-  finderModule = import ../../../modules/system/darwin/features/finder/default.nix {
+  finderModule = import ../../../../../modules/system/darwin/features/finder/default.nix {
     inherit pkgs;
     userProfile.username = "test";
   };
-  inputModule = import ../../../modules/system/darwin/features/input/default.nix { };
-  desktopPowerModule = import ../../../modules/system/darwin/features/power/default.nix {
+  inputModule = import ../../../../../modules/system/darwin/features/input/default.nix { };
+  desktopPowerModule = import ../../../../../modules/system/darwin/features/power/default.nix {
     hostConfig.darwin.power.sleep = "never";
   };
-  laptopPowerModule = import ../../../modules/system/darwin/features/power/default.nix {
+  laptopPowerModule = import ../../../../../modules/system/darwin/features/power/default.nix {
     hostConfig.darwin.power.sleep = 10;
   };
 
   selectedModules = features:
-    (import ../../../modules/system/darwin/features/default.nix {
+    (import ../../../../../modules/system/darwin/features/default.nix {
       hostConfig.darwin = { inherit features; };
       inherit lib;
     }).imports;
@@ -37,14 +37,14 @@ in
 lib.runTests {
   testFinderFeatureSelectsFinderModule = {
     expr = builtins.elem
-      ../../../modules/system/darwin/features/finder/default.nix
+      ../../../../../modules/system/darwin/features/finder/default.nix
       (selectedModules { finder = true; });
     expected = true;
   };
 
   testDisabledFeatureIsNotSelected = {
     expr = builtins.elem
-      ../../../modules/system/darwin/features/dock/default.nix
+      ../../../../../modules/system/darwin/features/dock/default.nix
       (selectedModules { dock = false; });
     expected = false;
   };
@@ -204,7 +204,7 @@ lib.runTests {
 
   testPowerFeatureSelectsPowerModule = {
     expr = builtins.elem
-      ../../../modules/system/darwin/features/power/default.nix
+      ../../../../../modules/system/darwin/features/power/default.nix
       (selectedModules { power = true; });
     expected = true;
   };

@@ -2,7 +2,7 @@
 
 let
   lib = pkgs.lib;
-  userProfiles = import ../../user-profiles { };
+  userProfiles = import ../../../user-profiles { };
   fixtures = ./fixtures;
 
   load = name:
@@ -54,7 +54,7 @@ lib.runTests {
   testMissingProfileGuidesToInstallScript = {
     expr = lib.hasInfix
       "setup.sh"
-      (builtins.readFile ../../user-profiles/default.nix);
+      (builtins.readFile ../../../user-profiles/default.nix);
     expected = true;
   };
 

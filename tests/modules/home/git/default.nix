@@ -9,7 +9,7 @@ let
       userEmail = "test@example.com";
     };
   };
-  module = import ../../../modules/home/git/default.nix {
+  module = import ../../../../modules/home/git/default.nix {
     inherit userProfile;
   };
   homeManager = {
@@ -21,18 +21,18 @@ let
     environment = "native";
     role = "desktop";
   };
-  selectedModules = (import ../../../modules/home/default.nix {
+  selectedModules = (import ../../../../modules/home/default.nix {
     inherit homeManager hostConfig lib;
   }).imports;
 in
 lib.runTests {
   testGitFlagSelectsModule = {
-    expr = builtins.elem ../../../modules/home/git/default.nix selectedModules;
+    expr = builtins.elem ../../../../modules/home/git/default.nix selectedModules;
     expected = true;
   };
 
   testDisabledZshIsNotSelected = {
-    expr = builtins.elem ../../../modules/home/zsh/default.nix selectedModules;
+    expr = builtins.elem ../../../../modules/home/zsh/default.nix selectedModules;
     expected = false;
   };
 

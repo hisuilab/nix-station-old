@@ -144,7 +144,7 @@
       checkSystem = "aarch64-darwin";
 
       # darwin統合テストは一度だけ import して各出力を参照する
-      darwinTests = import ./tests/darwin/integration.nix {
+      darwinTests = import ./tests/integration/darwin.nix {
         inherit lib mkDarwinConfiguration;
         userProfile = testUserProfile;
       };
@@ -171,7 +171,7 @@
         ${checkSystem} = {
           # Home Managerモジュール単体の統合評価（基本ツール）
           homeModulesEval =
-            (import ./tests/home/integration.nix {
+            (import ./tests/integration/home.nix {
               inherit home-manager nixpkgs;
               nixpkgsUnstable = nixpkgs-unstable;
               system = checkSystem;
@@ -179,7 +179,7 @@
 
           # Home Managerモジュール統合評価（managed tools: ghostty / p10k / zed）
           homeAppConfigsEval =
-            (import ./tests/home/integration.nix {
+            (import ./tests/integration/home.nix {
               inherit home-manager nixpkgs;
               nixpkgsUnstable = nixpkgs-unstable;
               system = checkSystem;

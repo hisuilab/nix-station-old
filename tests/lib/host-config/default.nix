@@ -2,7 +2,7 @@
 
 let
   lib = pkgs.lib;
-  hostConfigLib = import ../../lib/host-config.nix { };
+  hostConfigLib = import ../../../lib/host-config.nix { };
 
   validConfig = {
     meta = {
@@ -60,14 +60,14 @@ lib.runTests {
       homeManager = {
         p10k = {
           enable = true;
-          configFile = ../../modules/home/p10k/p10k.zsh;
+          configFile = ../../../modules/home/p10k/p10k.zsh;
         };
         zsh = true;
       };
     })).homeManager.p10k;
     expected = {
       enable = true;
-      configFile = ../../modules/home/p10k/p10k.zsh;
+      configFile = ../../../modules/home/p10k/p10k.zsh;
     };
   };
 
@@ -83,7 +83,7 @@ lib.runTests {
       homeManager = {
         p10k = {
           enable = true;
-          configFile = ../../modules/home/p10k/p10k.zsh;
+          configFile = ../../../modules/home/p10k/p10k.zsh;
         };
         zsh = false;
       };

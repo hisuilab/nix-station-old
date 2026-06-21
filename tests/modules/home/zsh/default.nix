@@ -2,7 +2,7 @@
 
 let
   lib = pkgs.lib;
-  module = import ../../../modules/home/zsh/default.nix {
+  module = import ../../../../modules/home/zsh/default.nix {
     config.xdg.dataHome = "/Users/test/.local/share";
   };
   homeManager = {
@@ -15,18 +15,18 @@ let
     environment = "native";
     role = "desktop";
   };
-  selectedModules = (import ../../../modules/home/default.nix {
+  selectedModules = (import ../../../../modules/home/default.nix {
     inherit homeManager hostConfig lib;
   }).imports;
 in
 lib.runTests {
   testZshFlagSelectsModule = {
-    expr = builtins.elem ../../../modules/home/zsh/default.nix selectedModules;
+    expr = builtins.elem ../../../../modules/home/zsh/default.nix selectedModules;
     expected = true;
   };
 
   testDisabledGitIsNotSelected = {
-    expr = builtins.elem ../../../modules/home/git/default.nix selectedModules;
+    expr = builtins.elem ../../../../modules/home/git/default.nix selectedModules;
     expected = false;
   };
 

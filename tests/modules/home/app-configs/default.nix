@@ -5,15 +5,15 @@ let
   homeManager = {
     ghostty = {
       enable = true;
-      configFile = ../../../modules/home/ghostty/config;
+      configFile = ../../../../modules/home/ghostty/config;
     };
     p10k = {
       enable = true;
-      configFile = ../../../modules/home/p10k/p10k.zsh;
+      configFile = ../../../../modules/home/p10k/p10k.zsh;
     };
     zed = {
       enable = true;
-      configFile = ../../../modules/home/zed/settings.json;
+      configFile = ../../../../modules/home/zed/settings.json;
     };
     zsh = true;
   };
@@ -22,17 +22,17 @@ let
     environment = "native";
     role = "laptop";
   };
-  selectedModules = (import ../../../modules/home/default.nix {
+  selectedModules = (import ../../../../modules/home/default.nix {
     inherit homeManager hostConfig lib;
   }).imports;
-  ghosttyModule = import ../../../modules/home/ghostty/default.nix {
+  ghosttyModule = import ../../../../modules/home/ghostty/default.nix {
     inherit homeManager lib;
   };
-  p10kModule = import ../../../modules/home/p10k/default.nix {
+  p10kModule = import ../../../../modules/home/p10k/default.nix {
     config.home.homeDirectory = "/Users/test";
     inherit homeManager lib pkgs;
   };
-  p10kDisabledModule = import ../../../modules/home/p10k/default.nix {
+  p10kDisabledModule = import ../../../../modules/home/p10k/default.nix {
     config.home.homeDirectory = "/Users/test";
     inherit lib pkgs;
     homeManager.p10k = {
@@ -40,7 +40,7 @@ let
       configFile = null;
     };
   };
-  zedModule = import ../../../modules/home/zed/default.nix {
+  zedModule = import ../../../../modules/home/zed/default.nix {
     inherit homeManager lib;
   };
 in
@@ -49,16 +49,16 @@ lib.runTests {
     expr = map
       (module: builtins.elem module selectedModules)
       [
-        ../../../modules/home/ghostty/default.nix
-        ../../../modules/home/p10k/default.nix
-        ../../../modules/home/zed/default.nix
+        ../../../../modules/home/ghostty/default.nix
+        ../../../../modules/home/p10k/default.nix
+        ../../../../modules/home/zed/default.nix
       ];
     expected = [ true true true ];
   };
 
   testGhosttyConfigHasManagedSource = {
     expr = ghosttyModule.xdg.configFile."ghostty/config".source;
-    expected = ../../../modules/home/ghostty/config;
+    expected = ../../../../modules/home/ghostty/config;
   };
 
   testP10kConfigHasManagedSource = {
@@ -75,7 +75,7 @@ lib.runTests {
     expected = {
       init = true;
       package = [ "powerlevel10k" ];
-      source = ../../../modules/home/p10k/p10k.zsh;
+      source = ../../../../modules/home/p10k/p10k.zsh;
       theme = true;
     };
   };
@@ -101,7 +101,7 @@ lib.runTests {
 
   testZedConfigHasManagedSource = {
     expr = zedModule.xdg.configFile."zed/settings.json".source;
-    expected = ../../../modules/home/zed/settings.json;
+    expected = ../../../../modules/home/zed/settings.json;
   };
 
 }

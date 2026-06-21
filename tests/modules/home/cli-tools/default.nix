@@ -2,7 +2,7 @@
 
 let
   lib = pkgs.lib;
-  module = import ../../../modules/home/cli-tools/default.nix {
+  module = import ../../../../modules/home/cli-tools/default.nix {
     inherit nixpkgsUnstable pkgs;
   };
   homeManager = {
@@ -14,14 +14,14 @@ let
     environment = "native";
     role = "desktop";
   };
-  selectedModules = (import ../../../modules/home/default.nix {
+  selectedModules = (import ../../../../modules/home/default.nix {
     inherit homeManager hostConfig lib;
   }).imports;
 in
 lib.runTests {
   testCliToolsFlagSelectsModule = {
     expr = builtins.elem
-      ../../../modules/home/cli-tools/default.nix
+      ../../../../modules/home/cli-tools/default.nix
       selectedModules;
     expected = true;
   };

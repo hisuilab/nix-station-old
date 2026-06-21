@@ -7,12 +7,12 @@ let
     userProfile.username = "test";
   };
   laptopDockModule = import ../../../modules/system/darwin/features/dock/default.nix {
-    hostConfig.meta.role = "laptop";
+    hostConfig.darwin.dock = { autohide = true; orientation = "bottom"; };
     inherit lib pkgs;
     userProfile.username = "test";
   };
   desktopDockModule = import ../../../modules/system/darwin/features/dock/default.nix {
-    hostConfig.meta.role = "desktop";
+    hostConfig.darwin.dock = { autohide = false; orientation = "left"; };
     inherit lib pkgs;
     userProfile.username = "test";
   };
@@ -22,10 +22,10 @@ let
   };
   inputModule = import ../../../modules/system/darwin/features/input/default.nix { };
   desktopPowerModule = import ../../../modules/system/darwin/features/power/default.nix {
-    hostConfig.meta.role = "desktop";
+    hostConfig.darwin.power.sleep = "never";
   };
   laptopPowerModule = import ../../../modules/system/darwin/features/power/default.nix {
-    hostConfig.meta.role = "laptop";
+    hostConfig.darwin.power.sleep = 10;
   };
 
   selectedModules = features:

@@ -18,12 +18,9 @@ let
 in
 {
   system.defaults.dock = {
-    autohide = hostConfig.meta.role == "laptop";
+    autohide = hostConfig.darwin.dock.autohide or false;
     mru-spaces = false;
-    orientation =
-      if hostConfig.meta.role == "laptop"
-      then "bottom"
-      else "left";
+    orientation = hostConfig.darwin.dock.orientation or "left";
     show-recents = false;
     tilesize = 48;
   };

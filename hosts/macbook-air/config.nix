@@ -5,7 +5,6 @@
     builder = "nix-darwin";
     os = "macos";
     environment = "native";
-    role = "laptop";
   };
 
   userProfile.name = "guest";
@@ -34,6 +33,11 @@
     dock = true;
     finder = true;
     input = true;
+  };
+
+  darwin.dock = {
+    autohide = true;
+    orientation = "bottom";
   };
 
   # GUI アプリ・App Store アプリは hosts/macbook-air/Brewfile で管理する。

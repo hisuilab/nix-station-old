@@ -32,12 +32,6 @@ let
     else
       throw "unsupported Home Manager environment: ${hostConfig.meta.environment}";
 
-  roleModule =
-    if builtins.hasAttr hostConfig.meta.role registry.roles then
-      registry.roles.${hostConfig.meta.role}.homeModule
-    else
-      throw "unsupported Home Manager host role: ${hostConfig.meta.role}";
-
   enabledToolModules = builtins.concatMap
     (name:
       let
@@ -53,16 +47,9 @@ in
 {
   imports =
     if unknownTools == [ ] then
-      [ platformModule environmentModule roleModule ] ++ enabledToolModules
+      [ platformModule environmentModule ] ++ enabledToolModules
     else
       throw "unsupported Home Manager tools: ${builtins.concatStringsSep ", " unknownTools}";
-
-  options.nixStation.homeRole = lib.mkOption {
-    type = lib.types.enum (builtins.attrNames registry.roles);
-    readOnly = true;
-    internal = true;
-    description = "Selected Home Manager host role";
-  };
 
   config = {
     home.stateVersion = "24.11";

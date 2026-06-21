@@ -10,7 +10,6 @@ let
       builder = "nix-darwin";
       os = "macos";
       environment = "native";
-      role = "desktop";
     };
     userProfile.name = "guest";
     homeManager = {
@@ -157,7 +156,6 @@ lib.runTests {
         builder = "home-manager";
         os = "ubuntu";
         environment = "native";
-        role = "server";
       };
       darwin.homebrew.enable = true;
     });
@@ -179,15 +177,6 @@ lib.runTests {
       meta.hostname = "HisuiLab-Mac-mini";
     })).meta.hostname;
     expected = "HisuiLab-Mac-mini";
-  };
-
-  testMissingRoleIsRejected = {
-    expr = canValidate "mac-mini" (
-      validConfig // {
-        meta = builtins.removeAttrs validConfig.meta [ "role" ];
-      }
-    );
-    expected = false;
   };
 
   testInvalidBuilderIsRejected = {
@@ -243,13 +232,6 @@ lib.runTests {
     expected = false;
   };
 
-  testInvalidRoleIsRejected = {
-    expr = canValidate "mac-mini" (lib.recursiveUpdate validConfig {
-      meta.role = "workstation";
-    });
-    expected = false;
-  };
-
   testHomeManagerPlatformRequiresLinux = {
     expr = canValidate "ubuntu-desktop" (lib.recursiveUpdate validConfig {
       meta.builder = "home-manager";
@@ -264,7 +246,6 @@ lib.runTests {
         builder = "home-manager";
         os = "ubuntu";
         environment = "native";
-        role = "server";
       };
     });
     expected = true;
@@ -277,7 +258,6 @@ lib.runTests {
         builder = "home-manager";
         os = "ubuntu";
         environment = "wsl";
-        role = "desktop";
       };
     });
     expected = true;
@@ -290,7 +270,6 @@ lib.runTests {
         builder = "home-manager";
         os = "raspberry-pi-os";
         environment = "wsl";
-        role = "server";
       };
     });
     expected = false;

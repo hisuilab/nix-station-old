@@ -33,7 +33,6 @@ eval_check "checks.aarch64-darwin.homeAppConfigsEval"
 eval_check "checks.aarch64-darwin.darwinEnabledEval"
 eval_check "checks.aarch64-darwin.darwinDisabledEval"
 eval_check "checks.aarch64-darwin.darwinRoutingEval"
-eval_check "checks.aarch64-darwin.darwinRoleRoutingEval"
 eval_check "checks.aarch64-darwin.darwinHomebrewEval"
 
 echo "=== checks.aarch64-linux ==="

@@ -1,3 +1,0 @@
-{
-  nixStation.homeRole = "laptop";
-}

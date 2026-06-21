@@ -218,9 +218,6 @@
           # Git・Zshフラグによるモジュール分流
           darwinRoutingEval = darwinTests.routingSystem;
 
-          # desktop・laptop・serverによるrole分流
-          darwinRoleRoutingEval = darwinTests.roleRoutingSystem;
-
           # Homebrew設定の統合評価
           darwinHomebrewEval = darwinTests.homebrewSystem;
 

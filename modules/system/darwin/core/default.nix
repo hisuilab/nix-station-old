@@ -39,6 +39,8 @@
     echo ""
   '';
 
+  networking.hostName = hostConfig.meta.hostname;
+
   # Determinate Systems インストーラーと競合するため nix-darwin の Nix 管理を無効化する
   nix.enable = false;
 

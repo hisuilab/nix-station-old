@@ -5,7 +5,6 @@
     builder = "nix-darwin";
     os = "macos";
     environment = "native";
-    role = "desktop";
   };
 
   userProfile.name = "guest";
@@ -44,6 +43,13 @@
     input = true;
     power = true;
   };
+
+  darwin.dock = {
+    autohide = false;
+    orientation = "left";
+  };
+
+  darwin.power.sleep = "never";
 
   # GUI アプリ・App Store アプリは hosts/mac-mini/Brewfile で管理する。
   # install = true: nix-homebrew が Homebrew バイナリを自動インストールする

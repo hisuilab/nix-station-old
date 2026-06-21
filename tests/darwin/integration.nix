@@ -9,7 +9,7 @@ let
   system = "aarch64-darwin";
 
   # extraConfig を validation 前にマージすることで darwin.homebrew などを検証に通す
-  makeHostConfigWith = hostId: role: homeManager: extraConfig:
+  makeHostConfigWith = hostId: homeManager: extraConfig:
     hostConfigLib.validateHostConfig {
       inherit hostId;
       config = {
@@ -19,19 +19,18 @@ let
           builder = "nix-darwin";
           os = "macos";
           environment = "native";
-          inherit role;
         };
         userProfile.name = "test";
         inherit homeManager;
       } // extraConfig;
     };
 
-  makeHostConfig = hostId: role: homeManager:
-    makeHostConfigWith hostId role homeManager { };
+  makeHostConfig = hostId: homeManager:
+    makeHostConfigWith hostId homeManager { };
 
   enabled = mkDarwinConfiguration {
     hostId = "darwin-enabled-test";
-    hostConfig = makeHostConfig "macos-enabled-test" "server" {
+    hostConfig = makeHostConfig "macos-enabled-test" {
       git = true;
       zsh = true;
     };
@@ -40,7 +39,7 @@ let
 
   disabled = mkDarwinConfiguration {
     hostId = "darwin-disabled-test";
-    hostConfig = makeHostConfig "macos-disabled-test" "server" {
+    hostConfig = makeHostConfig "macos-disabled-test" {
       git = false;
       zsh = false;
     };
@@ -49,7 +48,7 @@ let
 
   gitOnly = mkDarwinConfiguration {
     hostId = "darwin-git-test";
-    hostConfig = makeHostConfig "macos-git-test" "server" {
+    hostConfig = makeHostConfig "macos-git-test" {
       git = true;
       zsh = false;
     };
@@ -58,34 +57,16 @@ let
 
   zshOnly = mkDarwinConfiguration {
     hostId = "darwin-zsh-test";
-    hostConfig = makeHostConfig "macos-zsh-test" "server" {
+    hostConfig = makeHostConfig "macos-zsh-test" {
       git = false;
       zsh = true;
     };
     inherit userProfile;
   };
 
-  laptop = mkDarwinConfiguration {
-    hostId = "darwin-laptop-test";
-    hostConfig = makeHostConfig "macos-laptop-test" "laptop" {
-      git = false;
-      zsh = false;
-    };
-    inherit userProfile;
-  };
-
-  desktop = mkDarwinConfiguration {
-    hostId = "darwin-desktop-test";
-    hostConfig = makeHostConfig "macos-desktop-test" "desktop" {
-      git = false;
-      zsh = false;
-    };
-    inherit userProfile;
-  };
-
   homebrewEnabled = mkDarwinConfiguration {
     hostId = "darwin-homebrew-test";
-    hostConfig = makeHostConfigWith "macos-homebrew-test" "desktop"
+    hostConfig = makeHostConfigWith "macos-homebrew-test"
       {
         git = false;
         zsh = false;
@@ -98,7 +79,7 @@ let
 
   existingHomebrew = mkDarwinConfiguration {
     hostId = "darwin-existing-homebrew-test";
-    hostConfig = makeHostConfigWith "macos-existing-homebrew-test" "laptop"
+    hostConfig = makeHostConfigWith "macos-existing-homebrew-test"
       {
         git = false;
         zsh = false;
@@ -142,7 +123,6 @@ in
       disabledHome = disabled.config.home-manager.users.${username};
       _ = assertAll "disabledSystem" {
         testHasUser = { expr = builtins.hasAttr username disabled.config.home-manager.users; expected = true; };
-        testRole = { expr = disabledHome.nixStation.homeRole; expected = "server"; };
         testGitOff = { expr = disabledHome.programs.git.enable; expected = false; };
         testZshOff = { expr = disabledHome.programs.zsh.enable; expected = false; };
         testSystemZsh = { expr = disabled.config.programs.zsh.enable; expected = true; };
@@ -165,16 +145,6 @@ in
       };
     in
     gitOnly.system;
-
-  roleRoutingSystem =
-    let
-      _ = assertAll "roleRoutingSystem" {
-        testServerRole = { expr = enabled.config.nixStation.hostRole; expected = "server"; };
-        testLaptopRole = { expr = laptop.config.nixStation.hostRole; expected = "laptop"; };
-        testDesktopRole = { expr = desktop.config.nixStation.hostRole; expected = "desktop"; };
-      };
-    in
-    desktop.system;
 
   homebrewSystem =
     let

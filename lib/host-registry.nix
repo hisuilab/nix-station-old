@@ -43,19 +43,4 @@
     native.homeModule = ../modules/home/environments/native/default.nix;
     wsl.homeModule = ../modules/home/environments/wsl/default.nix;
   };
-
-  roles = {
-    desktop = {
-      homeModule = ../modules/home/roles/desktop.nix;
-      darwinModule = ../modules/system/darwin/roles/desktop.nix;
-    };
-    laptop = {
-      homeModule = ../modules/home/roles/laptop.nix;
-      darwinModule = ../modules/system/darwin/roles/laptop.nix;
-    };
-    server = {
-      homeModule = ../modules/home/roles/server.nix;
-      darwinModule = ../modules/system/darwin/roles/server.nix;
-    };
-  };
 }

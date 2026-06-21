@@ -5,7 +5,6 @@
     builder = "home-manager";
     os = "ubuntu";
     environment = "native";
-    role = "server";
   };
 
   userProfile.name = "guest";

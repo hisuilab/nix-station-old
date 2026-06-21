@@ -1,0 +1,110 @@
+schema_version = "1"
+
+# ブラウザ・クラウド
+[apps.chrome]
+install    = "homebrew-cask"
+package    = "google-chrome"
+macos_path = "/Applications/Google Chrome.app"
+
+[apps.google-drive]
+install    = "homebrew-cask"
+package    = "google-drive"
+macos_path = "/Applications/Google Drive.app"
+
+# ネットワーク・リモートアクセス
+[apps.tailscale]
+install    = "homebrew-cask"
+package    = "tailscale-app"
+macos_path = "/Applications/Tailscale.app"
+
+[apps.windows-app]
+install    = "homebrew-cask"
+package    = "windows-app"
+macos_path = "/Applications/Windows App.app"
+
+# 開発エディタ・ターミナル
+[apps.ghostty]
+install    = "homebrew-cask"
+package    = "ghostty"
+macos_path = "/Applications/Ghostty.app"
+
+[apps.zed]
+install    = "homebrew-cask"
+package    = "zed"
+macos_path = "/Applications/Zed.app"
+
+[apps.vscode]
+install    = "homebrew-cask"
+package    = "visual-studio-code"
+macos_path = "/Applications/Visual Studio Code.app"
+
+[apps.codex]
+install    = "homebrew-cask"
+package    = "codex-app"
+macos_path = "/Applications/Codex.app"
+
+# コンテナ
+[apps.docker]
+install    = "homebrew-cask"
+package    = "docker-desktop"
+macos_path = "/Applications/Docker.app"
+
+# 入力デバイス
+[apps.karabiner]
+install    = "homebrew-cask"
+package    = "karabiner-elements"
+macos_path = "/Applications/Karabiner-Elements.app"
+
+[apps.logi-options]
+install    = "homebrew-cask"
+package    = "logi-options+"
+macos_path = "/Applications/logioptionsplus.app"
+
+# コミュニケーション
+[apps.slack]
+install    = "homebrew-cask"
+package    = "slack"
+macos_path = "/Applications/Slack.app"
+
+[apps.discord]
+install    = "homebrew-cask"
+package    = "discord"
+macos_path = "/Applications/Discord.app"
+
+[apps.linear]
+install    = "homebrew-cask"
+package    = "linear"
+macos_path = "/Applications/Linear.app"
+
+[apps.zoom]
+install    = "homebrew-cask"
+package    = "zoom"
+macos_path = "/Applications/zoom.us.app"
+
+# クリエイティブ
+[apps.affinity]
+install    = "homebrew-cask"
+package    = "affinity"
+macos_path = "/Applications/Affinity.app"
+
+# ユーティリティ
+[apps.raycast]
+install    = "homebrew-cask"
+package    = "raycast"
+macos_path = "/Applications/Raycast.app"
+
+[apps.keycastr]
+install    = "homebrew-cask"
+package    = "keycastr"
+macos_path = "/Applications/KeyCastr.app"
+
+# フォント
+[apps.font-meslo]
+install = "homebrew-cask"
+package = "font-meslo-lg-nerd-font"
+
+# App Store アプリ（全ホスト共通）
+[apps.runcat]
+install = "mas"
+package = "RunCat"
+mas_id  = 1429033973

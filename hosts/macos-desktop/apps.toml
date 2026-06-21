@@ -1,0 +1,41 @@
+schema_version = "1"
+
+# AI・メディア制作（デスクトップ専用）
+[apps.ollama]
+install    = "homebrew-cask"
+package    = "ollama-app"
+macos_path = "/Applications/Ollama.app"
+
+[apps.blender]
+install    = "homebrew-cask"
+package    = "blender"
+macos_path = "/Applications/Blender.app"
+
+[apps.obs]
+install    = "homebrew-cask"
+package    = "obs"
+macos_path = "/Applications/OBS.app"
+
+[apps.elgato-stream-deck]
+install    = "homebrew-cask"
+package    = "elgato-stream-deck"
+macos_path = "/Applications/Elgato Stream Deck.app"
+
+[apps.davinci-resolve]
+install       = "manual"
+manual_steps  = [
+  "https://www.blackmagicdesign.com/products/davinciresolve から DaVinci Resolve をダウンロードしてインストールする",
+]
+
+# App Store アプリ（mac-mini 固有）
+[apps.xcode]
+install    = "mas"
+package    = "Xcode"
+mas_id     = 497799835
+macos_path = "/Applications/Xcode.app"
+
+[apps.garageband]
+install    = "mas"
+package    = "GarageBand"
+mas_id     = 682658836
+macos_path = "/Applications/GarageBand.app"

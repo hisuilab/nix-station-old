@@ -5,7 +5,6 @@
     builder = "home-manager";
     os = "ubuntu";
     environment = "wsl";
-    role = "desktop";
   };
 
   userProfile.name = "guest";

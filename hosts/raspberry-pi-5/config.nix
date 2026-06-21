@@ -5,7 +5,6 @@
     builder = "home-manager";
     os = "raspberry-pi-os";
     environment = "native";
-    role = "server";
   };
 
   userProfile.name = "guest";

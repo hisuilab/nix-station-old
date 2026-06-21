@@ -7,7 +7,7 @@
 
 | # | 優先度 | 判断 | 理由・備考 |
 |---|---|---|---|
-| 1 | 中 | このissueに含める: `install.sh` の「次のステップ」を brew 再実行のみに絞り、`docs/github-ssh.md` を新規作成して SSH 手順を切り出す。README から `docs/github-ssh.md` へのリンクを追加する | install.sh 完了後に必須なのは brew（mas アプリ対応）のみ。SSH は任意タイミングのため並列表示は混乱を招く |
+| 1 | 中 | このissueに含める: `install.sh` の「次のステップ」を brew 再実行のみに絞り、`docs/setup/github-ssh.md` を新規作成して SSH 手順を切り出す。README から `docs/setup/github-ssh.md` へのリンクを追加する | install.sh 完了後に必須なのは brew（mas アプリ対応）のみ。SSH は任意タイミングのため並列表示は混乱を招く |
 | 2 | 低 | ５の実装で解決させる | `darwin.homebrew.manageInstallation` を廃止 |
 | 3 | 中 | このissueに含める: `modules/system/darwin/features/input/default.nix` に `com.apple.inputmethod.Kotoeri.RomajiTyping` ドメインの `"JIMPrefLiveConversionKey" = false` を追加する | `NSAutomaticTextCompletionEnabled` はテキスト補完候補の設定であり、日本語 IME のライブ変換とは別のキー。正しいドメイン・キーに修正して実機再検証が必要 |
 | 4 | 中 | このissueに含める: `README.md` の Setup〜Apply Configuration セクションを `install.sh` を主経路として書き直す。手順は「① Nix インストール（Determinate Nix Installer）→ ② ターミナル再起動 → ③ リポジトリ取得 → ④ `bash install.sh <host-id>` 実行」の番号付きステップで記述する。手動コマンド（darwin-rebuild 直打ち等）は上級者向けとして折りたたみか別セクションに移動する。「Homebrew 本体も自動導入されます」の記述は `manageInstallation` の設定による旨に修正する | 実機テストで README → `install.sh` にたどり着けないことが判明した。README が旧手動方式のままでウィザードの存在が伝わらない。実際にユーザーが踏んだ手順をそのまま README に反映する |

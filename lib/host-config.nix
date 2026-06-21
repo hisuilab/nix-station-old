@@ -69,9 +69,6 @@ let
     else if !(config.meta ? environment)
       || !(builtins.hasAttr config.meta.environment registry.environments) then
       throw "host '${hostId}': unsupported meta.environment '${config.meta.environment or "<missing>"}'"
-    else if !(config.meta ? role)
-      || !(builtins.hasAttr config.meta.role registry.roles) then
-      throw "host '${hostId}': unsupported meta.role '${config.meta.role or "<missing>"}'"
     else if registry.operatingSystems.${config.meta.os}.builder != config.meta.builder then
       throw "host '${hostId}': meta.os '${config.meta.os}' requires meta.builder = '${registry.operatingSystems.${config.meta.os}.builder}'"
     else if !(builtins.elem config.meta.system registry.operatingSystems.${config.meta.os}.systems) then

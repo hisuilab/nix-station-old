@@ -62,12 +62,6 @@
           })
           systems);
 
-      # hostが指定したユーザープロファイルを取得
-      loadUserProfile = hostConfig:
-        userProfiles.loadUserProfile {
-          name = hostConfig.userProfile.name;
-        };
-
       # nix-darwinとHome Managerを統合したmacOS構成を生成
       # hostConfig は呼び出し元で validateHostConfig 済みであること
       mkDarwinConfiguration =
@@ -146,25 +140,11 @@
             ];
           };
 
-      # nix-darwin builderのhostをnix-darwin構成へ変換
-      mkDarwinHost = hostId: hostConfig:
-        mkDarwinConfiguration {
-          inherit hostConfig hostId;
-          userProfile = loadUserProfile hostConfig;
-        };
-
-      # home-manager builderのhostをstandalone構成へ変換
-      mkHomeHost = hostId: hostConfig:
-        mkHomeConfiguration {
-          inherit hostConfig hostId;
-          userProfile = loadUserProfile hostConfig;
-        };
-
       # host名変更の影響を受けない開発・テスト用system
       checkSystem = "aarch64-darwin";
 
       # darwin統合テストは一度だけ import して各出力を参照する
-      darwinTests = import ./tests/darwin/integration.nix {
+      darwinTests = import ./tests/integration/darwin.nix {
         inherit lib mkDarwinConfiguration;
         userProfile = testUserProfile;
       };
@@ -186,16 +166,12 @@
           '';
         };
 
-      # builderごとのflake出力
-      darwinConfigurations = builtins.mapAttrs mkDarwinHost darwinHosts;
-      homeConfigurations = builtins.mapAttrs mkHomeHost homeManagerHosts;
-
       # nix flake checkで評価するbuilder別テスト
       checks = {
         ${checkSystem} = {
           # Home Managerモジュール単体の統合評価（基本ツール）
           homeModulesEval =
-            (import ./tests/home/integration.nix {
+            (import ./tests/integration/home.nix {
               inherit home-manager nixpkgs;
               nixpkgsUnstable = nixpkgs-unstable;
               system = checkSystem;
@@ -203,7 +179,7 @@
 
           # Home Managerモジュール統合評価（managed tools: ghostty / p10k / zed）
           homeAppConfigsEval =
-            (import ./tests/home/integration.nix {
+            (import ./tests/integration/home.nix {
               inherit home-manager nixpkgs;
               nixpkgsUnstable = nixpkgs-unstable;
               system = checkSystem;
@@ -217,9 +193,6 @@
 
           # Git・Zshフラグによるモジュール分流
           darwinRoutingEval = darwinTests.routingSystem;
-
-          # desktop・laptop・serverによるrole分流
-          darwinRoleRoutingEval = darwinTests.roleRoutingSystem;
 
           # Homebrew設定の統合評価
           darwinHomebrewEval = darwinTests.homebrewSystem;

@@ -1,0 +1,52 @@
+schema_version = "1"
+
+[meta]
+system      = "aarch64-darwin"
+builder     = "nix-darwin"
+os          = "macos"
+environment = "native"
+
+[home_manager]
+cli_tools = true
+zsh       = true
+gh        = true
+git       = true
+
+[home_manager.p10k]
+enable      = false
+config_file = "modules/home/p10k/p10k.zsh"
+
+[home_manager.starship]
+enable      = true
+config_file = "modules/home/starship/starship.toml"
+
+[home_manager.ghostty]
+enable      = true
+config_file = "modules/home/ghostty/config"
+
+[home_manager.tmux]
+enable      = true
+config_file = "modules/home/tmux/tmux.conf"
+
+[home_manager.zed]
+enable      = true
+config_file = "modules/home/zed/settings.json"
+
+[darwin.features]
+appearance = true
+dock       = true
+finder     = true
+input      = true
+power      = true
+
+[darwin.dock]
+autohide    = false
+orientation = "left"
+
+[darwin.power]
+sleep = "never"
+
+[darwin.homebrew]
+enable      = true
+install     = true
+brew_bundle = true

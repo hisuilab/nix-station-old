@@ -1,0 +1,5 @@
+schema_version = "1"
+
+hostname = "My-Mac"
+host_id  = "macos-desktop"
+profile  = "guest"

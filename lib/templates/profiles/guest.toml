@@ -1,0 +1,8 @@
+schema_version = "1"
+
+username    = "your-username"
+description = "Personal profile"
+
+[git]
+user_name  = "Your Name"
+user_email = "you@example.com"

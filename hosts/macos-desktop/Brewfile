@@ -1,8 +1,11 @@
-# mac-mini 固有 Brewfile（ホスト差分のみ）
+# macos-desktop 固有 Brewfile（ホスト差分のみ）
 # 共通アプリは hosts/common/Brewfile で管理する。
 #
 # 適用: brew bundle --file hosts/common/Brewfile
-#       brew bundle --file hosts/mac-mini/Brewfile
+#       brew bundle --file hosts/macos-desktop/Brewfile
+#
+# TODO: このファイルはApp Catalog（TOML）の実装後に削除します。
+#       移行先: ~/.config/nix-station/generated/Brewfile（Wizardが生成）
 
 # AI・メディア制作（デスクトップ専用）
 cask "ollama-app"

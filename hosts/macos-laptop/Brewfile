@@ -1,5 +1,8 @@
-# macbook-air 固有 Brewfile（ホスト差分のみ）
+# macos-laptop 固有 Brewfile（ホスト差分のみ）
 # 共通アプリは hosts/common/Brewfile で管理する。
 #
 # 適用: brew bundle --file hosts/common/Brewfile
-#       brew bundle --file hosts/macbook-air/Brewfile  # 現在は差分なし
+#       brew bundle --file hosts/macos-laptop/Brewfile  # 現在は差分なし
+#
+# TODO: このファイルはApp Catalog（TOML）の実装後に削除します。
+#       移行先: ~/.config/nix-station/generated/Brewfile（Wizardが生成）

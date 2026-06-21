@@ -48,7 +48,7 @@ flowchart TD
 | Host | Nix、実機名・Profile参照を保持 | 共有TOML Template | 未実装 |
 | Profile | リポジトリ内のNixファイル | Instance内のTOML | 未実装 |
 | Deploy | Root flakeの全Host output | 選択Targetのlocal flake | 未実装 |
-| Role | Module分岐に使用 | 廃止し設定を明示 | 未実装 |
+| Role | Module分岐に使用 | 廃止し設定を明示 | 完了 |
 | App | BrewfileとDockを別管理 | App Catalogから生成 | 未実装 |
 | Test | 一部が実装と対応 | Registry駆動で全Moduleを追跡 | 未実装 |
 

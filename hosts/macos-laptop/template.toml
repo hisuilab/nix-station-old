@@ -1,0 +1,40 @@
+schema_version = "1"
+
+[meta]
+system      = "aarch64-darwin"
+builder     = "nix-darwin"
+os          = "macos"
+environment = "native"
+
+[home_manager]
+cli_tools = true
+zsh       = true
+gh        = true
+git       = true
+
+[home_manager.p10k]
+enable      = true
+config_file = "modules/home/p10k/p10k.zsh"
+
+[home_manager.ghostty]
+enable      = true
+config_file = "modules/home/ghostty/config"
+
+[home_manager.zed]
+enable      = true
+config_file = "modules/home/zed/settings.json"
+
+[darwin.features]
+appearance = true
+dock       = true
+finder     = true
+input      = true
+
+[darwin.dock]
+autohide    = true
+orientation = "bottom"
+
+[darwin.homebrew]
+enable      = true
+install     = false
+brew_bundle = true

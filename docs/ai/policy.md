@@ -23,15 +23,15 @@ Claude / Codex など AI エージェント共通のルール。
 ```
 
 **セッション開始時の確認（継続作業の場合）:**
-`git log --oneline -10` を実行し、`docs/decisions/` の最新ファイルを読んでから着手する。
+`git log --oneline -10` を実行し、`docs/decisions/` の最新ファイルを読んでから着手します。
 
 **命名規則:**
 
-| 対象 | 形式 |
-|---|---|
-| ブランチ | `type/issue-N-topic` |
-| レビュー | `docs/reviews/YYYY-MM-DD-issue-N-topic.md` |
-| 意思決定 | `docs/decisions/YYYY-MM-DD-issue-N-topic.md` |
+| 対象     | 形式                                                                   |
+| -------- | ---------------------------------------------------------------------- |
+| ブランチ | `type/issue-N-topic`                                                   |
+| レビュー | `docs/reviews/YYYY-MM-DD-issue-N-topic.md`                             |
+| 意思決定 | `docs/decisions/YYYY-MM-DD-issue-N-topic.md`                           |
 | コミット | Conventional Commits（`feat` / `fix` / `refactor` / `docs` / `chore`） |
 
 ## git 禁止事項
@@ -49,6 +49,6 @@ Claude / Codex など AI エージェント共通のルール。
 
 ## 外部ライブラリ・CI の注意事項
 
-- **GitHub Action のコミットハッシュ**: `gh release view <tag> --repo <owner/repo>` で取得する。推測・補完禁止
-- **nix-darwin / home-manager の API**: 使用前に nixpkgs の対応モジュール定義を `grep` で存在確認する
-- **CI 失敗時の調査**: `gh run view --log-failed` でログを確認する
+- **GitHub Action のコミットハッシュ**: `gh release view <tag> --repo <owner/repo>` で取得します。推測・補完は禁止します
+- **nix-darwin / home-manager の API**: 使用前に nixpkgs の対応モジュール定義を `grep` で存在確認します
+- **CI 失敗時の調査**: `gh run view --log-failed` でログを確認します

@@ -2,9 +2,13 @@
 
 このリポジトリは共通 AI 開発ポリシーを使用しています。
 
+全プロジェクト共通の文書・設計規約は、グローバル`AGENTS.md`と
+`$design-maintainable-system`から継承します。このファイルでは再定義しません。
+
 実装に着手する前に必ず読んでください:
 
 - [`docs/ai/policy.md`](docs/ai/policy.md)
+- [`docs/ai/context_policy.md`](docs/ai/context_policy.md)
 - [`docs/ai/risk_policy.md`](docs/ai/risk_policy.md)
 - [`docs/ai/review_checklist.md`](docs/ai/review_checklist.md)
 - [`docs/ai/protected_paths.txt`](docs/ai/protected_paths.txt)

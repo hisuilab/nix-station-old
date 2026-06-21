@@ -60,6 +60,10 @@ git log --oneline -10
 
 ## スキル・コマンド一覧
 
+> [!NOTE]
+> この節はnix-station固有Skillを扱います。全プロジェクト共通Skillは
+> `~/.agents/skills/`で管理し、このリポジトリには複製しません。
+
 ### スキル（呼ばれたときだけロード）
 
 | スキル           | 呼び方            | 内容                                       |
@@ -119,13 +123,16 @@ bash scripts/ai/secret-scan.sh      # 秘密情報のパターンを検出
 bash scripts/ai/hidden-content-scan.sh  # 隠しファイル・バイナリを検出
 ```
 
-hooks（`.claude/hooks/policy-gate.sh`）は `risk-check` と `secret-scan` を自動実行する。
+hooks（`.claude/hooks/policy-gate.sh`）は `risk-check` と `secret-scan` を自動実行します。
 
 ---
 
 ## 新しいスキル・ルールの追加方法
 
 ### スキルを追加する
+
+以下はnix-station固有Skillの追加手順です。全プロジェクト共通Skillは
+`~/.agents/skills/`へ追加します。
 
 1. `docs/ai/skills/<name>.md` に本体を書く（ゴール・ルール・出力フォーマット）
 2. `bash scripts/ai/sync-agent-adapters.sh` を実行する
@@ -148,7 +155,7 @@ bash scripts/ai/sync-agent-adapters.sh
 | 保護パスの追加・削除                   | `docs/ai/protected_paths.txt` |
 | 検証コマンドの変更                     | `scripts/ai/verify.sh`        |
 
-**`.claude/` や `.agents/` 側は編集しない。** そちらは `docs/ai/` を読む入口にすぎない。
+**`.claude/` や `.agents/` 側は編集しません。** そちらは `docs/ai/` を読む入口にすぎません。
 
 ### 二重管理してよいもの・してはいけないもの
 

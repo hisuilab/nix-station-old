@@ -1,6 +1,6 @@
 # Risky Change 定義 — nix-station
 
-この定義が唯一の基準。`.claude` / `.agents` 側で独自に定義しない。
+この定義が唯一の基準です。`.claude` / `.agents` 側で独自に定義しません。
 
 ## リスク分類
 

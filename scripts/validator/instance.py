@@ -25,21 +25,17 @@ except ImportError:
 
 SCHEMA_VERSION = "1"
 
-VALID_HOST_IDS = {
-    "macos-desktop",
-    "macos-laptop",
-    "raspberry-pi-5",
-    "ubuntu-desktop",
-    "ubuntu-wsl",
-}
-
 
 class InstanceValidationError(ValueError):
     pass
 
 
-def validate(raw: dict) -> dict:
-    """Validate a parsed instance TOML dict and return a normalized dict."""
+def validate(raw: dict, valid_host_ids: set[str] | None = None) -> dict:
+    """Validate a parsed instance TOML dict and return a normalized dict.
+
+    valid_host_ids: when provided, host_id is checked for membership.
+    Pass the result of discover_hosts() from the Wizard for dynamic validation.
+    """
     errors: list[str] = []
 
     version = raw.get("schema_version")
@@ -53,10 +49,10 @@ def validate(raw: dict) -> dict:
     host_id = raw.get("host_id", "")
     if not isinstance(host_id, str) or not host_id:
         errors.append("host_id: must be a non-empty string")
-    elif host_id not in VALID_HOST_IDS:
+    elif valid_host_ids is not None and host_id not in valid_host_ids:
         errors.append(
             f"host_id: '{host_id}' is not a registered host. "
-            f"Valid values: {sorted(VALID_HOST_IDS)}"
+            f"Valid values: {sorted(valid_host_ids)}"
         )
 
     profile = raw.get("profile", "")
@@ -93,7 +89,7 @@ def main() -> None:
 
     try:
         raw = load(path)
-        result = validate(raw)
+        result = validate(raw)  # standalone: no host_id membership check
         print(
             f"OK: instance '{result['hostname']}' "
             f"(host={result['host_id']}, profile={result['profile']})"

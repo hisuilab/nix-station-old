@@ -1,139 +1,109 @@
-# nix-station 設計原則
+# nix-station システム設計
 
-nix-station は **OSS フレームワーク**として設計する。
-フレームワーク自体の品質とユーザー固有の設定を明確に分離することが基本方針。
+> [!IMPORTANT]
+> この文書は目標アーキテクチャの全体構造と主要判断を所有します。詳細設計は
+> [`architecture/`](architecture/README.md)、実装状況は
+> [`移行状況`](architecture/README.md#3-移行状況)を参照してください。
 
----
+## 目次
 
-## フレームワークの責務とユーザーの責務
+- [1. この文書の責任](#1-この文書の責任)
+- [2. 主要な設計判断](#2-主要な設計判断)
+- [3. システム全体像](#3-システム全体像)
+- [4. 責務境界](#4-責務境界)
+- [5. 詳細設計の責任](#5-詳細設計の責任)
+- [6. TOMLとNixの境界](#6-tomlとnixの境界)
+- [7. nix-station固有の構造制約](#7-nix-station固有の構造制約)
 
-```
-nix-station リポジトリ
-├── Framework（コミット対象）
-│   ├── modules/         モジュール定義
-│   ├── lib/             バリデーション・ユーティリティ
-│   ├── tests/           フレームワークテスト
-│   ├── hosts/           ホストスキーマ定義
-│   └── user-profiles/   guest.nix・test.nix のみ
-│
-└── Instance（コミットしない）
-    └── user-profiles/<name>.nix  個人プロファイル（gitignore）
-```
+## 1. この文書の責任
 
-**フレームワーク**が保証するもの: モジュールのスキーマ、ロジック、ルーティングの正しさ
-**ユーザー**が責任を持つもの: 自分のプロファイルの作成、ホストへの紐付け、デプロイ
+[`REQUIREMENTS.md`](REQUIREMENTS.md)の要求を、どの責任へ分割し、どう接続するかを
+定義します。利用手順は[`SETUP.md`](SETUP.md)、開発手順は
+[`DEVELOPMENT.md`](DEVELOPMENT.md)が所有します。
 
----
+## 2. 主要な設計判断
 
-## 品質保証の3層構造
-
-### Layer 1: Framework Quality — `nix flake check`
-
-**責任**: このリポジトリのコードは正しいか
-
-- モジュールのスキーマ・型が正しいか
-- ルーティングロジック（role / platform / feature フラグ）が正しいか
-- ホスト設定の構造が正しいか
-
-**実装**: `checks.*` に `testUserProfile` を使ったテストを配置する
-**原則**: ユーザー固有データを一切必要としない。clone 直後から `nix flake check` が通ること
-
-```
-checks.aarch64-darwin.tests              # ユニットテスト（純粋 Nix）
-checks.aarch64-darwin.darwinEnabledEval  # モジュール統合（testUserProfile）
-checks.aarch64-darwin.macbook-air        # ホストスキーマ（testUserProfile）
-```
-
-### Layer 2: Profile Quality — `loadUserProfile`
-
-**責任**: このプロファイルは完全か
-
-- `username` が存在・非空か
-- `git.userName` が存在・非空か
-- `git.userEmail` が存在・非空か
-
-**実装**: `user-profiles/default.nix` の `validateUserProfile` が担う
-**発火タイミング**: `darwin-rebuild switch` 時（`nix flake check` 時ではない）
-
-### Layer 3: Deploy Quality — `setup.sh` / `activationScripts`
-
-**責任**: このマシンはデプロイ準備ができているか
-
-| チェック内容 | 実装場所 | 発火タイミング |
+| 判断 | 採用方針 | 詳細設計 |
 |---|---|---|
-| guest プロファイルでないか | `activationScripts` | `darwin-rebuild switch` 時 |
-| プロファイルファイルが存在するか | `setup.sh` | セットアップ対話時 |
-| ホスト名・プラットフォームが一致するか | `setup.sh` | セットアップ対話時 |
+| Host | 個人情報を持たない共有Template | [`InstanceとDeployment`](architecture/instance-and-deployment.md) |
+| Profile | Hostへ固定せず適用時に選択 | [`InstanceとDeployment`](architecture/instance-and-deployment.md) |
+| Instance | リポジトリ外へ保存 | [`InstanceとDeployment`](architecture/instance-and-deployment.md) |
+| Role | 廃止し挙動をTemplateへ明示 | [`InstanceとDeployment`](architecture/instance-and-deployment.md) |
+| Deploy | Instance内のlocal flakeへ分離 | [`InstanceとDeployment`](architecture/instance-and-deployment.md) |
+| App | App Catalogを正本にしてBrewfileとDockを生成 | [`App CatalogとDock`](architecture/app-management.md) |
+| Test | Registryとパス規約から追跡 | [`TestとCI`](architecture/testing.md) |
+| Wizard | 初回対話UIに限定しApplication Serviceを共有 | [`ユーザーワークフロー`](architecture/user-workflow.md) |
 
----
+判断の経緯は
+[`Decision Record`](decisions/2026-06-21-issue-36-system-architecture.md)に保存します。
 
-## `nix flake check` の責任範囲
+## 3. システム全体像
 
-`nix flake check` は以下を検証する:
+```mermaid
+flowchart LR
+    U["利用者"] --> UI["Wizard / CLI"]
+    H["Host Template<br>TOML"] --> T["Runtime Target"]
+    P["User Profile<br>TOML"] --> T
+    I["Device Instance<br>TOML"] --> T
+    UI --> T
+    T --> V["Validation"]
+    V --> B{"Builder"}
+    B --> D["nix-darwin"]
+    B --> HM["Home Manager"]
+    D --> MAC["macOS"]
+    HM --> LINUX["Linux / WSL"]
+    WIN["PowerShell + winget"] --> WSL["WSL"]
+    WSL --> UI
+```
 
-| 対象 | 検証内容 |
+対応OSと管理範囲は[`REQUIREMENTS.md`](REQUIREMENTS.md#10-対応範囲)が正本です。
+
+## 4. 責務境界
+
+| 概念 | 責任 | 責任範囲外 |
+|---|---|---|
+| Framework | Module、検証、構成生成 | 個人情報、実機状態 |
+| Host Template | OS、system、機能・アプリ選択 | username、hostname、秘密情報 |
+| User Profile | username、Git identity | OS、端末機能 |
+| Device Instance | hostname、選択Template | Module定義 |
+| Registry | 機能ID、Module、対応環境 | Profile、Test path、実行状態 |
+| Builder | 検証済みTargetの成果物化 | 対話入力、秘密情報管理 |
+| Wizard | 初回対話と適用確認 | Nix導入、評価・ビルドロジック |
+
+依存は入力、検証、構成生成、Module、Builderの一方向にします。下位Moduleから
+Hostファイルやユーザーインターフェースを参照しません。
+
+## 5. 詳細設計の責任
+
+| 詳細設計 | 所有する契約 |
 |---|---|
-| `checks.*` | 明示的なテストスイートをビルド・実行する |
-| その他の output | 評価可能か（型・構文レベル）を確認する |
+| [`instance-and-deployment.md`](architecture/instance-and-deployment.md) | Host、Profile、Instance、local flake、適用、rollback |
+| [`user-workflow.md`](architecture/user-workflow.md) | 初回利用フロー、Wizard、Application Service |
+| [`app-management.md`](architecture/app-management.md) | App Catalog、Brewfile、Dock、導入失敗 |
+| [`testing.md`](architecture/testing.md) | Test階層、Registry追跡、CI、レビュー基準 |
 
-`nix flake check` が責任を持たないもの:
+## 6. TOMLとNixの境界
 
-- ユーザーがプロファイルを設定済みかどうか
-- そのホストがデプロイ可能な状態かどうか
+利用者が編集するHost、Profile、Instance、App Catalogは`schema_version`付きTOMLとします。
+ValidatorがTOMLを正規化済みNix attrsetへ変換し、利用者はNix pathではなくRegistry IDを
+選択します。
 
-これらは Layer 3 の責任であり、`setup.sh` と `activationScripts` が担う。
+Module、Registry、Validator、Builderは、path、関数、optionを自然に表現できるNixで
+実装します。この境界により、利用者向けインターフェースと内部実装を分離します。
 
----
-
-## Nix の評価時 vs 適用時
-
-nix-darwin の `assertions` は**評価時**に発火する。`nix flake check` も評価を行うため、`assertions` に運用上の条件（「guest のままデプロイしないか」等）を置くと `nix flake check` が壊れる。
-
-| 仕組み | 発火タイミング | 適切な用途 |
-|---|---|---|
-| `assertions` | 評価時（`nix flake check` 含む） | スキーマ違反・型エラー（必ずビルド不能なもの） |
-| `activationScripts` | 適用時（`darwin-rebuild switch` のみ） | デプロイ前提条件（ユーザー設定済みか等） |
-
-**原則**: 運用上の条件チェックは `activationScripts` に置く。
-
----
-
-## `darwinConfigurations` の扱い
-
-`darwinConfigurations` はデプロイ用成果物であり、CI テストターゲットではない。
-ユーザープロファイルをリポジトリにコミットしない方針のため、パーソナルホストを `darwinConfigurations` に含めると `nix flake check` が失敗する。
-
-**方針**: パーソナルホストは `darwinConfigurations` から外す。
-
-```
-darwinConfigurations に含めるもの:
-└── （なし、またはデモ用の完全コミット済みホストのみ）
-
-checks に含めるもの:
-├── checks.aarch64-darwin.macbook-air  # スキーマ検証（testUserProfile）
-└── checks.aarch64-darwin.mac-mini    # スキーマ検証（testUserProfile）
+```mermaid
+flowchart LR
+    TOML["User TOML"] --> P["Parse"]
+    P --> V["Validate + Normalize"]
+    R["Nix Registry"] --> V
+    V --> T["Normalized Target"]
+    T --> B["Nix Builder"]
 ```
 
-デプロイは `setup.sh` 経由で行う。`setup.sh` が `darwin-rebuild switch --impure --flake` を内部で呼び出す。
+## 7. nix-station固有の構造制約
 
----
+- `flake.nix`はinputとoutput編成に集中します
+- 新しいHost、Profile、機能の追加だけでコア変更を発生させません
 
-## ユーザープロファイルの管理方針
-
-| ファイル | git 管理 | 用途 |
-|---|---|---|
-| `user-profiles/guest.nix` | コミット | デフォルト・未設定状態のテンプレート |
-| `user-profiles/test.nix` | コミット | フレームワークテスト専用モック |
-| `user-profiles/<name>.nix` | **gitignore** | 個人プロファイル（コミットしない） |
-
-個人プロファイルは `setup.sh` が対話形式で生成する。
-Nix 評価では `--impure` フラグを使いローカルファイルを参照する。
-
----
-
-## OSS フレームワークとしての原則
-
-1. **clone 直後から `nix flake check` が通ること** — フレームワーク品質の最低保証
-2. **個人情報をリポジトリにコミットしないこと** — ユーザープロファイルは gitignore
-3. **`setup.sh` が唯一のユーザー向け導線であること** — Nix の知識がなくても使える
-4. **責務の層を越えないこと** — Layer 1 が Layer 3 の仕事をしない
+汎用的なModule責任、ファイル分割、README、Test構造の規約は
+`$design-maintainable-system`から継承し、この文書では再定義しません。

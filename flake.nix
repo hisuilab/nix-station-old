@@ -62,12 +62,6 @@
           })
           systems);
 
-      # hostが指定したユーザープロファイルを取得
-      loadUserProfile = hostConfig:
-        userProfiles.loadUserProfile {
-          name = hostConfig.userProfile.name;
-        };
-
       # nix-darwinとHome Managerを統合したmacOS構成を生成
       # hostConfig は呼び出し元で validateHostConfig 済みであること
       mkDarwinConfiguration =
@@ -146,20 +140,6 @@
             ];
           };
 
-      # nix-darwin builderのhostをnix-darwin構成へ変換
-      mkDarwinHost = hostId: hostConfig:
-        mkDarwinConfiguration {
-          inherit hostConfig hostId;
-          userProfile = loadUserProfile hostConfig;
-        };
-
-      # home-manager builderのhostをstandalone構成へ変換
-      mkHomeHost = hostId: hostConfig:
-        mkHomeConfiguration {
-          inherit hostConfig hostId;
-          userProfile = loadUserProfile hostConfig;
-        };
-
       # host名変更の影響を受けない開発・テスト用system
       checkSystem = "aarch64-darwin";
 
@@ -185,10 +165,6 @@
             pre-commit install --install-hooks
           '';
         };
-
-      # builderごとのflake出力
-      darwinConfigurations = builtins.mapAttrs mkDarwinHost darwinHosts;
-      homeConfigurations = builtins.mapAttrs mkHomeHost homeManagerHosts;
 
       # nix flake checkで評価するbuilder別テスト
       checks = {

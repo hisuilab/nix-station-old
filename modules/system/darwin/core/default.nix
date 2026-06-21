@@ -1,4 +1,4 @@
-{ nixpkgsUnstable, hostConfig, userProfile, lib, ... }:
+{ nixpkgsUnstable, hostConfig, userProfile, hostname, lib, ... }:
 
 {
   # nix-homebrew HEAD が ruby_4_0 を要求するが nixpkgs-25.05 には未収録のため unstable から補完
@@ -16,15 +16,14 @@
       userProfile.name が 'guest' のままです。darwin-rebuild を中止します。
 
       修正手順:
-        1. ユーザープロファイルを作成する
-           cp user-profiles/guest.nix user-profiles/<your-name>.nix
-           # username / git.userName / git.userEmail を編集
+        1. ~/.config/nix-station/profiles/<your-name>.toml を作成する
+           username    = "<your-name>"
+           [git]
+           user_name  = "<Your Name>"
+           user_email = "<your@email.com>"
 
-        2. hosts/<host-id>/config.nix を更新する
-           userProfile.name = "<your-name>";
-
-        または setup.sh を使うと対話形式でセットアップできます:
-           bash setup.sh <host-id>
+        2. ~/.config/nix-station/instance.toml の profile を更新する
+           profile = "<your-name>"
     '';
   };
 
@@ -33,13 +32,13 @@
     echo ""
     echo "============================================================"
     echo " Applying nix-darwin configuration"
-    echo "   host    : ${hostConfig.meta.hostname}"
+    echo "   host    : ${hostname}"
     echo "   user    : ${userProfile.username}"
     echo "============================================================"
     echo ""
   '';
 
-  networking.hostName = hostConfig.meta.hostname;
+  networking.hostName = hostname;
 
   # Determinate Systems インストーラーと競合するため nix-darwin の Nix 管理を無効化する
   nix.enable = false;

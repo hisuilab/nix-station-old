@@ -75,10 +75,6 @@ let
       throw "host '${hostId}': meta.system '${config.meta.system}' is not supported by meta.os '${config.meta.os}'"
     else if !(builtins.elem config.meta.environment registry.operatingSystems.${config.meta.os}.environments) then
       throw "host '${hostId}': meta.environment '${config.meta.environment}' is not supported by meta.os '${config.meta.os}'"
-    else if !(config ? userProfile) || !builtins.isAttrs config.userProfile then
-      throw "host '${hostId}': userProfile must be an attribute set"
-    else if !(config.userProfile ? name) || !isNonEmptyString config.userProfile.name then
-      throw "host '${hostId}': userProfile.name must be a non-empty string"
     else if config ? darwin && !builtins.isAttrs config.darwin then
       throw "host '${hostId}': darwin must be an attribute set"
     else if config.meta.builder != "nix-darwin"

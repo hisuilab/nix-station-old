@@ -68,6 +68,7 @@
         { hostConfig
         , hostId
         , userProfile
+        , hostname ? hostConfig.meta.hostname
         ,
         }:
         if hostConfig.meta.builder != "nix-darwin" then
@@ -78,7 +79,7 @@
 
             # nix-darwinモジュールへのhost・ユーザー設定の受け渡し
             specialArgs = {
-              inherit hostConfig hostId userProfile;
+              inherit hostConfig hostId userProfile hostname;
               homeManager = hostConfig.homeManager;
               nixpkgsUnstable = nixpkgs-unstable;
             };
@@ -155,6 +156,35 @@
       };
     in
     {
+      # local deploy flake から参照するライブラリ関数
+      lib = {
+        inherit mkDarwinConfiguration mkHomeConfiguration;
+
+        # host_id を受け取りバリデーション済み hostConfig を返す
+        loadHostTemplate = hostId:
+          if !(builtins.hasAttr hostId hostConfigs) then
+            throw "nix-station: unknown host_id '${hostId}'"
+          else
+            hostConfigLib.validateHostConfig {
+              config = hostConfigs.${hostId};
+              inherit hostId;
+            };
+
+        # TOML プロファイルを読み込み userProfile attrset を返す
+        loadUserProfile =
+          { name
+          , profilesDir
+          ,
+          }:
+          let
+            profileFile = profilesDir + "/${name}.toml";
+          in
+          if !builtins.pathExists profileFile then
+            throw "nix-station: profile '${name}.toml' not found in ${toString profilesDir}"
+          else
+            import ./lib/profile-loader.nix { inherit profileFile; };
+      };
+
       # リポジトリ開発用shell
       devShells.${checkSystem}.default =
         nixpkgs.legacyPackages.${checkSystem}.mkShell {

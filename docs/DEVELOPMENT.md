@@ -112,7 +112,7 @@ bash scripts/ai/verify.sh
 nix build path:.#checks.aarch64-darwin.tests --no-link
 
 # Host構成の実ビルド例
-nix build path:.#checks.aarch64-darwin.mac-mini --no-link
+nix build path:.#checks.aarch64-darwin.macos-desktop --no-link
 nix build path:.#checks.x86_64-linux.ubuntu-wsl --no-link
 
 # 静的検査

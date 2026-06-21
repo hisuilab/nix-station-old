@@ -26,8 +26,8 @@ eval_check() {
 
 echo "=== checks.aarch64-darwin ==="
 eval_check "checks.aarch64-darwin.tests"
-eval_check "checks.aarch64-darwin.mac-mini"
-eval_check "checks.aarch64-darwin.macbook-air"
+eval_check "checks.aarch64-darwin.macos-desktop"
+eval_check "checks.aarch64-darwin.macos-laptop"
 eval_check "checks.aarch64-darwin.homeModulesEval"
 eval_check "checks.aarch64-darwin.homeAppConfigsEval"
 eval_check "checks.aarch64-darwin.darwinEnabledEval"

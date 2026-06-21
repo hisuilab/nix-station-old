@@ -5,8 +5,8 @@
 ```text
 hosts/
 ├── default.nix
-├── mac-mini/config.nix
-├── macbook-air/config.nix
+├── macos-desktop/config.nix
+├── macos-laptop/config.nix
 ├── raspberry-pi-5/config.nix
 ├── ubuntu-desktop/config.nix
 └── ubuntu-wsl/config.nix
@@ -16,25 +16,27 @@ hosts/
 
 ## 設定項目
 
-- `platform = "darwin"`: nix-darwin と Home Manager を生成
-- `platform = "home-manager"`: Ubuntu・Raspberry Pi OS 向け standalone Home Manager を生成
-- `os`: `darwin`、`ubuntu`、`raspberry-pi-os` から Home Manager の OS 固有設定を選択
+- `builder = "nix-darwin"`: nix-darwin と Home Manager を生成
+- `builder = "home-manager"`: Ubuntu・Raspberry Pi OS 向け standalone Home Manager を生成
+- `os`: `macos`、`ubuntu`、`raspberry-pi-os` から Home Manager の OS 固有設定を選択
 - `environment`: `native` または `wsl` から実行環境固有の設定を選択
-- `role`: `desktop`、`laptop`、`server` から用途別モジュールを選択
 
-`platform = "darwin"` では `meta.hostname` を macOS へ反映します。standalone Home Manager は OS の hostname を変更しないため、Linux ホストの `meta.hostname` は識別用メタデータです。
+`builder = "nix-darwin"` では `meta.hostname` を macOS へ反映します。standalone Home Manager は OS の hostname を変更しないため、Linux ホストの `meta.hostname` は識別用メタデータです。
 
 ## 設定例
 
 ```nix
-# hosts/macbook-air/config.nix
+# hosts/macos-laptop/config.nix
 meta = {
   hostname = "HisuiLab-MacBook-Air";
   system = "aarch64-darwin";
-  platform = "darwin";
-  os = "darwin";
+  builder = "nix-darwin";
+  os = "macos";
   environment = "native";
-  role = "laptop";
+};
+darwin.dock = {
+  autohide = true;
+  orientation = "bottom";
 };
 ```
 
@@ -43,10 +45,9 @@ meta = {
 meta = {
   hostname = "ubuntu-wsl";
   system = "x86_64-linux";
-  platform = "home-manager";
+  builder = "home-manager";
   os = "ubuntu";
   environment = "wsl";
-  role = "desktop";
 };
 ```
 

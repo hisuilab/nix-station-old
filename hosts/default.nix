@@ -1,7 +1,7 @@
 {
   # mac
-  mac-mini = import ./mac-mini/config.nix;
-  macbook-air = import ./macbook-air/config.nix;
+  macos-desktop = import ./macos-desktop/config.nix;
+  macos-laptop = import ./macos-laptop/config.nix;
 
   # linux
   raspberry-pi-5 = import ./raspberry-pi-5/config.nix;

@@ -1,6 +1,6 @@
 {
   meta = {
-    hostname = "HisuiLab-MacBook-air";
+    hostname = "HisuiLab-Mac-mini";
     system = "aarch64-darwin";
     builder = "nix-darwin";
     os = "macos";
@@ -15,12 +15,20 @@
     gh = true;
     git = true;
     p10k = {
-      enable = true;
+      enable = false;
       configFile = ../../modules/home/p10k/p10k.zsh;
+    };
+    starship = {
+      enable = true;
+      configFile = ../../modules/home/starship/starship.toml;
     };
     ghostty = {
       enable = true;
       configFile = ../../modules/home/ghostty/config;
+    };
+    tmux = {
+      enable = true;
+      configFile = ../../modules/home/tmux/tmux.conf;
     };
     zed = {
       enable = true;
@@ -33,19 +41,22 @@
     dock = true;
     finder = true;
     input = true;
+    power = true;
   };
 
   darwin.dock = {
-    autohide = true;
-    orientation = "bottom";
+    autohide = false;
+    orientation = "left";
   };
 
-  # GUI アプリ・App Store アプリは hosts/macbook-air/Brewfile で管理する。
-  # install = false: Homebrew バイナリは既存インストールを使用する
+  darwin.power.sleep = "never";
+
+  # GUI アプリ・App Store アプリは hosts/macos-desktop/Brewfile で管理する。
+  # install = true: nix-homebrew が Homebrew バイナリを自動インストールする
   # brewBundle = true: setup.sh が brew bundle を実行してアプリを一括導入する
   darwin.homebrew = {
     enable = true;
-    install = false;
+    install = true;
     brewBundle = true;
   };
 }

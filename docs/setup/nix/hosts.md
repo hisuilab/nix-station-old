@@ -111,4 +111,4 @@ darwin.homebrew = {
 2. `hosts/default.nix` へ登録します。
 3. ユーザープロファイルを `user-profiles/<name>.nix` に用意します（[user-profiles.md](user-profiles.md) 参照）。
 
-モジュール構成の詳細は [`docs/DEVELOPMENT.md`](../DEVELOPMENT.md) を参照してください。
+モジュール構成の詳細は [`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) を参照してください。

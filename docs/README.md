@@ -16,7 +16,7 @@
 
 | 目的 | 読む順番 |
 |---|---|
-| 利用を開始する | [`SETUP`](SETUP.md) → 対象OSガイド |
+| 利用を開始する | [`SETUP`](setup/README.md) → 対象OSガイド |
 | プロダクトを理解する | [`REQUIREMENTS`](REQUIREMENTS.md) → [`DESIGN`](DESIGN.md) |
 | 設計をレビューする | [`DESIGN`](DESIGN.md) → 対象の詳細設計 → Decision Record |
 | 実装を変更する | [`DEVELOPMENT`](DEVELOPMENT.md) → 対象Module README → 対応Test |
@@ -30,10 +30,10 @@
 | [`REQUIREMENTS`](REQUIREMENTS.md) | 背景、価値、対象者、要件、対象外 | 内部構造、操作手順 |
 | [`DESIGN`](DESIGN.md) | 全体構造、責務境界、主要判断 | サブシステム詳細、開発手順 |
 | [`architecture/`](architecture/README.md) | 詳細設計、依存、失敗時動作、移行状況 | 現行操作コマンド |
-| [`SETUP`](SETUP.md) | 共通の初回導入手順 | OS固有の制約、日常適用 |
+| [`SETUP`](setup/README.md) | 共通の初回導入手順 | OS固有の制約、日常適用 |
 | OS別ガイド | OS固有の管理範囲、制約、適用方法 | 共通の取得・導入手順 |
 | [`DEVELOPMENT`](DEVELOPMENT.md) | 現行実装の拡張方法、検証コマンド | 要件、設計判断、AI固有ルール |
-| [`nix/`](nix/hosts.md) | 現行Nix設定の利用方法 | 目標アーキテクチャ |
+| [`setup/nix/`](setup/nix/hosts.md) | 現行Nix設定の利用方法 | 目標アーキテクチャ |
 | [`ai/`](ai/context_policy.md) | AI固有の読込、リスク、承認、レビュー | プロダクト要件、設計本文 |
 
 ## 3. 設計文書
@@ -52,14 +52,14 @@
 
 | 問い | 正本 |
 |---|---|
-| 初回セットアップ | [`SETUP.md`](SETUP.md) |
-| macOS固有の適用 | [`mac/setup.md`](mac/setup.md) |
-| Linux・WSL固有の適用 | [`linux/setup.md`](linux/setup.md) |
-| WindowsとWSL導入 | [`windows/setup.md`](windows/setup.md) |
-| 現行Host設定 | [`nix/hosts.md`](nix/hosts.md) |
-| 現行User Profile | [`nix/user-profiles.md`](nix/user-profiles.md) |
-| direnv | [`nix/direnv.md`](nix/direnv.md) |
-| GitHub SSH | [`github-ssh.md`](github-ssh.md) |
+| 初回セットアップ | [`setup/README.md`](setup/README.md) |
+| macOS固有の適用 | [`setup/mac.md`](setup/mac.md) |
+| Linux・WSL固有の適用 | [`setup/linux.md`](setup/linux.md) |
+| WindowsとWSL導入 | [`setup/windows.md`](setup/windows.md) |
+| 現行Host設定 | [`setup/nix/hosts.md`](setup/nix/hosts.md) |
+| 現行User Profile | [`setup/nix/user-profiles.md`](setup/nix/user-profiles.md) |
+| direnv | [`setup/nix/direnv.md`](setup/nix/direnv.md) |
+| GitHub SSH | [`setup/github-ssh.md`](setup/github-ssh.md) |
 | 開発とローカル検証 | [`DEVELOPMENT.md`](DEVELOPMENT.md) |
 
 ## 5. 履歴文書

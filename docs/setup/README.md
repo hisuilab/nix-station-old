@@ -15,10 +15,10 @@
 
 | 環境 | 初回入口 | OS固有ガイド |
 |---|---|---|
-| macOS | `setup.sh` | [`mac/setup.md`](mac/setup.md) |
-| Linux | `setup.sh` | [`linux/setup.md`](linux/setup.md) |
-| WSL | `setup.sh` | [`linux/setup.md`](linux/setup.md) |
-| Windows本体 | `setup.ps1` | [`windows/setup.md`](windows/setup.md) |
+| macOS | `setup.sh` | [`mac.md`](mac.md) |
+| Linux | `setup.sh` | [`linux.md`](linux.md) |
+| WSL | `setup.sh` | [`linux.md`](linux.md) |
+| Windows本体 | `setup.ps1` | [`windows.md`](windows.md) |
 
 ## 2. macOS・Linux・WSL
 
@@ -70,12 +70,12 @@ bash setup.sh <host-id>
 ```
 
 Wizardの目標責任と将来の利用フローは
-[`ユーザーワークフロー設計`](architecture/user-workflow.md)を参照してください。
+[`ユーザーワークフロー設計`](../architecture/user-workflow.md)を参照してください。
 
 ## 3. Windows
 
 Windows本体のアプリとWSL導入はPowerShellで行います。Windows固有の取得・実行手順は
-[`Windowsセットアップ`](windows/setup.md)を参照してください。Nixによる環境構築は、
+[`Windowsセットアップ`](windows.md)を参照してください。Nixによる環境構築は、
 WSL内で[macOS・Linux・WSLの共通手順](#2-macoslinuxwsl)を実行します。
 
 ## 4. セットアップ後

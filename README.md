@@ -19,13 +19,13 @@ nix-stationは、複数デバイスの開発環境を再現するための、ガ
 
 ## 2. 利用を開始する
 
-初回導入は[`セットアップガイド`](docs/SETUP.md)から開始してください。
+初回導入は[`セットアップガイド`](docs/setup/README.md)から開始してください。
 
 | 環境 | OS固有ガイド |
 |---|---|
-| macOS | [`docs/mac/setup.md`](docs/mac/setup.md) |
-| Linux・WSL | [`docs/linux/setup.md`](docs/linux/setup.md) |
-| Windows | [`docs/windows/setup.md`](docs/windows/setup.md) |
+| macOS | [`docs/setup/mac.md`](docs/setup/mac.md) |
+| Linux・WSL | [`docs/setup/linux.md`](docs/setup/linux.md) |
+| Windows | [`docs/setup/windows.md`](docs/setup/windows.md) |
 
 ## 3. ドキュメント
 

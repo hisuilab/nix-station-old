@@ -1,7 +1,7 @@
 # Linux・WSLセットアップ
 
 > [!IMPORTANT]
-> 共通の初回導入手順は[`SETUP.md`](../SETUP.md)を参照してください。この文書はLinux・WSL
+> 共通の初回導入手順は[`README.md`](README.md)を参照してください。この文書はLinux・WSL
 > 固有の管理範囲、制約、再適用方法だけを所有します。
 
 ## 目次
@@ -23,7 +23,7 @@
 ## 2. 環境別の前提
 
 - NixOSはNix導入済みのため、共通SetupのNix導入を省略します
-- WindowsからWSLを作成する手順は[`Windowsセットアップ`](../windows/setup.md)を参照します
+- WindowsからWSLを作成する手順は[`Windowsセットアップ`](windows.md)を参照します
 - WSL上でNixOSを使う場合は[NixOS-WSL](https://github.com/nix-community/NixOS-WSL)を参照します
 
 ## 3. 設定の再適用
@@ -33,4 +33,4 @@ nix run github:nix-community/home-manager/release-25.05 -- \
   switch --flake path:.#<host-id>
 ```
 
-現行Host設定は[`ホスト設定`](../nix/hosts.md)を参照してください。
+現行Host設定は[`ホスト設定`](nix/hosts.md)を参照してください。

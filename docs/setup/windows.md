@@ -2,7 +2,7 @@
 
 > [!IMPORTANT]
 > この文書はWindows本体のwinget導入とWSL bootstrapを所有します。WSL内のNix環境構築は
-> [`SETUP.md`](../SETUP.md)と[`Linux・WSLガイド`](../linux/setup.md)を参照してください。
+> [`README.md`](README.md)と[`Linux・WSLガイド`](linux.md)を参照してください。
 
 ## 目次
 
@@ -71,7 +71,7 @@ wsl --install -d Ubuntu
 ```
 
 再起動後にUbuntuを起動し、ユーザーを作成します。以降のNix導入とnix-station適用は
-[`SETUP.md`](../SETUP.md#2-macoslinuxwsl)へ移動します。
+[`README.md`](README.md#2-macoslinuxwsl)へ移動します。
 
 ## 5. 手動導入
 

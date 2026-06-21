@@ -18,7 +18,7 @@
 ## 1. この文書の責任
 
 [`REQUIREMENTS.md`](REQUIREMENTS.md)の要求を、どの責任へ分割し、どう接続するかを
-定義します。利用手順は[`SETUP.md`](SETUP.md)、開発手順は
+定義します。利用手順は[`setup/README.md`](setup/README.md)、開発手順は
 [`DEVELOPMENT.md`](DEVELOPMENT.md)が所有します。
 
 ## 2. 主要な設計判断

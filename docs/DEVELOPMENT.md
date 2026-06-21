@@ -27,8 +27,8 @@
 | プロダクト要件 | [`REQUIREMENTS.md`](REQUIREMENTS.md) |
 | 目標アーキテクチャ | [`DESIGN.md`](DESIGN.md) |
 | 設計文書の索引 | [`architecture/README.md`](architecture/README.md) |
-| 現行のHost設定 | [`nix/hosts.md`](nix/hosts.md) |
-| 現行のProfile設定 | [`nix/user-profiles.md`](nix/user-profiles.md) |
+| 現行のHost設定 | [`setup/nix/hosts.md`](setup/nix/hosts.md) |
+| 現行のProfile設定 | [`setup/nix/user-profiles.md`](setup/nix/user-profiles.md) |
 | AI開発ポリシー | [`ai/policy.md`](ai/policy.md) |
 
 ## 2. nix-station固有の開発制約

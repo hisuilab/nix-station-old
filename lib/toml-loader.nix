@@ -5,9 +5,6 @@
 # - home_manager.cli_tools  → homeManager.cliTools
 # - home_manager.<t>.config_file → homeManager.<t>.configFile (string → Nix path)
 # - darwin.homebrew.brew_bundle  → darwin.homebrew.brewBundle
-#
-# Temporary: injects userProfile.name = "guest" until Instance separation is
-# implemented (issue-44 Decision #1-3).
 { tomlFile }:
 
 let
@@ -61,11 +58,6 @@ in
 {
   meta = raw.meta or { };
   homeManager = normalizeHomeManager (raw.home_manager or { });
-
-  # Temporary placeholder until Instance separation is complete (issue-44 Decision #1-3).
-  # Instance (~/. config/nix-station/instance.toml) will own userProfile selection.
-  userProfile.name = "guest";
-
 } // (if rawDarwin != { } then {
   darwin = rawDarwin // {
     homebrew = normalizeHomebrew (rawDarwin.homebrew or { });

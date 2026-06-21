@@ -169,6 +169,20 @@
               config = hostConfigs.${hostId};
               inherit hostId;
             };
+
+        # TOML プロファイルを読み込み userProfile attrset を返す
+        loadUserProfile =
+          { name
+          , profilesDir
+          ,
+          }:
+          let
+            profileFile = profilesDir + "/${name}.toml";
+          in
+          if !builtins.pathExists profileFile then
+            throw "nix-station: profile '${name}.toml' not found in ${toString profilesDir}"
+          else
+            import ./lib/profile-loader.nix { inherit profileFile; };
       };
 
       # リポジトリ開発用shell

@@ -10,10 +10,10 @@ jobs:
     steps:
       # 1. コードのチェックアウト
       - name: Checkout repository
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       # 2. 固定バージョンのDeterminate Nixをインストール
       - name: Install Determinate Nix
-        uses: DeterminateSystems/determinate-nix-action@9adf02b41cfdac2632e1c16f0480ff5bf3b05dd6 # v3.21.1
+        uses: DeterminateSystems/determinate-nix-action@629b284231c2a82554b724e357e47fc6020833c8 # v3.21.2
       # 3. checks.* を評価（darwinConfigurations.* は guest プロファイルのため除外）
       #    hosts/*/config.nix の userProfile.name = "guest" は未設定ホストのシグナルであり
       #    assertions が Nix 評価時に発火するのは設計上の想定動作。
@@ -29,13 +29,13 @@ jobs:
     steps:
       # 1. コードのチェックアウト
       - name: Checkout repository
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       # 2. aarch64-linux エミュレーション（Raspberry Pi 5 ビルド用）
       - name: Set up QEMU for aarch64 emulation
-        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0
+        uses: docker/setup-qemu-action@06116385d9baf250c9f4dcb4858b16962ea869c3 # v4.1.0
       # 3. macOSと同じ固定バージョンのNixをインストール（aarch64-linux を追加プラットフォームとして登録）
       - name: Install Determinate Nix
-        uses: DeterminateSystems/determinate-nix-action@9adf02b41cfdac2632e1c16f0480ff5bf3b05dd6 # v3.21.1
+        uses: DeterminateSystems/determinate-nix-action@629b284231c2a82554b724e357e47fc6020833c8 # v3.21.2
         with:
           extra-conf: |
             extra-platforms = aarch64-linux
@@ -54,10 +54,10 @@ jobs:
     steps:
       # 1. コードのチェックアウト
       - name: Checkout repository
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       # 2. nixpkgs-fmt のために Nix をインストール
       - name: Install Determinate Nix
-        uses: DeterminateSystems/determinate-nix-action@9adf02b41cfdac2632e1c16f0480ff5bf3b05dd6 # v3.21.1
+        uses: DeterminateSystems/determinate-nix-action@629b284231c2a82554b724e357e47fc6020833c8 # v3.21.2
       # 3. pre-commit をインストールして全ファイルを検査
       - name: Install pre-commit
         run: pip install pre-commit
